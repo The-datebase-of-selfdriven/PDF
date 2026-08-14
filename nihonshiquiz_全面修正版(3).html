@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>日本史総合クイズ｜統合・不具合修正版</title>
+<style>
+*{box-sizing:border-box}body{font-family:sans-serif;max-width:760px;margin:10px auto;padding:0 12px;line-height:1.55}
+button{display:block;width:100%;margin:6px 0;padding:9px;font-size:1rem;text-align:left;cursor:pointer}
+#startBtn{text-align:center;font-weight:bold}.hidden{display:none!important}
+fieldset{margin:10px 0;padding:10px;border:1px solid #bbb;border-radius:8px}.mode-grid,.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 14px}
+.answer,.stem{margin:10px 0;padding:10px;border:1px solid #ccc;background:#fafafa;border-radius:6px}.bad{background:#fff0f0;border-color:#d99}.good{background:#f0fff0;border-color:#9c9}
+@media(max-width:560px){.mode-grid,.check-grid{grid-template-columns:1fr}}
+.stats-actions{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.stats-actions button{width:auto;flex:1 1 auto;min-width:120px}
+#statsList table,#statsSummary table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:6px}
+#statsList th,#statsList td,#statsSummary th,#statsSummary td{border:1px solid #ccc;padding:4px 6px;text-align:left;vertical-align:top}
+#statsList{max-height:60vh;overflow:auto;border:1px solid #ddd;border-radius:6px}
+.ok{color:#2a2}.ng{color:#d33}
+</style>
+</head>
+<body>
+<h1>日本史総合クイズ</h1>
+<div id="settings">
+<fieldset><legend>出題分野</legend>
+<label><input type="radio" name="section" value="culture" checked onchange="updateSection()"> 文化史</label>
+<label><input type="radio" name="section" value="chronology" onchange="updateSection()"> 年代史</label>
+</fieldset>
+<fieldset id="cultureSettings"><legend>文化史の時代・文化（複数選択可）</legend><div id="cultureList" class="check-grid"></div></fieldset>
+<fieldset id="chronologySettings" class="hidden"><legend>年代史の時代（複数選択可）</legend>
+<div class="check-grid">
+<label><input type="checkbox" class="chrono-era" value="ancient" checked> 古代（旧石器・縄文・弥生・古墳・飛鳥・奈良・平安）</label>
+<label><input type="checkbox" class="chrono-era" value="medieval" checked> 中世（鎌倉・室町・戦国）</label>
+<label><input type="checkbox" class="chrono-era" value="earlymodern" checked> 近世（安土桃山・江戸）</label>
+<label><input type="checkbox" class="chrono-era" value="modern1" checked> 近代Ⅰ（明治・大正）</label>
+<label><input type="checkbox" class="chrono-era" value="modern2" checked> 近代Ⅱ・現代（昭和・平成・令和）</label>
+</div></fieldset>
+<fieldset><legend>難易度</legend>
+<label><input type="radio" name="difficulty" value="easy" checked> かんたん</label><br>
+<label><input type="radio" name="difficulty" value="hard"> むずかしい（近い時代・年号を優先）</label></fieldset>
+<fieldset><legend>モード</legend>
+<div id="cultureModes" class="mode-grid">
+<label><input type="radio" name="cultureMode" value="c1" checked> 時代 → 文化の特色</label>
+<label><input type="radio" name="cultureMode" value="c2"> 時代 → 文化のもの</label>
+<label><input type="radio" name="cultureMode" value="r1"> 文化の特色 → 時代・文化</label>
+<label><input type="radio" name="cultureMode" value="r2"> 文化のもの → 時代・文化</label>
+<label><input type="radio" name="cultureMode" value="b1"> 2つの出来事の間 → 文化の特色</label>
+<label><input type="radio" name="cultureMode" value="b2"> 2つの出来事の間 → 文化のもの</label>
+<label><input type="radio" name="cultureMode" value="s1"> 文化の特色の並び替え</label>
+<label><input type="radio" name="cultureMode" value="s2"> 文化のものの並び替え</label>
+</div>
+<div id="chronologyModes" class="mode-grid hidden">
+<label><input type="radio" name="chronoMode" value="choice" checked> 年号選択</label>
+<label><input type="radio" name="chronoMode" value="sort4"> 並び替え（4つ）</label>
+<label><input type="radio" name="chronoMode" value="sort6"> 並び替え（6つ）</label>
+<label><input type="radio" name="chronoMode" value="between"> 間の出来事</label>
+</div></fieldset>
+<button id="startBtn" onclick="startQuiz()">開始（10問セット）</button>
+<button id="statsBtn" onclick="openStats()">📊 実績を見る</button>
+</div>
+<div id="quiz" class="hidden"><p id="progress"></p><div id="question"></div><div id="feedback"></div></div>
+<div id="stats" class="hidden">
+<h2>学習実績</h2>
+<div id="statsSummary"></div>
+<div class="stats-actions">
+<button onclick="exportHistory()">JSONで書き出し</button>
+<button onclick="document.getElementById('importFile').click()">JSONを読み込む</button>
+<input type="file" id="importFile" accept="application/json" class="hidden" onchange="importHistory(event)">
+<button onclick="clearHistory()">履歴を削除</button>
+<button onclick="closeStats()">設定に戻る</button>
+</div>
+<h3>回答履歴（新しい順）</h3>
+<div id="statsList"></div>
+</div>
+
+<script>
+const SET_SIZE=10;
+const DATA={"cultures":[{"era":"旧石器時代","name":"旧石器時代の文化","trait":"狩猟や採集を生活の中心とし、打製石器を用いて大型動物などを追った生活様式。","items":[["打製石器","生活用具"],["岩宿遺跡","遺跡"]]},{"era":"縄文時代","name":"縄文文化","trait":"狩猟・採集を中心とし、縄文土器や磨製石器を用い、竪穴住居・貝塚・土偶などが見られる文化。","items":[["縄文土器","土器"],["磨製石器","石器"],["竪穴住居","住居"],["貝塚","遺跡"],["土偶","祈り・信仰"],["三内丸山遺跡","遺跡"],["抜歯","風習"],["屈葬","埋葬"]]},{"era":"弥生時代","name":"弥生文化","trait":"稲作を中心に農業が発展し、弥生土器・石包丁・高床倉庫・青銅器・鉄器などが用いられた文化。","items":[["弥生土器","土器"],["石包丁","農具"],["高床倉庫","建物"],["青銅器","祭事"],["鉄器","工具・武器"],["吉野ヶ里遺跡","遺跡"]]},{"era":"古墳時代","name":"古墳文化","trait":"大和政権の成立・発展を背景に、権力者の墓として古墳が造られ、埴輪などが置かれた文化。渡来人から須恵器なども伝わった。","items":[["大仙古墳","古墳"],["前方後円墳","古墳の形"],["埴輪","副葬・祭祀"],["須恵器","土器"],["渡来人","文化の伝来"]]},{"era":"飛鳥時代","name":"飛鳥文化","trait":"仏教の影響が濃く、日本最初の仏教文化とされる。有力者による寺院や仏像の造立が進んだ。","items":[["法隆寺","寺院"],["法隆寺釈迦三尊像","仏像"],["広隆寺弥勒菩薩像","仏像"]]},{"era":"奈良時代","name":"天平文化","trait":"遣唐使を通じた中国文化の影響を強く受けた国際色豊かな仏教文化。東大寺・大仏・正倉院などが代表的。","items":[["東大寺","寺院"],["東大寺大仏","仏像・仏教"],["正倉院","建物・宝物"],["校倉造","建築様式"],["鳥毛立女屏風","美術工芸"],["唐招提寺","寺院"],["古事記","歴史書"],["日本書紀","歴史書"],["風土記","地誌"],["万葉集","和歌集"]]},{"era":"平安時代","name":"国風文化","trait":"唐風文化を基にしながら日本の風土や生活に合った文化。貴族を担い手とし、かな文字による仮名文学や寝殿造が発達した。","items":[["源氏物語","物語・紫式部"],["枕草子","随筆・清少納言"],["古今和歌集","和歌集・紀貫之"],["土佐日記","日記・紀貫之"],["寝殿造","建築様式"],["平等院鳳凰堂","寺院建築"]]},{"era":"鎌倉時代","name":"鎌倉文化","trait":"武士にも文化の担い手が広がり、力強く素朴な文化となった。公家文化の継承、武家文化、禅宗の影響が特徴。","items":[["平家物語","軍記物語"],["新古今和歌集","和歌集"],["徒然草","随筆・吉田兼好"],["方丈記","随筆・鴨長明"],["浄土宗","仏教・法然"],["浄土真宗","仏教・親鸞"],["時宗","仏教・一遍"],["日蓮宗","仏教・日蓮"],["臨済宗","仏教・栄西"],["曹洞宗","仏教・道元"],["金剛力士像","彫刻・運慶・快慶"]]},{"era":"室町時代","name":"北山文化","trait":"足利義満の時代に、公家文化と禅宗の影響を受けた武家文化が融合した華やかな文化。","items":[["鹿苑寺金閣","建築"],["能","芸能・観阿弥・世阿弥"],["狂言","芸能"]]},{"era":"室町時代","name":"東山文化","trait":"足利義政の時代の簡素な文化で、わび・さびを大切にし、書院造・枯山水・水墨画などが発達した。","items":[["慈照寺銀閣","建築"],["書院造","建築様式"],["龍安寺石庭","枯山水"],["水墨画","絵画・雪舟"],["御伽草子","文学"],["連歌","文学"],["茶の湯","文化・行為"]]},{"era":"安土桃山時代","name":"桃山文化","trait":"大名や力をつけた商人を中心とした豪華で雄大な文化。城郭・濃絵・茶の湯・かぶき踊りなどが発達し、南蛮文化も見られた。","items":[["安土城","城郭"],["姫路城","城郭"],["大阪城","城郭"],["唐獅子図屏風","絵画・狩野永徳"],["茶の湯","文化・千利休"],["かぶき踊り","芸能・出雲阿国"],["浄瑠璃","芸能"],["濃絵","絵画"],["南蛮文化","文化交流"]]},{"era":"江戸時代","name":"元禄文化","trait":"上方を中心に、武士や経済力をつけた新興町人を担い手として栄えた文化。浮世草子・俳諧・人形浄瑠璃・歌舞伎などが盛んになった。","items":[["浮世草子","文学・井原西鶴"],["奥の細道","俳諧・松尾芭蕉"],["人形浄瑠璃","芸能・近松門左衛門"],["曽根崎心中","人形浄瑠璃"],["歌舞伎","芸能"],["風神雷神図屏風","絵画・俵屋宗達"],["燕子花図屏風","絵画・尾形光琳"],["紅白梅図屏風","絵画・尾形光琳"],["見返り美人図","浮世絵・菱川師宣"]]},{"era":"江戸時代","name":"化政文化","trait":"江戸を中心に庶民まで担い手が広がり、風刺・皮肉が好まれた文化。小説・俳諧・浮世絵などが盛んになった。","items":[["東海道中膝栗毛","小説・十返舎一九"],["南総里見八犬伝","小説・滝沢馬琴"],["俳諧","文学・与謝蕪村・小林一茶"],["錦絵","浮世絵"],["ポッピンを吹く女","美人画・喜多川歌麿"],["東洲斎写楽","浮世絵・役者絵"],["富嶽三十六景","浮世絵・葛飾北斎"],["東海道五十三次","浮世絵・歌川広重"],["解体新書","蘭学・杉田玄白"],["古事記伝","国学・本居宣長"],["適塾","私塾・緒方洪庵"],["寺子屋","教育"]]},{"era":"明治時代","name":"明治文化","trait":"開国の影響で西洋文化を取り入れた文明開化の文化。洋風の生活、レンガ造り、ガス灯、洋服、牛肉、太陽暦、新聞・雑誌などが広がった。","items":[["文明開化","文化の特色"],["浮雲","小説・二葉亭四迷"],["みだれ髪","短歌・与謝野晶子"],["たけくらべ","小説・樋口一葉"],["舞姫","小説・森鴎外"],["坊ちゃん","小説・夏目漱石"],["吾輩は猫である","小説・夏目漱石"],["無我","日本画・横山大観"],["湖畔","洋画・黒田清輝"],["読書","洋画・黒田清輝"],["荒城の月","音楽・滝廉太郎"],["慶應義塾","教育・福沢諭吉"],["東京専門学校","教育・大隈重信"],["女子英学塾","教育・津田梅子"]]}],"events":[["大化の改新","645"],["平安京遷都","794"],["鎌倉幕府成立","1185/1192"],["承久の乱","1221"],["元寇","1274・1281"],["室町幕府成立","1336"],["応仁の乱","1467"],["鉄砲伝来","1543"],["本能寺の変","1582"],["関ヶ原の戦い","1600"],["江戸幕府成立","1603"],["享保の改革","1716"],["寛政の改革","1787"],["天保の改革","1841"],["大政奉還","1867"],["明治維新","1868"]]};
+const pdfDatabase=[{"year":57,"text":"倭の奴国王が後漢に使いを送る（金印受領）","p":1,"side":"日本","g":"奴の国王 困難乗り越え 金印GET"},{"year":239,"text":"卑弥呼が魏に使いを送る","p":1,"side":"日本","g":"卑弥呼の文来る 魏の皇帝"},{"year":552,"text":"百済王から仏像と経典を贈られる（仏教伝来）","p":1,"side":"日本","g":"午前や午後に 仏像おがむ"},{"year":589,"text":"隋が中国大陸を統一する","p":1,"side":"世界","g":""},{"year":593,"text":"聖徳太子が推古天皇の摂政となる","p":1,"side":"日本","g":"国民喜ぶ 聖徳太子が 摂政に！"},{"year":603,"text":"聖徳太子が冠位十二階を定める","p":1,"side":"日本","g":""},{"year":607,"text":"小野妹子らを遣隋使として派遣する","p":1,"side":"日本","g":"妹子行く 隋はずいぶん 遠かったろおな"},{"year":610,"text":"ムハンマドがイスラム教を創始する","p":1,"side":"世界","g":""},{"year":630,"text":"第1回遣唐使が派遣される","p":1,"side":"日本","g":""},{"year":645,"text":"大化の改新が始まり、日本独自の年号を使用する","p":1,"side":"日本","g":"いそがしい 無事故で行う 大化の改新"},{"year":663,"text":"白村江の戦いで唐・新羅の連合軍に敗れる","p":1,"side":"日本","g":""},{"year":672,"text":"壬申の乱が起き、天武天皇の政治が始まる","p":1,"side":"日本","g":"お世継ぎは？ 無理な二人の 壬申の乱"},{"year":676,"text":"新羅が朝鮮半島を統一する","p":1,"side":"世界","g":""},{"year":701,"text":"大宝律令がつくられる","p":1,"side":"日本","g":"なぁおいできたか 律令は。"},{"year":710,"text":"平城京（奈良）へ都を移す","p":2,"side":"日本","g":"なんと見事な 平城京"},{"year":741,"text":"聖武天皇が国分寺建立の詔を発布する","p":2,"side":"日本","g":"お坊さん 国分寺と国分尼寺は 仲が良い"},{"year":743,"text":"墾田永年私財法が出され、開墾地の私有が認められる","p":2,"side":"日本","g":"貴族たち 心配なしさ 荘園つくろう"},{"year":794,"text":"平安京（京都）へ都を移す","p":2,"side":"日本","g":"平安京 なくした権力 回復だ。"},{"year":894,"text":"菅原道真の提案により遣唐使が廃止される","p":2,"side":"日本","g":"道真が 白紙にもどした 遣唐使"},{"year":907,"text":"中国で唐が滅びる","p":2,"side":"世界","g":""},{"year":1016,"text":"藤原道長が摂政となり、摂関政治の全盛期を迎える","p":2,"side":"日本","g":"貴族の世 摂関政治は とおいむかし"},{"year":1086,"text":"白河上皇が院政を開始する","p":2,"side":"日本","g":"上皇に 人ははむかえない 院政開始"},{"year":1096,"text":"ヨーロッパで第1回十字軍の遠征が始まる","p":2,"side":"世界","g":""},{"year":1167,"text":"平清盛が太政大臣となる","p":2,"side":"日本","g":"平清盛 いい胸毛 だじょ〜"},{"year":1185,"text":"壇ノ浦の戦いで平氏が滅亡する","p":2,"side":"日本","g":"お兄ちゃん！ いいはこ作ろう 鎌倉に！"},{"year":1192,"text":"源頼朝が征夷大将軍に任命され、鎌倉幕府が成立する","p":2,"side":"日本","g":"鎌倉に いい国作ろう 頼朝さん"},{"year":1221,"text":"幕府軍が朝廷軍を破る承久の乱が起きる","p":2,"side":"日本","g":"1221よしとき やよかった 承久の乱！"},{"year":1232,"text":"武士の法律である御成敗式目が制定される","p":2,"side":"日本","g":"泰時が 一日3通、御成敗！"},{"year":1274,"text":"元（モンゴル帝国）が襲来する（文永の役）","p":2,"side":"日本","g":"元寇で 人船酔いして 人に吐いた。"},{"year":1297,"text":"武士の困窮を救うため、永仁の徳政令が発令される","p":2,"side":"日本","g":"貞時に 皮肉な結果の 徳政令"},{"year":1333,"text":"鎌倉幕府が滅亡する","p":2,"side":"日本","g":"鎌倉の 幕府のとどめを いざさん。"},{"year":1338,"text":"足利尊氏が征夷大将軍となり、室町幕府を開く","p":2,"side":"日本","g":"尊氏は 勇んで都に のぼります"},{"year":1368,"text":"中国で元が滅び、明が建国される","p":2,"side":"世界","g":""},{"year":1392,"text":"南北朝が合一（統一）される","p":2,"side":"日本","g":"義満は、いざくにまとめて 全盛期"},{"year":1404,"text":"足利義満が明との間で日明貿易（勘合貿易）を開始する","p":2,"side":"日本","g":"合わせよう 勘合の意味を 人知れよ"},{"year":1428,"text":"正長の土一揆が起きる","p":2,"side":"日本","g":"正長に 一緒にやろう、土一揆"},{"year":1467,"text":"戦国時代の幕開けとなる応仁の乱が始まる","p":3,"side":"日本","g":"人の世むなしい応仁の乱"},{"year":1492,"text":"コロンブスが船でアメリカ大陸に到達する","p":3,"side":"世界","g":""},{"year":1517,"text":"ドイツでルターによる宗教改革が始まる","p":3,"side":"世界","g":""},{"year":1534,"text":"イエズス会が創立される","p":3,"side":"世界","g":""},{"year":1543,"text":"種子島に鉄砲が伝来する","p":3,"side":"日本","g":"以後予算 勝利のためだ 鉄砲だ"},{"year":1549,"text":"フランシスコ・ザビエルがキリスト教を伝える","p":3,"side":"日本","g":"以後よく広がるキリスト教"},{"year":1573,"text":"織田信長が将軍を追放し、室町幕府が滅亡する","p":3,"side":"日本","g":"室町に 一語涙の 幕降りる"},{"year":1582,"text":"本能寺の変が起きる","p":3,"side":"日本","g":"いちごパンツの本能寺の変態"},{"year":1588,"text":"豊臣秀吉が刀狩令を出す","p":3,"side":"日本","g":"もうだめよ 以後パパ 刀は使えない"},{"year":1600,"text":"関ヶ原の戦いが起きる","p":3,"side":"日本","g":"そのまんま覚えよう（岐阜県ってのも大事）"},{"year":1603,"text":"徳川家康により江戸幕府が成立する","p":3,"side":"日本","g":"江戸幕府 ヒーローおっさん 徳川家康"},{"year":1615,"text":"大坂夏の陣で豊臣氏が滅亡し、武家諸法度が出される","p":3,"side":"日本","g":"大名の 疲労以後たまる 武家諸法度"},{"year":1635,"text":"参勤交代の制度が定められる","p":3,"side":"日本","g":"命令だ 4月に一路 参勤交代"},{"year":1637,"text":"島原の乱（島原・天草一揆）が起きる","p":3,"side":"日本","g":"人無残なり 島原・天草一揆"},{"year":1639,"text":"ポルトガル船の来航が禁止され「鎖国」が完成する","p":3,"side":"日本","g":"難しい いろんな策で 鎖国完成"},{"year":1716,"text":"徳川吉宗による享保の改革が始まる","p":3,"side":"日本","g":"吉宗の いない六時は 暴れん坊将軍"},{"year":1787,"text":"松平定信による寛政の改革が始まる","p":3,"side":"日本","g":"定信は かなり厳しい 人なんやなぁ"},{"year":1789,"text":"ヨーロッパでフランス革命が勃発する","p":3,"side":"世界","g":"人権よこせ 非難爆発 フランス革命"},{"year":1840,"text":"イギリスと清の間でアヘン戦争が起きる","p":3,"side":"世界","g":"欧米とアヘンの怖さを人は知れ"},{"year":1841,"text":"水野忠邦による天保の改革が始まる","p":3,"side":"日本","g":"水野が解散 いやしい行い 株仲間"},{"year":1853,"text":"アメリカのペリー率いる黒船が浦賀に来航する","p":4,"side":"日本","g":"ペリーたち 浦賀に来るとは いや誤算"},{"year":1854,"text":"日米和親条約を結び、日本が開国する","p":4,"side":"日本","g":""},{"year":1858,"text":"日米修好通商条約の締結、および安政の大獄が始まる","p":4,"side":"日本","g":"通商は、NOでいいよね？ いやGOや！"},{"year":1866,"text":"薩長同盟が成立する","p":4,"side":"日本","g":""},{"year":1867,"text":"徳川慶喜が朝廷に政権を返す大政奉還が行われる","p":4,"side":"日本","g":"江戸終わる いやむなしいな 大政奉還"},{"year":1868,"text":"新政府軍と旧幕府軍の間で戊辰戦争が始まる","p":4,"side":"日本","g":"いちからやろうや 王政復古の大号令"},{"year":1871,"text":"廃藩置県が行われる","p":4,"side":"日本","g":"もう 藩とはいわない いや泣いた"},{"year":1872,"text":"学制が発布される","p":4,"side":"日本","g":""},{"year":1873,"text":"国民軍を創設する徴兵令が出される","p":4,"side":"日本","g":"嫌な3% 現金で入れてね 地租改正"},{"year":1877,"text":"西郷隆盛を中心とした不満士族の反乱（西南戦争）が起きる","p":4,"side":"日本","g":"西郷の 一派ななんと 西南戦争"},{"year":1889,"text":"大日本帝国憲法が発布される","p":4,"side":"日本","g":"アジアで 一番はやくできた 大日本帝国憲法"},{"year":1894,"text":"日清戦争が始まる","p":4,"side":"日本","g":"世界に向けて 一躍進出 日清戦争"},{"year":1895,"text":"日清戦争の講和条約である下関条約が結ばれる","p":4,"side":"日本","g":""},{"year":1902,"text":"日英同盟が結ばれる","p":4,"side":"日本","g":"日暮れに結ぼう 日英同盟"},{"year":1904,"text":"日露戦争が勃発する","p":4,"side":"日本","g":"行くわよ 大陸 日露戦争"},{"year":1905,"text":"日露戦争の講和条約であるポーツマス条約が結ばれる","p":4,"side":"日本","g":""},{"year":1910,"text":"日本が韓国を併合する","p":4,"side":"日本","g":"後世で ひどく言われる 韓国併合"},{"year":1914,"text":"ヨーロッパを中心に第一次世界大戦が始まる","p":5,"side":"世界","g":"第一次 行く意思強い 土地欲しい"},{"year":1917,"text":"ロシア革命が起きる","p":5,"side":"世界","g":"レーニンが 仲間を集めに 行くいなか"},{"year":1918,"text":"米価暴騰を受け、富山県から米騒動が広まる","p":5,"side":"日本","g":"原敬 行く人やめな 米騒動"},{"year":1920,"text":"国際連盟が成立する","p":5,"side":"世界","g":"とくに大きな 国際連盟"},{"year":1925,"text":"普通選挙法が成立する","p":5,"side":"日本","g":"普通選挙 いく25歳は 男子のみ"},{"year":1929,"text":"アメリカの株価暴落をきっかけに世界恐慌が始まる","p":5,"side":"世界","g":"不景気だ とくに苦しい 世界恐慌"},{"year":1931,"text":"関東軍が満州事変を引き起こす","p":5,"side":"日本","g":"中国と いくさ始める 満州事変"},{"year":1932,"text":"満州国建国、および五・一五事件が起きる","p":5,"side":"日本","g":"犬養は いくさに反対 始末せよ"},{"year":1933,"text":"日本が国際連盟を脱退する","p":5,"side":"日本","g":""},{"year":1936,"text":"二・二六事件が起きる","p":5,"side":"日本","g":""},{"year":1937,"text":"盧溝橋事件をきっかけに日中戦争が始まる","p":5,"side":"日本","g":"いくさ長引く 日中戦争"},{"year":1938,"text":"国家総動員法が成立する","p":5,"side":"日本","g":""},{"year":1941,"text":"真珠湾攻撃により日本が太平洋戦争を始める","p":5,"side":"日本","g":"行くよ一気に 太平洋へ"},{"year":1945,"text":"ポツダム宣言を受諾し、第二次世界大戦が終結する","p":5,"side":"日本","g":"ポツダムへ 平和を求めて 行く仕事"},{"year":1946,"text":"日本国憲法が公布される","p":5,"side":"日本","g":"新憲法 行くよ夢中に 新時代"},{"year":1951,"text":"サンフランシスコ講和条約が結ばれる","p":5,"side":"日本","g":"米の都合 ひどく強引 平和と安保"},{"year":1952,"text":"サンフランシスコ講和条約が発効し、日本の独立が回復する","p":5,"side":"日本","g":""},{"year":1956,"text":"日ソ共同宣言により国交を回復し、国際連合へ加盟する","p":5,"side":"日本","g":"復興し 国際社会に いくころだ"},{"year":1972,"text":"沖縄が日本に本土復帰し、日中共同声明に調印する","p":5,"side":"日本","g":"復帰した これで行く夏 沖縄へ"}];
+const CULTURE_SELECTOR=[["旧石器時代","旧石器時代の文化"],["縄文時代","縄文文化"],["弥生時代","弥生文化"],["古墳時代","古墳文化"],["飛鳥時代","飛鳥文化"],["奈良時代","天平文化"],["平安時代","国風文化"],["鎌倉時代","鎌倉文化"],["室町時代","北山文化"],["室町時代","東山文化"],["安土桃山時代","桃山文化"],["江戸時代","元禄文化"],["江戸時代","化政文化"],["明治時代","明治文化"]];
+// 各文化の「主に栄えた時期」。
+// 「2つの出来事の間」問題では、この範囲の中央付近が
+// 2つの出来事の間に入る文化だけを正解候補にする。
+const CULTURE_SUBRANGES={
+  "旧石器時代の文化":[-35000,-14000],
+  "縄文文化":[-14000,-900],
+  "弥生文化":[-900,250],
+  "古墳文化":[250,538],
+  "飛鳥文化":[538,710],
+  "天平文化":[710,794],
+  "国風文化":[794,1185],
+  "鎌倉文化":[1185,1338],
+  "北山文化":[1338,1467],
+  "東山文化":[1467,1573],
+  "桃山文化":[1573,1603],
+  "元禄文化":[1688,1716],
+  "化政文化":[1804,1841],
+  "明治文化":[1868,1912]
+};
+// 並び順は文化の主な成立・発展時期を基準にする。同じ「室町時代」でも北山→東山の順を保持する。
+const CULTURE_ORDER={"旧石器時代の文化":1,"縄文文化":2,"弥生文化":3,"古墳文化":4,"飛鳥文化":5,"天平文化":6,"国風文化":7,"鎌倉文化":8,"北山文化":9,"東山文化":10,"桃山文化":11,"元禄文化":12,"化政文化":13,"明治文化":14};
+
+let section="culture",difficulty="easy",cultureMode="c1",chronoMode="choice";
+let selectedCultures=[],selectedChronoEras=[],questions=[],current=0,score=0;
+let questionStartTime=0;
+const HISTORY_KEY="nihonshiQuizHistory";
+function loadHistory(){try{const raw=localStorage.getItem(HISTORY_KEY);const a=raw?JSON.parse(raw):[];return Array.isArray(a)?a:[]}catch(e){return[]}}
+function saveHistory(){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(history))}catch(e){console.warn("履歴の保存に失敗しました",e)}}
+let history=loadHistory();
+function pad2(n){return String(n).padStart(2,"0")}
+function nowStamp(){const d=new Date();return{iso:`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`,y:d.getFullYear(),m:d.getMonth()+1,day:d.getDate()}}
+function questionLabel(q){
+ if(q.section==="culture"){
+  if(q.type==="sort")return q.prompt+(q.cultures?`（対象：${q.cultures.map(c=>c.name).join("・")}）`:q.culture?`（${q.culture.name}）`:"");
+  return (q.stem?q.stem+"／":"")+q.prompt+(q.culture?`（${q.culture.era}・${q.culture.name}）`:"");
+ }
+ if(q.type==="choice")return `【年号選択】${q.stem}`;
+ if(q.type==="between")return `【間の出来事】${q.low.text}（${q.low.year}年）～${q.high.text}（${q.high.year}年）`;
+ if(q.type==="sort")return "【年代並び替え】"+q.displayOrder.map(e=>e.text).join("／");
+ return q.prompt||"";
+}
+function recordAnswer(q,isCorrect,userAnswerText,correctAnswerText){
+ const t=questionStartTime?Math.max(0,+((Date.now()-questionStartTime)/1000).toFixed(1)):null;
+ const ts=nowStamp();
+ history.push({date:ts.iso,year:ts.y,month:ts.m,day:ts.day,section:q.section,mode:q.section==="culture"?cultureMode:chronoMode,difficulty,type:q.type,question:questionLabel(q),userAnswer:userAnswerText,correctAnswer:correctAnswerText,isCorrect:!!isCorrect,timeSeconds:t});
+ saveHistory();
+}
+const $=id=>document.getElementById(id);
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function uniq(a){const seen=new Set(),out=[];for(const v of (a||[])){const k=typeof v+"\0"+String(v);if(!seen.has(k)){seen.add(k);out.push(v)}}return out}
+function updateSection(){section=document.querySelector('input[name="section"]:checked').value;$("cultureSettings").classList.toggle("hidden",section!=="culture");$("chronologySettings").classList.toggle("hidden",section!=="chronology");$("cultureModes").classList.toggle("hidden",section!=="culture");$("chronologyModes").classList.toggle("hidden",section!=="chronology")}
+$("cultureList").innerHTML=CULTURE_SELECTOR.map((x,i)=>`<label><input type="checkbox" class="culture" value="${i}" checked> ${esc(x[0])}・${esc(x[1])}</label>`).join("");
+function culturePool(){let ids=[...document.querySelectorAll(".culture:checked")].map(e=>+e.value);return ids.map(i=>DATA.cultures.find(c=>c.era===CULTURE_SELECTOR[i][0]&&c.name===CULTURE_SELECTOR[i][1])).filter(Boolean)}
+function cultureLabel(c){return c.era+"・"+c.name}
+function cultureQuestionName(c){return c.name==="旧石器時代の文化"?"旧石器時代の文化":c.era+"の"+c.name}
+function itemDisplay(i){return i[1]?i[0]+"（"+i[1]+"）":i[0]}
+function similarity(a,b){let A=new Set((a.trait+a.name).split("")),B=new Set((b.trait+b.name).split("")),n=0;for(const x of A)if(B.has(x))n++;return n}
+function similarityText(a,b){let n=0;for(const x of a)if(b.includes(x))n++;return n}
+function cultureOptions(c,p){
+  let o=p.filter(x=>x!==c);
+  if(o.length<3)return [];
+  if(difficulty==="hard")o.sort((a,b)=>similarity(b,c)-similarity(a,c));
+  else o=shuffle(o);
+  return shuffle([c,...o.slice(0,3)]);
+}
+function eraOptions(c,p){
+  let o=p.filter(x=>x!==c);
+  if(o.length<3)return [];
+  if(difficulty==="hard")o.sort((a,b)=>similarity(b,c)-similarity(a,c));
+  else o=shuffle(o);
+  return shuffle([cultureLabel(c),...o.slice(0,3).map(cultureLabel)]);
+}
+function uniqueItems(c){let m=new Map;for(const x of DATA.cultures)for(const i of x.items)m.set(i[0],(m.get(i[0])||0)+1);return c.items.filter(i=>m.get(i[0])===1)}
+function itemOptions(name,c,p){
+  const good=c.items.find(i=>i[0]===name);
+  if(!good)return[];
+  const targetName=good[0];
+  const candidates=[];
+  for(const x of p){
+    if(x===c)continue;
+    for(const i of x.items){
+      if(i[0]===targetName)continue;
+      if(!candidates.some(v=>v[0]===i[0]))candidates.push(i);
+    }
+  }
+  let o=difficulty==="hard"
+    ?candidates.sort((a,b)=>similarityText(b[0],targetName)-similarityText(a[0],targetName))
+    :shuffle(candidates);
+  if(o.length<3)return[];
+  return shuffle([itemDisplay(good),...o.slice(0,3).map(itemDisplay)]);
+}
+
+const CULTURE_REP_YEAR={
+  "旧石器時代の文化":-20000,"縄文文化":-5000,"弥生文化":100,"古墳文化":400,
+  "飛鳥文化":650,"天平文化":750,"国風文化":1000,"鎌倉文化":1250,
+  "北山文化":1420,"東山文化":1500,"桃山文化":1580,"元禄文化":1700,
+  "化政文化":1820,"明治文化":1880
+};
+function cultureBetween(){
+  const ev=DATA.events.map((x,i)=>({name:x[0],year:Number(String(x[1]).match(/-?\d+/)?.[0]),yearText:x[1],i}))
+    .filter(x=>Number.isFinite(x.year)).sort((a,b)=>a.year-b.year);
+  const valid=selectedCultures.filter(c=>Number.isFinite(CULTURE_REP_YEAR[c.name]));
+  if(valid.length<1||ev.length<2)return null;
+  const candidates=[];
+  for(let i=0;i<ev.length-1;i++){
+    for(let j=i+1;j<ev.length;j++){
+      const low=ev[i],high=ev[j];
+      if(high.year-low.year<40)continue;
+      const active=valid.filter(c=>CULTURE_REP_YEAR[c.name]>low.year&&CULTURE_REP_YEAR[c.name]<high.year);
+      if(active.length!==1)continue;
+      candidates.push({low,high,c:active[0],span:high.year-low.year});
+    }
+  }
+  if(!candidates.length)return null;
+  candidates.sort((a,b)=>a.span-b.span);
+  const pool=difficulty==="hard"?candidates.slice(0,Math.min(30,candidates.length)):candidates.slice(0,Math.min(80,candidates.length));
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function makeCultureQuestion(){
+  let c,good,base,entries,answer;
+  if(!selectedCultures.length)return null;
+  if(cultureMode==="c1"){
+    c=selectedCultures[Math.floor(Math.random()*selectedCultures.length)];
+    const opts=cultureOptions(c,selectedCultures);
+    if(opts.length!==4)return null;
+    return{type:"choice",section:"culture",prompt:`${cultureQuestionName(c)}の特色として最も適切なものを選びなさい。`,answer:c.trait,options:opts.map(x=>x.trait),culture:c};
+  }
+  if(cultureMode==="c2"){
+    c=selectedCultures[Math.floor(Math.random()*selectedCultures.length)];
+    base=uniqueItems(c); good=(base.length?base:c.items)[Math.floor(Math.random()*(base.length?base.length:c.items.length))];
+    const opts=itemOptions(good[0],c,selectedCultures);
+    if(opts.length!==4)return null;
+    return{type:"choice",section:"culture",prompt:`${cultureQuestionName(c)}と最も関係の深いものを選びなさい。`,answer:itemDisplay(good),options:opts,culture:c};
+  }
+  if(cultureMode==="r1"){
+    c=selectedCultures[Math.floor(Math.random()*selectedCultures.length)];
+    const opts=eraOptions(c,selectedCultures);if(opts.length!==4)return null;
+    return{type:"choice",section:"culture",prompt:"次の文化の特色と最も関係の深い時代・文化を選びなさい。",stem:c.trait,answer:cultureLabel(c),options:opts,culture:c};
+  }
+  if(cultureMode==="r2"){
+    c=selectedCultures[Math.floor(Math.random()*selectedCultures.length)];
+    base=uniqueItems(c);good=(base.length?base:c.items)[Math.floor(Math.random()*(base.length?base.length:c.items.length))];
+    const opts=eraOptions(c,selectedCultures);if(opts.length!==4)return null;
+    return{type:"choice",section:"culture",prompt:`「${itemDisplay(good)}」と最も関係の深い時代・文化を選びなさい。`,answer:cultureLabel(c),options:opts,culture:c};
+  }
+  if(cultureMode==="b1"||cultureMode==="b2"){
+    const pair=cultureBetween();if(!pair)return null;c=pair.c;
+    if(cultureMode==="b1"){
+      const opts=cultureOptions(c,selectedCultures);if(opts.length!==4)return null;
+      return{type:"choice",section:"culture",stem:`「${pair.low.name}（${pair.low.yearText}）」→「${pair.high.name}（${pair.high.yearText}）」`,prompt:"この2つの出来事の間に主に栄えた文化として、最も適切なものを選びなさい。",answer:c.trait,options:opts.map(x=>x.trait),culture:c,betweenPair:pair};
+    }
+    base=uniqueItems(c);good=(base.length?base:c.items)[Math.floor(Math.random()*(base.length?base.length:c.items.length))];
+    const opts=itemOptions(good[0],c,selectedCultures);if(opts.length!==4)return null;
+    return{type:"choice",section:"culture",stem:`「${pair.low.name}（${pair.low.yearText}）」→「${pair.high.name}（${pair.high.yearText}）」`,prompt:"この2つの出来事の間に主に栄えた文化に関係するものとして、最も適切なものを選びなさい。",answer:itemDisplay(good),options:opts,culture:c,betweenPair:pair};
+  }
+  c=selectedCultures[Math.floor(Math.random()*selectedCultures.length)];
+  if(cultureMode==="s1"){
+    if(selectedCultures.length<4)return null;
+    const b=shuffle(selectedCultures).slice(0,4),labs=["ア","イ","ウ","エ"];
+    const cor=[...b].sort((a,x)=>(CULTURE_ORDER[a.name]||99)-(CULTURE_ORDER[x.name]||99));
+    answer=cor.map(x=>labs[b.indexOf(x)]).join("→");
+    const all=perms(4).map(x=>x.split(",").map(i=>labs[+i]).join("→"));
+    const wrong=shuffle(all.filter(x=>x!==answer)).slice(0,5);
+    return{type:"sort",section:"culture",prompt:"次の文化を、主に栄えた時期の古い順に並べ替えなさい。",cultures:b,entries:b.map((x,i)=>({label:labs[i],text:x.trait})),answer,shown:shuffle([answer,...wrong])};
+  }
+  const itemCultures=selectedCultures.filter(x=>uniqueItems(x).length>=4);
+  if(!itemCultures.length)return null;
+  c=itemCultures[Math.floor(Math.random()*itemCultures.length)];
+  const source=uniqueItems(c),chosen=shuffle(source).slice(0,4),labs=["ア","イ","ウ","エ"];
+  const sortAnswer=source.filter(x=>chosen.some(e=>e[0]===x[0])).map(x=>labs[chosen.findIndex(e=>e[0]===x[0])]).join("→");
+  const all=perms(4).map(x=>x.split(",").map(i=>labs[+i]).join("→")),wrong=shuffle(all.filter(x=>x!==sortAnswer)).slice(0,5);
+  return{type:"sort",section:"culture",prompt:`${c.name}に関係する文化のものを、資料に示された順に並べ替えなさい。`,culture:c,entries:chosen.map((x,i)=>({label:labs[i],text:x[0]})),answer:sortAnswer,shown:shuffle([sortAnswer,...wrong])};
+}
+
+function chronoEra(i){return({1:"ancient",2:"medieval",3:"earlymodern",4:"modern1",5:"modern2"})[i.p]}
+function chronoPool(){return pdfDatabase.filter(i=>selectedChronoEras.includes(chronoEra(i)))}
+function chronoChoice(p){
+  if(!p.length)return null;
+  const c=p[Math.floor(Math.random()*p.length)];
+  let candidates=p.filter(i=>i!==c&&i.year!==c.year);
+  if(difficulty==="hard")candidates.sort((a,b)=>Math.abs(a.year-c.year)-Math.abs(b.year-c.year));else candidates=shuffle(candidates);
+  const years=uniq([c.year,...candidates.map(i=>i.year)]).slice(0,4);
+  return years.length===4?{type:"choice",section:"chronology",item:c,stem:c.text,prompt:"上の出来事が起こった年として最も適切なものを選びなさい。",options:shuffle(years)}:null;
+}
+function chronoBetween(p){
+  const s=[...p].sort((a,b)=>a.year-b.year||a.text.localeCompare(b.text));
+  if(s.length<4)return null;
+  for(let t=0;t<1000;t++){
+    const a=Math.floor(Math.random()*(s.length-2));
+    const maxB=Math.min(s.length-1,a+5);
+    const b=a+1+Math.floor(Math.random()*(maxB-a));
+    const low=s[a],high=s[b];
+    const mid=s.filter(x=>x.year>low.year&&x.year<high.year);
+    if(!mid.length)continue;
+    const correct=mid[Math.floor(Math.random()*mid.length)];
+    let outside=s.filter(x=>x.year<=low.year||x.year>=high.year).filter(x=>x!==low&&x!==high);
+    if(difficulty==="hard")outside.sort((x,y)=>Math.min(Math.abs(x.year-low.year),Math.abs(x.year-high.year))-Math.min(Math.abs(y.year-low.year),Math.abs(y.year-high.year)));
+    else outside=shuffle(outside);
+    const options=[correct,...outside].filter((x,i,a)=>a.findIndex(y=>y.year===x.year)===i).slice(0,4);
+    if(options.length===4)return{type:"between",section:"chronology",prompt:"次の2つの出来事の間に起こった出来事として最も適切なものを選びなさい。",low,high,correctChoice:correct,options:shuffle(options)};
+  }
+  return null;
+}
+function pickSort(p,n){
+  let a=[],gap=difficulty==="easy"?30:5;
+  for(let t=0;t<1500&&a.length<n;t++){
+    const c=p[Math.floor(Math.random()*p.length)];
+    if(!a.some(x=>x.year===c.year)&&a.every(x=>Math.abs(x.year-c.year)>=gap)) a.push(c);
+  }
+  if(a.length<n){
+    a=[];
+    for(const c of shuffle(p)){
+      if(!a.some(x=>x.year===c.year)) a.push(c);
+      if(a.length===n) break;
+    }
+  }
+  return a.length===n?a:null;
+}
+function perms(n){let out=[];function r(a,z){if(!z.length){out.push(a.join(","));return}for(let i=0;i<z.length;i++)r([...a,z[i]],[...z.slice(0,i),...z.slice(i+1)])}r([],Array.from({length:n},(_,i)=>i));return out}
+const KATAKANA_LABELS=["ア","イ","ウ","エ","オ","カ"];
+function chronoSort(p,n){
+  const items=pickSort(p,n);if(!items)return null;
+  const display=shuffle(items),labs=KATAKANA_LABELS.slice(0,n);
+  const ans=display.map((it,i)=>({it,i})).sort((a,b)=>a.it.year-b.it.year||a.it.text.localeCompare(b.it.text)).map(x=>labs[x.i]).join("→");
+  const all=perms(n).map(x=>x.split(",").map(i=>labs[+i]).join("→"));
+  const wrong=shuffle(all.filter(x=>x!==ans)).slice(0,Math.min(5,all.length-1));
+  return {type:"sort",section:"chronology",prompt:"次の出来事を、起こった順（古い順）に並び替えなさい。",displayOrder:display,labels:labs,answer:ans,shown:shuffle([ans,...wrong])};
+}function makeChronoQuestion(){let p=chronoPool();if(chronoMode==="choice")return chronoChoice(p);if(chronoMode==="between")return chronoBetween(p);return chronoSort(p,chronoMode==="sort6"?6:4)}
+function sig(q){if(!q)return"NULL";return[q.type,q.section,q.prompt||"",q.stem||"",q.answer||"",q.options?.map(x=>typeof x==="object"?x.year+":"+x.text:String(x)).sort().join("|")||"",q.entries?.map(x=>x.label+"="+x.text).join("|")||"",q.displayOrder?.map(x=>x.year).join(",")||""].join("###")}
+function validQuestion(q){
+  if(!q)return false;
+  if(q.type==="choice"){
+    if(!Array.isArray(q.options)||q.options.length!==4)return false;
+    if(new Set(q.options.map(String)).size!==q.options.length)return false;
+    if(q.answer!=null&&!q.options.map(String).includes(String(q.answer)))return false;
+    if(q.section==="chronology"&&q.item&&!q.options.map(Number).includes(Number(q.item.year)))return false;
+    return true;
+  }
+  if(q.type==="between")return Array.isArray(q.options)&&q.options.length===4&&new Set(q.options.map(x=>x.year)).size===4&&q.correctChoice&&q.options.some(x=>Number(x.year)===Number(q.correctChoice.year));
+  if(q.type==="sort")return Array.isArray(q.shown)&&q.shown.length>=2&&new Set(q.shown).size===q.shown.length;
+  return false;
+}
+function generate(){
+  questions=[];const used=new Set();
+  for(let i=0;i<SET_SIZE;i++){
+    let q=null;
+    for(let t=0;t<500;t++){
+      const candidate=section==="culture"?makeCultureQuestion():makeChronoQuestion();
+      if(validQuestion(candidate)&&!used.has(sig(candidate))){q=candidate;break}
+    }
+    if(!q)return false;
+    used.add(sig(q));questions.push(q);
+  }
+  return true;
+}function startQuiz(){
+ section=document.querySelector('input[name="section"]:checked').value;difficulty=document.querySelector('input[name="difficulty"]:checked').value;
+ if(section==="culture"){
+  cultureMode=document.querySelector('input[name="cultureMode"]:checked').value;
+  selectedCultures=culturePool();
+  if(selectedCultures.length<2){alert("文化史では2つ以上の文化を選択してください。");return}
+  if(["c1","c2","r1","r2","b1","b2"].includes(cultureMode)&&selectedCultures.length<4){alert("このモードは4択で出題するため、4つ以上の文化を選択してください。");return}
+  if(cultureMode==="s1"&&selectedCultures.length<4){alert("「文化の特色の並び替え」には、4つ以上の文化を選択してください。");return}
+  if((cultureMode==="s2")&&!selectedCultures.some(c=>c.items.length>=4)){alert("「文化のものの並び替え」には、文化のものが4つ以上ある文化を1つ以上選択してください。");return}
+  if((cultureMode==="b1"||cultureMode==="b2")&&!selectedCultures.some(c=>CULTURE_SUBRANGES[c.name])){alert("「2つの出来事の間」モードでは、年代範囲が設定された文化を1つ以上選択してください。");return}
+}
+ else{
+  chronoMode=document.querySelector('input[name="chronoMode"]:checked').value;
+  selectedChronoEras=[...document.querySelectorAll(".chrono-era:checked")].map(e=>e.value);
+  if(!selectedChronoEras.length){alert("年代史では時代を1つ以上選択してください。");return}
+  const distinctYears=new Set(chronoPool().map(i=>i.year)).size;
+  const need=chronoMode==="sort6"?6:chronoMode==="sort4"?4:chronoMode==="between"?3:2;
+  if(distinctYears<need){alert(`選択した範囲では、必要な異なる年号数（${need}個）が足りません。時代を追加してください。`);return}
+ }
+ if(!generate()){alert("問題を作成できませんでした。選択範囲を広げてください。");return}
+ current=0;score=0;$("settings").classList.add("hidden");$("quiz").classList.remove("hidden");renderQuestion()
+}
+function renderQuestion(){
+ questionStartTime=Date.now();
+ let q=questions[current],h="";$("progress").textContent=`第${current+1}問 / ${SET_SIZE}　正解 ${score} 問`;if(q.stem)h+=`<div class="stem">${esc(q.stem)}</div>`;h+=`<p>${esc(q.prompt)}</p>`;
+ if(q.type==="choice")q.options.forEach((o,i)=>h+=`<button type="button" data-act="choice" data-idx="${i}">${i+1}．${esc(o)}</button>`);
+ else if(q.type==="sort"){if(q.entries)q.entries.forEach(e=>h+=`<p><b>${e.label}．</b>${esc(e.text)}</p>`);else q.displayOrder.forEach((e,i)=>h+=`<p><b>${q.labels[i]}．</b>${esc(e.text)}</p>`);q.shown.forEach((o,i)=>h+=`<button type="button" data-act="sort" data-idx="${i}">${i+1}．${esc(o)}</button>`)}
+ else{h+=`<p>【前】西暦${q.low.year}年：${esc(q.low.text)}</p><p>【後】西暦${q.high.year}年：${esc(q.high.text)}</p>`;q.options.forEach((o,i)=>h+=`<button type="button" data-act="between" data-idx="${i}">${esc(o.text)}</button>`)}
+ $("question").innerHTML=h;$("feedback").innerHTML=""
+}
+$("question").addEventListener("click",function(e){
+ const b=e.target.closest("button[data-act]");if(!b)return;
+ const idx=+b.dataset.idx,q=questions[current];
+ if(b.dataset.act==="choice")answerChoice(q.options[idx]);
+ else if(b.dataset.act==="sort")answerSort(q.shown[idx]);
+ else if(b.dataset.act==="between")answerBetween(q.options[idx].year);
+});
+function goro(i){return i.g?`ごろ合わせ：「${esc(i.g)}」`:"（ごろ合わせなし）"}
+function finish(correct,detail){$("question").querySelectorAll("button").forEach(b=>b.disabled=true);$("feedback").innerHTML=`<div class="answer ${correct?"good":"bad"}"><b>${correct?"正解！":"不正解"}</b><br>${detail}</div><button onclick="nextQuestion()">${current===SET_SIZE-1?"結果を見る":"次の問題へ"}</button>`}
+function answerChoice(chosen){let q=questions[current],correct=String(chosen)===String(q.section==="culture"?q.answer:q.item.year);if(correct)score++;let d="",correctText,userText=String(chosen);if(q.section==="culture"){
+    correctText=q.answer;
+    if(q.betweenPair)d+=`<b>2つの出来事：</b>${esc(q.betweenPair.low.name)}（${esc(q.betweenPair.low.yearText)}）→ ${esc(q.betweenPair.high.name)}（${esc(q.betweenPair.high.yearText)}）<br><br>`;
+    d+=`<b>正解：</b>${esc(q.answer)}<br><br><b>文化：</b>${esc(q.culture.name)}<br><b>時代：</b>${esc(q.culture.era)}<br><br><b>特色</b><br>${esc(q.culture.trait)}<br><br><b>代表的な文化のもの</b><br>${q.culture.items.map(itemDisplay).map(esc).join("、")}`;
+  }else{correctText=q.item.year+"年";userText=chosen+"年";d+=`<b>正解：</b>${q.item.year}年<br>${esc(q.item.text)}<br>${goro(q.item)}<br>年表PDF ${q.item.p} ページ（${esc(q.item.side)}）`}recordAnswer(q,correct,userText,correctText);finish(correct,d)}
+function answerSort(chosen){let q=questions[current],correct=chosen===q.answer;if(correct)score++;let d=`<b>正解：</b>${esc(q.answer)}<br>`;if(q.section==="chronology")q.displayOrder.forEach((it,i)=>d+=`${q.labels[i]}．${esc(it.text)}<br>${goro(it)}<br>年表PDF ${it.p} ページ<br>`);else if(q.cultures)q.entries.forEach((e,i)=>d+=`<br>${e.label}．${esc(q.cultures[i].era)}・${esc(q.cultures[i].name)}<br>${esc(e.text)}<br>`);else d+=`<b>文化：</b>${esc(q.culture.name)}（${esc(q.culture.era)}）<br>${esc(q.culture.trait)}`;recordAnswer(q,correct,chosen,q.answer);finish(correct,d)}
+function answerBetween(y){let q=questions[current],correct=Number(y)===Number(q.correctChoice.year);if(correct)score++;let chosenOpt=q.options.find(o=>Number(o.year)===Number(y))||q.correctChoice;let d=`<b>正解：</b>${esc(q.correctChoice.text)}（${q.correctChoice.year}年）<br>${q.low.year}年 と ${q.high.year}年 の間に起きました。<br>${goro(q.correctChoice)}<br>年表PDF ${q.correctChoice.p} ページ（${esc(q.correctChoice.side)}）`;recordAnswer(q,correct,`${chosenOpt.text}（${chosenOpt.year}年）`,`${q.correctChoice.text}（${q.correctChoice.year}年）`);finish(correct,d)}
+function nextQuestion(){current++;if(current>=SET_SIZE){$("question").innerHTML=`<h2>終了！</h2><p><b>${SET_SIZE}問中 ${score}問正解</b></p>`;$("feedback").innerHTML='<button onclick="backToSettings()">設定に戻る</button>';return}renderQuestion()}
+function backToSettings(){$("settings").classList.remove("hidden");$("quiz").classList.add("hidden");$("question").innerHTML="";$("feedback").innerHTML=""}
+
+function openStats(){renderStats();$("settings").classList.add("hidden");$("stats").classList.remove("hidden")}
+function closeStats(){$("stats").classList.add("hidden");$("settings").classList.remove("hidden")}
+function fmtTime(t){return t==null?"—":t+"秒"}
+function renderStats(){
+ const total=history.length,correct=history.filter(h=>h.isCorrect).length;
+ const avgTime=total?(history.reduce((s,h)=>s+(h.timeSeconds||0),0)/total).toFixed(1):"—";
+ const bySection={};
+ history.forEach(h=>{const key=h.section==="culture"?"文化史":"年代史";bySection[key]=bySection[key]||{total:0,correct:0,time:0};bySection[key].total++;bySection[key].time+=h.timeSeconds||0;if(h.isCorrect)bySection[key].correct++});
+ let sum=`<p><b>総回答数：</b>${total}問　<b>正解数：</b>${correct}問　<b>正答率：</b>${total?(correct/total*100).toFixed(1):0}%　<b>平均解答時間：</b>${avgTime==="—"?"—":avgTime+"秒"}</p>`;
+ if(total){
+  sum+=`<table><tr><th>分野</th><th>回答数</th><th>正解数</th><th>正答率</th><th>平均時間</th></tr>`;
+  for(const k in bySection){const b=bySection[k];sum+=`<tr><td>${esc(k)}</td><td>${b.total}</td><td>${b.correct}</td><td>${(b.correct/b.total*100).toFixed(1)}%</td><td>${(b.time/b.total).toFixed(1)}秒</td></tr>`}
+  sum+="</table>";
+ }
+ $("statsSummary").innerHTML=sum;
+ if(!total){$("statsList").innerHTML="<p>まだ記録がありません。クイズに挑戦すると、ここに履歴が表示されます。</p>";return}
+ const rows=[...history].reverse().map(h=>`<tr><td>${esc(h.date)}</td><td>${h.section==="culture"?"文化史":"年代史"}</td><td>${esc(h.question)}</td><td>${esc(h.userAnswer)}</td><td>${esc(h.correctAnswer)}</td><td class="${h.isCorrect?"ok":"ng"}">${h.isCorrect?"○ 正解":"✕ 不正解"}</td><td>${fmtTime(h.timeSeconds)}</td></tr>`).join("");
+ $("statsList").innerHTML=`<table><tr><th>日時</th><th>分野</th><th>問題</th><th>回答</th><th>正解</th><th>結果</th><th>時間</th></tr>${rows}</table>`;
+}
+function exportHistory(){
+ if(!history.length){alert("書き出す記録がありません。");return}
+ const blob=new Blob([JSON.stringify(history,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ const ts=nowStamp();
+ a.href=url;a.download=`nihonshi_quiz_history_${ts.y}${pad2(ts.m)}${pad2(ts.day)}.json`;
+ document.body.appendChild(a);a.click();document.body.removeChild(a);
+ URL.revokeObjectURL(url);
+}
+function importHistory(e){
+ const file=e.target.files[0];if(!file)return;
+ const reader=new FileReader();
+ reader.onload=function(ev){
+  try{
+   const data=JSON.parse(ev.target.result);
+   if(!Array.isArray(data))throw new Error("形式が不正です");
+   const key=r=>`${r.date}|${r.question}|${r.userAnswer}|${r.timeSeconds}`;
+   const seen=new Set(history.map(key));
+   let added=0;
+   data.forEach(r=>{if(r&&typeof r==="object"&&typeof r.date==="string"&&!seen.has(key(r))){history.push(r);seen.add(key(r));added++}});
+   history.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+   saveHistory();renderStats();
+   alert(`${added}件の記録を読み込みました。（合計 ${history.length}件）`);
+  }catch(err){alert("JSONファイルの読み込みに失敗しました。ファイル形式を確認してください。")}
+  e.target.value="";
+ };
+ reader.readAsText(file);
+}
+function clearHistory(){
+ if(!history.length){alert("記録はまだありません。");return}
+ if(!confirm("これまでの学習履歴をすべて削除します。よろしいですか？（この操作は元に戻せません）"))return;
+ history=[];saveHistory();renderStats();
+}
+
+updateSection();
+</script>
+</body>
+</html>
