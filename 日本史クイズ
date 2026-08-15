@@ -71,7 +71,7 @@ fieldset{margin:10px 0;padding:10px;border:1px solid #bbb;border-radius:8px}.mod
 <h3>回答履歴（新しい順）</h3>
 <div id="statsList"></div>
 </div>
-
+ 
 <script>
 const SET_SIZE=10;
 const DATA={"cultures":[{"era":"旧石器時代","name":"旧石器時代の文化","trait":"狩猟や採集を生活の中心とし、打製石器を用いて大型動物などを追った生活様式。","items":[["打製石器","生活用具"],["岩宿遺跡","遺跡"]]},{"era":"縄文時代","name":"縄文文化","trait":"狩猟・採集を中心とし、縄文土器や磨製石器を用い、竪穴住居・貝塚・土偶などが見られる文化。","items":[["縄文土器","土器"],["磨製石器","石器"],["竪穴住居","住居"],["貝塚","遺跡"],["土偶","祈り・信仰"],["三内丸山遺跡","遺跡"],["抜歯","風習"],["屈葬","埋葬"]]},{"era":"弥生時代","name":"弥生文化","trait":"稲作を中心に農業が発展し、弥生土器・石包丁・高床倉庫・青銅器・鉄器などが用いられた文化。","items":[["弥生土器","土器"],["石包丁","農具"],["高床倉庫","建物"],["青銅器","祭事"],["鉄器","工具・武器"],["吉野ヶ里遺跡","遺跡"]]},{"era":"古墳時代","name":"古墳文化","trait":"大和政権の成立・発展を背景に、権力者の墓として古墳が造られ、埴輪などが置かれた文化。渡来人から須恵器なども伝わった。","items":[["大仙古墳","古墳"],["前方後円墳","古墳の形"],["埴輪","副葬・祭祀"],["須恵器","土器"],["渡来人","文化の伝来"]]},{"era":"飛鳥時代","name":"飛鳥文化","trait":"仏教の影響が濃く、日本最初の仏教文化とされる。有力者による寺院や仏像の造立が進んだ。","items":[["法隆寺","寺院"],["法隆寺釈迦三尊像","仏像"],["広隆寺弥勒菩薩像","仏像"]]},{"era":"奈良時代","name":"天平文化","trait":"遣唐使を通じた中国文化の影響を強く受けた国際色豊かな仏教文化。東大寺・大仏・正倉院などが代表的。","items":[["東大寺","寺院"],["東大寺大仏","仏像・仏教"],["正倉院","建物・宝物"],["校倉造","建築様式"],["唐招提寺","寺院"],["古事記","歴史書"],["日本書紀","歴史書"],["風土記","地誌"],["万葉集","和歌集"]]},{"era":"平安時代","name":"国風文化","trait":"唐風文化を基にしながら日本の風土や生活に合った文化。貴族を担い手とし、かな文字による仮名文学や寝殿造が発達した。","items":[["源氏物語","物語・紫式部"],["枕草子","随筆・清少納言"],["古今和歌集","和歌集・紀貫之"],["土佐日記","日記・紀貫之"],["寝殿造","建築様式"],["平等院鳳凰堂","寺院建築"]]},{"era":"鎌倉時代","name":"鎌倉文化","trait":"武士にも文化の担い手が広がり、力強く素朴な文化となった。公家文化の継承、武家文化、禅宗の影響が特徴。","items":[["平家物語","軍記物語"],["新古今和歌集","和歌集"],["徒然草","随筆・吉田兼好"],["方丈記","随筆・鴨長明"],["浄土宗","仏教・法然"],["浄土真宗","仏教・親鸞"],["時宗","仏教・一遍"],["日蓮宗","仏教・日蓮"],["臨済宗","仏教・栄西"],["曹洞宗","仏教・道元"],["金剛力士像","彫刻・運慶・快慶"]]},{"era":"室町時代","name":"北山文化","trait":"足利義満の時代に、公家文化と禅宗の影響を受けた武家文化が融合した華やかな文化。","items":[["鹿苑寺金閣","建築"],["能","芸能・観阿弥・世阿弥"],["狂言","芸能"]]},{"era":"室町時代","name":"東山文化","trait":"足利義政の時代の簡素な文化で、わび・さびを大切にし、書院造・枯山水・水墨画などが発達した。","items":[["慈照寺銀閣","建築"],["書院造","建築様式"],["水墨画","絵画・雪舟"],["御伽草子","文学"],["連歌","文学"],["茶の湯","文化・行為"]]},{"era":"安土桃山時代","name":"桃山文化","trait":"大名や力をつけた商人を中心とした豪華で雄大な文化。城郭・濃絵・茶の湯・かぶき踊りなどが発達し、南蛮文化も見られた。","items":[["安土城","城郭"],["姫路城","城郭"],["大阪城","城郭"],["唐獅子図屏風","絵画・狩野永徳"],["茶の湯","文化・千利休"],["かぶき踊り","芸能・出雲阿国"],["浄瑠璃","芸能"],["濃絵","絵画"],["南蛮文化","文化交流"]]},{"era":"江戸時代","name":"元禄文化","trait":"上方を中心に、武士や経済力をつけた新興町人を担い手として栄えた文化。浮世草子・俳諧・人形浄瑠璃・歌舞伎などが盛んになった。","items":[["浮世草子","文学・井原西鶴"],["奥の細道","俳諧・松尾芭蕉"],["人形浄瑠璃","芸能・近松門左衛門"],["歌舞伎","芸能"],["風神雷神図屏風","絵画・俵屋宗達"],["燕子花図屏風","絵画・尾形光琳"],["紅白梅図屏風","絵画・尾形光琳"],["見返り美人図","浮世絵・菱川師宣"]]},{"era":"江戸時代","name":"化政文化","trait":"江戸を中心に庶民まで担い手が広がり、風刺・皮肉が好まれた文化。小説・俳諧・浮世絵などが盛んになった。","items":[["東海道中膝栗毛","小説・十返舎一九"],["南総里見八犬伝","小説・滝沢馬琴"],["俳諧","文学・与謝蕪村・小林一茶"],["錦絵","浮世絵"],["ポッピンを吹く女","美人画・喜多川歌麿"],["富嶽三十六景","浮世絵・葛飾北斎"],["東海道五十三次","浮世絵・歌川広重"],["解体新書","蘭学・杉田玄白"],["古事記伝","国学・本居宣長"],["寺子屋","教育"]]},{"era":"明治時代","name":"明治文化","trait":"開国の影響で西洋文化を取り入れた文明開化の文化。洋風の生活、レンガ造り、ガス灯、洋服、牛肉、太陽暦、新聞・雑誌などが広がった。","items":[["文明開化","文化の特色"],["浮雲","小説・二葉亭四迷"],["みだれ髪","短歌・与謝野晶子"],["たけくらべ","小説・樋口一葉"],["舞姫","小説・森鴎外"],["坊ちゃん","小説・夏目漱石"],["吾輩は猫である","小説・夏目漱石"],["無我","日本画・横山大観"],["湖畔","洋画・黒田清輝"],["読書","洋画・黒田清輝"],["荒城の月","音楽・滝廉太郎"],["慶應義塾","教育・福沢諭吉"],["東京専門学校","教育・大隈重信"],["女子英学塾","教育・津田梅子"]]}],"events":[["大化の改新","645"],["平安京遷都","794"],["鎌倉幕府成立","1185/1192"],["承久の乱","1221"],["元寇","1274・1281"],["室町幕府成立","1336"],["応仁の乱","1467"],["鉄砲伝来","1543"],["本能寺の変","1582"],["関ヶ原の戦い","1600"],["江戸幕府成立","1603"],["享保の改革","1716"],["寛政の改革","1787"],["天保の改革","1841"],["大政奉還","1867"],["明治維新","1868"]]};
@@ -98,7 +98,7 @@ const CULTURE_SUBRANGES={
 };
 // 並び順は文化の主な成立・発展時期を基準にする。同じ「室町時代」でも北山→東山の順を保持する。
 const CULTURE_ORDER={"旧石器時代の文化":1,"縄文文化":2,"弥生文化":3,"古墳文化":4,"飛鳥文化":5,"天平文化":6,"国風文化":7,"鎌倉文化":8,"北山文化":9,"東山文化":10,"桃山文化":11,"元禄文化":12,"化政文化":13,"明治文化":14};
-
+ 
 let section="culture",difficulty="easy",cultureMode="c1",chronoMode="choice";
 let selectedCultures=[],selectedChronoEras=[],questions=[],current=0,score=0;
 let questionStartTime=0;
@@ -169,7 +169,7 @@ function itemOptions(name,c,p){
   if(o.length<3)return[];
   return shuffle([itemDisplay(good),...o.slice(0,3).map(itemDisplay)]);
 }
-
+ 
 const CULTURE_REP_YEAR={
   "旧石器時代の文化":-20000,"縄文文化":-5000,"弥生文化":100,"古墳文化":400,
   "飛鳥文化":650,"天平文化":750,"国風文化":1000,"鎌倉文化":1250,
@@ -243,15 +243,20 @@ function makeCultureQuestion(){
     const wrong=shuffle(all.filter(x=>x!==answer)).slice(0,5);
     return{type:"sort",section:"culture",prompt:"次の文化を、主に栄えた時期の古い順に並べ替えなさい。",cultures:b,entries:b.map((x,i)=>({label:labs[i],text:x.trait})),answer,shown:shuffle([answer,...wrong])};
   }
-  const itemCultures=selectedCultures.filter(x=>uniqueItems(x).length>=4);
-  if(!itemCultures.length)return null;
-  c=itemCultures[Math.floor(Math.random()*itemCultures.length)];
-  const source=uniqueItems(c),chosen=shuffle(source).slice(0,4),labs=["ア","イ","ウ","エ"];
-  const sortAnswer=source.filter(x=>chosen.some(e=>e[0]===x[0])).map(x=>labs[chosen.findIndex(e=>e[0]===x[0])]).join("→");
+  // s2：文化のものの並び替え → 異なる文化から1つずつものを選び、時代の古い順に並び替える
+  const itemCultures=selectedCultures.filter(x=>uniqueItems(x).length>=1);
+  if(itemCultures.length<4)return null;
+  const chosenCultures=shuffle(itemCultures).slice(0,4),labs=["ア","イ","ウ","エ"];
+  const chosenPairs=chosenCultures.map((cc,i)=>{
+    const pool=uniqueItems(cc);
+    const item=pool[Math.floor(Math.random()*pool.length)];
+    return{culture:cc,item,label:labs[i]};
+  });
+  const sortAnswer=[...chosenPairs].sort((a,b)=>(CULTURE_ORDER[a.culture.name]||99)-(CULTURE_ORDER[b.culture.name]||99)).map(x=>x.label).join("→");
   const all=perms(4).map(x=>x.split(",").map(i=>labs[+i]).join("→")),wrong=shuffle(all.filter(x=>x!==sortAnswer)).slice(0,5);
-  return{type:"sort",section:"culture",prompt:`${c.name}に関係する文化のものを、資料に示された順に並べ替えなさい。`,culture:c,entries:chosen.map((x,i)=>({label:labs[i],text:x[0]})),answer:sortAnswer,shown:shuffle([sortAnswer,...wrong])};
+  return{type:"sort",section:"culture",prompt:"次の文化のものを、時代の古い順に並び替えなさい。",cultures:chosenPairs.map(x=>x.culture),entries:chosenPairs.map(x=>({label:x.label,text:itemDisplay(x.item)})),answer:sortAnswer,shown:shuffle([sortAnswer,...wrong])};
 }
-
+ 
 function chronoEra(i){return({1:"ancient",2:"medieval",3:"earlymodern",4:"modern1",5:"modern2"})[i.p]}
 function chronoPool(){return pdfDatabase.filter(i=>selectedChronoEras.includes(chronoEra(i)))}
 function chronoChoice(p){
@@ -340,7 +345,7 @@ function generate(){
   if(selectedCultures.length<2){alert("文化史では2つ以上の文化を選択してください。");return}
   if(["c1","c2","r1","r2","b1","b2"].includes(cultureMode)&&selectedCultures.length<4){alert("このモードは4択で出題するため、4つ以上の文化を選択してください。");return}
   if(cultureMode==="s1"&&selectedCultures.length<4){alert("「文化の特色の並び替え」には、4つ以上の文化を選択してください。");return}
-  if((cultureMode==="s2")&&!selectedCultures.some(c=>c.items.length>=4)){alert("「文化のものの並び替え」には、文化のものが4つ以上ある文化を1つ以上選択してください。");return}
+  if(cultureMode==="s2"&&selectedCultures.filter(c=>uniqueItems(c).length>=1).length<4){alert("「文化のものの並び替え」には、文化のものを1つ以上持つ文化を4つ以上選択してください。");return}
   if((cultureMode==="b1"||cultureMode==="b2")&&!selectedCultures.some(c=>CULTURE_SUBRANGES[c.name])){alert("「2つの出来事の間」モードでは、年代範囲が設定された文化を1つ以上選択してください。");return}
 }
  else{
@@ -380,7 +385,7 @@ function answerSort(chosen){let q=questions[current],correct=chosen===q.answer;i
 function answerBetween(y){let q=questions[current],correct=Number(y)===Number(q.correctChoice.year);if(correct)score++;let chosenOpt=q.options.find(o=>Number(o.year)===Number(y))||q.correctChoice;let d=`<b>正解：</b>${esc(q.correctChoice.text)}（${q.correctChoice.year}年）<br>${q.low.year}年 と ${q.high.year}年 の間に起きました。<br>${goro(q.correctChoice)}<br>年表PDF ${q.correctChoice.p} ページ（${esc(q.correctChoice.side)}）`;recordAnswer(q,correct,`${chosenOpt.text}（${chosenOpt.year}年）`,`${q.correctChoice.text}（${q.correctChoice.year}年）`);finish(correct,d)}
 function nextQuestion(){current++;if(current>=SET_SIZE){$("question").innerHTML=`<h2>終了！</h2><p><b>${SET_SIZE}問中 ${score}問正解</b></p>`;$("feedback").innerHTML='<button onclick="backToSettings()">設定に戻る</button>';return}renderQuestion()}
 function backToSettings(){$("settings").classList.remove("hidden");$("quiz").classList.add("hidden");$("question").innerHTML="";$("feedback").innerHTML=""}
-
+ 
 function openStats(){renderStats();$("settings").classList.add("hidden");$("stats").classList.remove("hidden")}
 function closeStats(){$("stats").classList.add("hidden");$("settings").classList.remove("hidden")}
 function fmtTime(t){return t==null?"—":t+"秒"}
@@ -434,8 +439,9 @@ function clearHistory(){
  if(!confirm("これまでの学習履歴をすべて削除します。よろしいですか？（この操作は元に戻せません）"))return;
  history=[];saveHistory();renderStats();
 }
-
+ 
 updateSection();
 </script>
 </body>
 </html>
+ 
