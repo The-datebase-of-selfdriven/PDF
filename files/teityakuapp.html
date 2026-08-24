@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>暗記ドリル</title>
+<style>
+/* ============================================================
+   RESET / BASE — アプリらしい挙動にするための土台
+   ============================================================ */
+*, *::before, *::after{ box-sizing:border-box; margin:0; padding:0; }
+html{ height:100%; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+body{
+  height:100%;
+  overflow:hidden;               /* 本体はスクロールさせない。中の要素だけスクロール */
+  overscroll-behavior:none;      /* iOSのバウンス/引っ張り更新を抑止 */
+  position:fixed; inset:0;
+  background:#fff;
+  color:#141414;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","YuGothic","Meiryo",Roboto,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  touch-action:manipulation;             /* ダブルタップズームを無効化 */
+  -webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;
+  user-select:none;
+}
+img{ max-width:100%; display:block; }
+button, input, select{ font:inherit; color:inherit; }
+button{ background:none; border:none; touch-action:manipulation; cursor:pointer; }
+::-webkit-scrollbar{ width:0; height:0; }
+
+:root{
+  --bg:#ffffff;
+  --fg:#141414;
+  --g-50:#fafafa;
+  --g-100:#f1f1f1;
+  --g-200:#e4e4e4;
+  --g-300:#cfcfcf;
+  --g-400:#a3a3a3;
+  --g-500:#7a7a7a;
+  --g-600:#525252;
+  --g-800:#222222;
+  --ink:#000000;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px);
+  --safe-r:env(safe-area-inset-right,0px);
+}
+
+/* 実ポインタ(マウス)がある端末だけ hover を効かせる。タッチ機のホバー残り対策 */
+@media (hover:hover) and (pointer:fine){
+  .hoverable:hover{ background:var(--g-100); }
+  .btn-primary:hover{ background:var(--g-800); }
+}
+
+/* ============================================================
+   レイアウト骨格
+   ============================================================ */
+#app{ height:100%; display:flex; flex-direction:column; }
+
+#topbar{
+  flex:0 0 auto;
+  display:flex; align-items:center;
+  height:calc(52px + var(--safe-t));
+  padding-top:var(--safe-t);
+  padding-left:max(4px,var(--safe-l)); padding-right:max(4px,var(--safe-r));
+  border-bottom:2px solid var(--ink);
+  background:#fff;
+  position:relative; z-index:10;
+}
+#topbar .tb-side{ width:52px; height:52px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+#topbar .tb-title{ flex:1 1 auto; text-align:center; font-size:16px; font-weight:800; letter-spacing:.02em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 4px; }
+#topbar button.tb-btn{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:22px; line-height:1; }
+#topbar button.tb-btn:active{ background:var(--g-100); }
+
+#screens{ flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-y:contain; padding-bottom:calc(64px + var(--safe-b)); }
+#screens.no-tab{ padding-bottom:16px; }
+
+#tabbar{
+  flex:0 0 auto;
+  display:flex;
+  border-top:2px solid var(--ink);
+  padding-bottom:var(--safe-b);
+  background:#fff;
+  position:relative; z-index:10;
+}
+#tabbar button{
+  flex:1 1 0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:2px; height:60px; font-size:10.5px; font-weight:700; color:var(--g-500);
+  border-right:1px solid var(--g-200);
+}
+#tabbar button:last-child{ border-right:none; }
+#tabbar button .ic{ font-size:19px; line-height:1; font-weight:900; }
+#tabbar button.active{ color:var(--ink); }
+#tabbar button.active .ic{ transform:scale(1.05); }
+#tabbar button:active{ background:var(--g-100); }
+
+/* ============================================================
+   汎用パーツ
+   ============================================================ */
+.pad{ padding:16px; }
+.section-label{ font-size:12px; font-weight:800; color:var(--g-500); letter-spacing:.08em; margin:20px 16px 8px; text-transform:uppercase; }
+.section-label:first-child{ margin-top:14px; }
+
+.card{ border:2px solid var(--ink); background:#fff; }
+.card + .card{ border-top:none; }
+.list{ margin:0 16px; }
+.list .card:first-child{ border-top:2px solid var(--ink); }
+
+.hero{
+  margin:14px 16px 0; border:2px solid var(--ink); padding:18px 16px; background:#fff;
+}
+.hero .big{ font-size:34px; font-weight:900; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+.hero .unit{ font-size:14px; font-weight:700; margin-left:2px; }
+.hero .sub{ font-size:12.5px; color:var(--g-500); margin-top:4px; font-weight:600; }
+.hero .row{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+
+.btn-primary{
+  display:block; width:100%; text-align:center;
+  background:var(--ink); color:#fff; font-weight:800; font-size:16px;
+  padding:15px 12px; border:2px solid var(--ink);
+  letter-spacing:.02em;
+}
+.btn-primary:active{ background:var(--g-800); }
+.btn-primary[disabled]{ background:var(--g-300); border-color:var(--g-300); color:#fff; }
+
+.btn-outline{
+  display:block; width:100%; text-align:center;
+  background:#fff; color:var(--ink); font-weight:800; font-size:15px;
+  padding:13px 12px; border:2px solid var(--ink);
+}
+.btn-outline:active{ background:var(--g-100); }
+
+.btn-ghost{
+  display:inline-flex; align-items:center; gap:6px;
+  font-weight:700; font-size:13px; color:var(--g-600);
+  padding:8px 10px; border:1.5px solid var(--g-300);
+}
+.btn-ghost:active{ background:var(--g-100); }
+
+.row-item{
+  display:flex; align-items:center; gap:10px; padding:14px 14px; border-bottom:1px solid var(--g-200);
+}
+.row-item:last-child{ border-bottom:none; }
+.row-item .ri-main{ flex:1 1 auto; min-width:0; }
+.row-item .ri-title{ font-size:15px; font-weight:800; }
+.row-item .ri-sub{ font-size:12px; color:var(--g-500); margin-top:2px; font-weight:600; }
+.row-item .ri-chev{ font-size:16px; color:var(--g-400); font-weight:900; }
+.row-item .ri-num{ font-size:13px; font-weight:800; font-variant-numeric:tabular-nums; padding:3px 8px; border:1.5px solid var(--ink); }
+.row-item .ri-num.zero{ border-color:var(--g-300); color:var(--g-400); }
+
+.tag{ display:inline-block; font-size:11px; font-weight:700; padding:2px 7px; border:1.3px solid var(--g-400); color:var(--g-600); margin:0 4px 4px 0; }
+.tag.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+.chipwrap{ display:flex; flex-wrap:wrap; gap:0; margin:0 16px; }
+.chip{ font-size:13px; font-weight:700; padding:9px 13px; border:1.5px solid var(--g-400); color:var(--g-600); margin:0 6px 6px 0; }
+.chip.on{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+.empty{ margin:40px 20px; text-align:center; color:var(--g-500); }
+.empty .eic{ font-size:34px; font-weight:900; margin-bottom:10px; }
+.empty p{ font-size:13.5px; font-weight:600; line-height:1.7; }
+
+.field{ margin:14px 16px; }
+.field label{ display:block; font-size:12.5px; font-weight:800; color:var(--g-600); margin-bottom:6px; }
+.stepper{ display:flex; border:2px solid var(--ink); }
+.stepper button{ width:48px; height:46px; font-size:20px; font-weight:900; flex:0 0 auto; }
+.stepper button:active{ background:var(--g-100); }
+.stepper .sval{ flex:1 1 auto; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; font-variant-numeric:tabular-nums; border-left:2px solid var(--ink); border-right:2px solid var(--ink); }
+
+.seg{ display:flex; border:2px solid var(--ink); }
+.seg button{ flex:1 1 0; padding:11px 6px; font-size:13px; font-weight:800; text-align:center; }
+.seg button + button{ border-left:2px solid var(--ink); }
+.seg button.on{ background:var(--ink); color:#fff; }
+
+.toast{
+  position:fixed; left:50%; bottom:calc(76px + var(--safe-b)); transform:translateX(-50%);
+  background:var(--ink); color:#fff; font-size:13px; font-weight:700;
+  padding:10px 16px; z-index:200; max-width:88%; text-align:center;
+  border:1px solid #000;
+  animation:toastin .18s ease-out;
+}
+@keyframes toastin{ from{ opacity:0; transform:translate(-50%,6px);} to{ opacity:1; transform:translate(-50%,0);} }
+
+/* ============================================================
+   ホーム
+   ============================================================ */
+.streakbar{ display:flex; gap:0; margin:14px 16px 0; border:2px solid var(--ink); }
+.streakbar .sb-cell{ flex:1 1 0; padding:12px 8px; text-align:center; }
+.streakbar .sb-cell + .sb-cell{ border-left:2px solid var(--ink); }
+.streakbar .sb-num{ font-size:22px; font-weight:900; font-variant-numeric:tabular-nums; }
+.streakbar .sb-lab{ font-size:10.5px; font-weight:700; color:var(--g-500); margin-top:2px; }
+
+/* ============================================================
+   出題範囲選択
+   ============================================================ */
+.filter-summary{ margin:14px 16px; padding:12px 14px; border:1.5px dashed var(--g-400); font-size:12.5px; font-weight:600; color:var(--g-600); line-height:1.6; }
+
+/* ============================================================
+   クイズ画面
+   ============================================================ */
+#quizscreen{ height:100%; display:flex; flex-direction:column; }
+.qz-progress-track{ height:5px; background:var(--g-200); flex:0 0 auto; }
+.qz-progress-fill{ height:100%; background:var(--ink); transition:width .25s ease; }
+.qz-meta{ display:flex; justify-content:space-between; align-items:center; padding:10px 16px 0; flex:0 0 auto; }
+.qz-meta .qm-tag{ font-size:11.5px; font-weight:800; color:var(--g-500); }
+.qz-meta .qm-count{ font-size:13px; font-weight:900; font-variant-numeric:tabular-nums; }
+.qz-body{ flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+.qz-question{ padding:18px 18px 8px; }
+.qz-question .qtxt{ font-size:20px; font-weight:800; line-height:1.7; white-space:pre-wrap; user-select:text; }
+.qz-question img{ margin-top:14px; border:2px solid var(--ink); }
+.qz-choices{ display:flex; flex-direction:column; margin:18px 0 0; border-top:2px solid var(--ink); }
+.choice-btn{
+  display:flex; align-items:center; width:100%; text-align:left;
+  min-height:58px; padding:14px 16px; font-size:16.5px; font-weight:700; line-height:1.5;
+  background:#fff; color:var(--ink);
+  border:2px solid var(--ink); border-top:none;
+  gap:12px;
+}
+.choice-btn .cb-mark{ flex:0 0 auto; width:26px; height:26px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; }
+.choice-btn .cb-txt{ flex:1 1 auto; }
+.choice-btn:active{ background:var(--g-100); }
+.choice-btn[data-locked="1"]:active{ background:#fff; }
+.choice-btn.sel-correct{ background:var(--ink); color:#fff; }
+.choice-btn.sel-correct .cb-mark{ border-color:#fff; background:#fff; color:var(--ink); }
+.choice-btn.sel-wrong{ background:#fff; color:var(--g-400); text-decoration:line-through; }
+.choice-btn.sel-wrong .cb-mark{ background:var(--g-400); border-color:var(--g-400); color:#fff; }
+.choice-btn.reveal-correct-unselected{ border-color:var(--ink); box-shadow:inset 0 0 0 2px var(--ink); }
+
+/* 選択肢が全て図（雨温図など）のときは2列グリッドで並べる */
+.qz-choices.qz-choices-grid{ display:grid; grid-template-columns:1fr 1fr; border-top:2px solid var(--ink); border-left:2px solid var(--ink); }
+.qz-choices.qz-choices-grid .choice-btn-grid{
+  flex-direction:column; align-items:center; text-align:center;
+  border-top:none; border-left:none; border-right:2px solid var(--ink); border-bottom:2px solid var(--ink);
+  min-height:0; padding:10px 8px 12px; gap:6px;
+}
+.choice-btn-grid .cb-mark{ width:22px; height:22px; font-size:12px; }
+.choice-btn-grid .cb-txt{ width:100%; }
+.choice-btn-grid .rt-block{ margin:2px 0 0; }
+
+.qz-explain{ margin:0; padding:16px 18px; background:var(--g-50); border-top:2px solid var(--ink); font-size:13.5px; line-height:1.75; font-weight:600; color:var(--g-800); }
+.qz-explain .el{ font-weight:900; font-size:11.5px; color:var(--g-500); letter-spacing:.06em; display:block; margin-bottom:5px; }
+.qz-footer{ flex:0 0 auto; padding:12px 16px calc(12px + var(--safe-b)); border-top:2px solid var(--ink); }
+.autoadv-track{ height:3px; background:var(--g-200); margin-top:8px; overflow:hidden; }
+.autoadv-fill{ height:100%; background:var(--ink); width:0%; animation:autoadv .8s linear forwards; }
+@keyframes autoadv{ from{ width:0%; } to{ width:100%; } }
+
+/* 理解度バー（単元・教科の記憶定着度） */
+.mbar-track{ height:5px; background:var(--g-200); margin-top:8px; }
+.mbar-fill{ height:100%; background:var(--ink); }
+.unit-row{ padding:13px 14px; }
+.unit-row.on{ background:var(--g-50); }
+.unit-row .ur-top{ display:flex; align-items:center; gap:9px; }
+.unit-row .ur-mark{ font-size:15px; font-weight:900; flex:0 0 auto; width:16px; }
+.unit-row .ur-title{ flex:1 1 auto; font-size:14.5px; font-weight:800; }
+.unit-row .ur-meta{ font-size:11.5px; color:var(--g-500); font-weight:600; margin-top:2px; margin-left:25px; }
+.unit-row .ur-pct{ font-size:13px; font-weight:900; font-variant-numeric:tabular-nums; }
+
+/* ============================================================
+   リッチコンテンツ（表・グラフなど／questionやchoices, explanation内に
+   埋め込める汎用パーツ。renderRichText() が生成するHTMLに対応）
+   ============================================================ */
+.rt-block{ margin:10px 0; }
+.rt-block:first-child{ margin-top:0; }
+.rt-block:last-child{ margin-bottom:0; }
+.rt-graph svg{ width:100%; height:auto; }
+.rt-caption{ font-size:10.5px; font-weight:700; color:var(--g-500); text-align:center; margin-top:2px; }
+.rt-lg{ display:inline-block; width:12px; margin:0 3px 0 10px; vertical-align:middle; }
+.rt-lg:first-child{ margin-left:0; }
+.rt-lg-line{ border-top:2px solid currentColor; height:0; }
+.rt-lg-bar{ height:9px; background:currentColor; opacity:.28; border:1px solid currentColor; box-sizing:border-box; }
+.rt-table{ width:100%; border-collapse:collapse; font-size:12.5px; font-weight:600; }
+.rt-table th, .rt-table td{ border:1.3px solid currentColor; padding:6px 7px; text-align:center; line-height:1.4; }
+.rt-table th{ background:var(--g-100); font-weight:800; }
+.choice-btn .rt-table th{ background:rgba(0,0,0,.06); }
+.choice-btn.sel-correct .rt-table th{ background:rgba(255,255,255,.18); }
+.rt-pieflex{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:center; }
+.rt-legend{ font-size:11.5px; font-weight:700; line-height:1.9; }
+.rt-lgrow{ display:flex; align-items:center; gap:6px; }
+.rt-lgsw{ width:10px; height:10px; flex:0 0 auto; border:1px solid #0002; }
+.rt-unknown{ font-size:12px; font-weight:600; color:var(--g-500); padding:8px 10px; border:1.3px dashed var(--g-400); }
+
+/* ============================================================
+   結果画面
+   ============================================================ */
+.result-score{ text-align:center; padding:28px 16px 8px; }
+.result-score .rs-frac{ font-size:46px; font-weight:900; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+.result-score .rs-pct{ font-size:15px; font-weight:800; color:var(--g-500); margin-top:4px; }
+.mistake-item{ padding:13px 14px; border-bottom:1px solid var(--g-200); }
+.mistake-item:last-child{ border-bottom:none; }
+.mistake-item .mi-q{ font-size:14px; font-weight:700; line-height:1.6; white-space:pre-wrap; }
+.mistake-item .mi-a{ font-size:12.5px; margin-top:6px; font-weight:700; }
+.mistake-item .mi-a b{ font-weight:900; }
+
+/* ============================================================
+   実績
+   ============================================================ */
+.ach-item{ display:flex; align-items:center; gap:12px; padding:14px; border-bottom:1px solid var(--g-200); }
+.ach-item:last-child{ border-bottom:none; }
+.ach-item .ai-badge{ width:42px; height:42px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:900; flex:0 0 auto; }
+.ach-item.locked .ai-badge{ border-color:var(--g-300); color:var(--g-300); }
+.ach-item.locked .ai-title{ color:var(--g-400); }
+.ach-item .ai-title{ font-size:14.5px; font-weight:800; }
+.ach-item .ai-desc{ font-size:12px; color:var(--g-500); margin-top:2px; font-weight:600; }
+.ach-item .ai-date{ font-size:10.5px; color:var(--g-400); font-weight:700; margin-left:auto; flex:0 0 auto; }
+
+/* ============================================================
+   モーダル
+   ============================================================ */
+#modalLayer{ position:fixed; inset:0; z-index:100; display:none; }
+#modalLayer.open{ display:block; }
+.modal-back{ position:absolute; inset:0; background:rgba(0,0,0,.5); }
+.modal-box{ position:absolute; left:0; right:0; bottom:0; background:#fff; border-top:2px solid var(--ink); max-height:82vh; overflow-y:auto; padding-bottom:calc(18px + var(--safe-b)); }
+.modal-box .mb-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:2px solid var(--ink); }
+.modal-box .mb-head .mbt{ font-size:15.5px; font-weight:900; }
+.modal-box .mb-head button{ font-size:22px; font-weight:900; width:32px; height:32px; }
+
+.hidden-input{ position:absolute; width:1px; height:1px; opacity:0; overflow:hidden; }
+
+/* pointerdownで即時に付与する押下フィードバック（クリック確定を待たない） */
+button.pressed, .choice-btn.pressed{ background:var(--g-100); }
+.choice-btn.sel-correct.pressed, .choice-btn.sel-wrong.pressed{ background:inherit; }
+.btn-primary.pressed{ background:var(--g-800); }
+.tag.on.pressed, .chip.on.pressed{ background:var(--g-800); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div class="tb-side" id="tbLeft"></div>
+    <div class="tb-title" id="tbTitle">暗記ドリル</div>
+    <div class="tb-side" id="tbRight"></div>
+  </div>
+  <div id="screens"></div>
+  <div id="tabbar"></div>
+</div>
+
+<div id="modalLayer">
+  <div class="modal-back" data-action="closeModal"></div>
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<input type="file" id="fileInput" class="hidden-input" accept="application/json,.json" multiple>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   定数
+   ============================================================ */
+var STORAGE_KEY_LIB   = "drill_library_v1";
+var STORAGE_KEY_PROG  = "drill_progress_v1";
+var STORAGE_KEY_STATS = "drill_stats_v1";
+var STORAGE_KEY_SET   = "drill_settings_v1";
+
+/* 間隔反復の日数テーブル（レベル0〜7） */
+var INTERVALS = [0,1,3,7,14,30,60,120];
+
+var ACHIEVEMENTS = [
+  { id:"first",    title:"はじめの一歩", desc:"最初の1問に回答した",         check:function(s){ return s.totalAnswered>=1; } },
+  { id:"streak3",  title:"3日坊主を突破", desc:"3日連続で学習した",           check:function(s){ return s.streak>=3; } },
+  { id:"streak7",  title:"一週間戦士",   desc:"7日連続で学習した",           check:function(s){ return s.streak>=7; } },
+  { id:"streak14", title:"二週間の壁",   desc:"14日連続で学習した",          check:function(s){ return s.streak>=14; } },
+  { id:"streak30", title:"継続マスター", desc:"30日連続で学習した",          check:function(s){ return s.streak>=30; } },
+  { id:"total50",  title:"五十本ノック", desc:"累計50問に回答した",          check:function(s){ return s.totalAnswered>=50; } },
+  { id:"total200", title:"二百本ノック", desc:"累計200問に回答した",         check:function(s){ return s.totalAnswered>=200; } },
+  { id:"total1000",title:"千本ノック",   desc:"累計1000問に回答した",        check:function(s){ return s.totalAnswered>=1000; } },
+  { id:"perfect",  title:"パーフェクト", desc:"1セットで全問正解した",       check:function(s,ctx){ return !!(ctx&&ctx.perfect); } },
+  { id:"days30",   title:"コツコツ型",   desc:"のべ30日学習した",           check:function(s){ return (s.studyDays||[]).length>=30; } }
+];
+
+/* 理解度モデル：3回連続正解で「完全に覚えた（100%）」とみなす。
+   一度合っただけでは暗記完了とは言えないため、連続正解数(streak)に応じて
+   到達できる上限(cap)を段階的に上げる。また、時間が経つほど忘却曲線的に
+   減衰させる（レベルが高いほど記憶の定着が強く、減衰は緩やか）。 */
+var MASTERY_STREAK = 3;
+var HALF_LIFE = [1,2,3,5,8,14,25,45]; // レベル(0〜7)ごとの理解度半減期（日）
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+function $(sel,root){ return (root||document).querySelector(sel); }
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function nl2br(s){ return esc(s).replace(/\n/g,"<br>"); }
+
+/* ============================================================
+   リッチテキスト（question / choices / explanation 共通レンダラ）
+   ------------------------------------------------------------
+   対応記法：
+     **太字**            → <b>
+     __下線__            → <u>
+     [[種類｜項目｜項目...]]  → 表・グラフなどのブロック要素
+       （文字列全体がそのまま "種類｜..." で始まる場合は [[ ]] を省略可。
+        既存の "雨温図｜気温: ...｜降水量: ..." 形式との後方互換のため）
+   対応する種類：雨温図 / 表 / 棒グラフ / 折れ線グラフ / 円グラフ
+   詳細な記法ガイドは同梱の別紙を参照。
+   ============================================================ */
+var RT_BLOCK_TYPES = ["雨温図","表","棒グラフ","折れ線グラフ","円グラフ"];
+
+function renderRichText(raw){
+  if(raw==null || raw==="") return "";
+  var s = String(raw);
+  var trimmed = s.trim();
+  for(var i=0;i<RT_BLOCK_TYPES.length;i++){
+    if(trimmed.indexOf(RT_BLOCK_TYPES[i]+"｜")===0){ s = "[["+trimmed+"]]"; break; }
+  }
+  var out = "", last = 0, m;
+  var re = /\[\[([\s\S]+?)\]\]/g;
+  while((m = re.exec(s))){
+    out += rtInline(s.slice(last, m.index));
+    out += rtBlock(m[1]);
+    last = re.lastIndex;
+  }
+  out += rtInline(s.slice(last));
+  return out;
+}
+
+function rtInline(text){
+  if(!text) return "";
+  var e = esc(text);
+  e = e.replace(/\*\*([\s\S]+?)\*\*/g, "<b>$1</b>");
+  e = e.replace(/__([\s\S]+?)__/g, "<u>$1</u>");
+  e = e.replace(/\n/g, "<br>");
+  return e;
+}
+
+function rtBlock(content){
+  var parts = content.split("｜").map(function(p){ return p.trim(); });
+  var type = parts[0], rest = parts.slice(1);
+  try{
+    switch(type){
+      case "雨温図": return rtClimateGraph(rest);
+      case "表": return rtTable(rest);
+      case "棒グラフ": return rtXYChart(rest, "bar");
+      case "折れ線グラフ": return rtXYChart(rest, "line");
+      case "円グラフ": return rtPieChart(rest);
+      default: return '<div class="rt-block rt-unknown">'+esc(content)+'</div>';
+    }
+  }catch(err){
+    return '<div class="rt-block rt-unknown">'+esc(content)+'</div>';
+  }
+}
+
+/* "気温: 9,10,12" のような1項目を {label, raw[], nums[]|null} に分解 */
+function rtParseField(str){
+  var idx = str.indexOf(":");
+  if(idx<0) idx = str.indexOf("：");
+  var label = idx>=0 ? str.slice(0, idx).trim() : "";
+  var body = idx>=0 ? str.slice(idx+1) : str;
+  var raw = body.split(",").map(function(v){ return v.trim(); }).filter(function(v){ return v!==""; });
+  var nums = raw.map(Number);
+  var allNum = nums.length>0 && nums.every(function(n){ return !isNaN(n); });
+  return { label:label, raw:raw, nums: allNum ? nums : null };
+}
+
+/* 表｜見出し1,見出し2,...｜行1セル1,行1セル2,...｜行2セル1,... */
+function rtTable(rows){
+  rows = rows.filter(function(r){ return r!==""; });
+  if(rows.length===0) return "";
+  var header = rows[0].split(",").map(function(c){ return c.trim(); });
+  var body = rows.slice(1).map(function(r){ return r.split(",").map(function(c){ return c.trim(); }); });
+  var html = '<table class="rt-table"><thead><tr>'
+    + header.map(function(h){ return '<th>'+rtInline(h)+'</th>'; }).join("")
+    + '</tr></thead><tbody>'
+    + body.map(function(r){ return '<tr>'+r.map(function(c){ return '<td>'+rtInline(c)+'</td>'; }).join("")+'</tr>'; }).join("")
+    + '</tbody></table>';
+  return '<div class="rt-block">'+html+'</div>';
+}
+
+/* 雨温図｜気温: n,n,...｜降水量: n,n,...（12ヶ月分を想定、月数は可変） */
+function rtClimateGraph(rest){
+  var temp=null, precip=null;
+  rest.forEach(function(r){
+    var f = rtParseField(r);
+    if(!f.nums) return;
+    if(/気温|気候|temp/i.test(f.label)) temp = f;
+    else if(/降水|precip|雨/i.test(f.label)) precip = f;
+    else if(!temp) temp = f; else if(!precip) precip = f;
+  });
+  if(!temp || !precip) return '<div class="rt-block rt-unknown">'+esc(rest.join(" / "))+'</div>';
+
+  var n = Math.max(temp.nums.length, precip.nums.length);
+  var W=300, H=192, padL=30, padR=30, padT=14, padB=24;
+  var plotW=W-padL-padR, plotH=H-padT-padB;
+  var colW = plotW/n;
+
+  var tMin = Math.min.apply(null, temp.nums), tMax = Math.max.apply(null, temp.nums);
+  var tLow = Math.floor((tMin-4)/5)*5, tHigh = Math.ceil((tMax+4)/5)*5;
+  if(tHigh<=tLow) tHigh = tLow+5;
+
+  var pMax = Math.max.apply(null, precip.nums);
+  var pHigh = Math.ceil((pMax*1.15)/10)*10; if(!pHigh) pHigh = 10;
+
+  function xAt(i){ return padL + colW*i + colW/2; }
+  function yTemp(v){ return padT + plotH*(1-(v-tLow)/(tHigh-tLow)); }
+  function yPrecipTop(v){ return padT + plotH*(1-v/pHigh); }
+  var baseY = padT+plotH;
+
+  var bars = precip.nums.map(function(v,i){
+    var bw = colW*0.56, bx = xAt(i)-bw/2, by = yPrecipTop(v), bh = Math.max(baseY-by,0);
+    return '<rect x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="1"></rect>';
+  }).join("");
+
+  var pts = temp.nums.map(function(v,i){ return xAt(i).toFixed(1)+","+yTemp(v).toFixed(1); }).join(" ");
+  var dots = temp.nums.map(function(v,i){ return '<circle cx="'+xAt(i).toFixed(1)+'" cy="'+yTemp(v).toFixed(1)+'" r="2.6" fill="currentColor"></circle>'; }).join("");
+
+  var axis = '<line x1="'+padL+'" y1="'+padT+'" x2="'+padL+'" y2="'+baseY+'" stroke="currentColor" stroke-width="1.4"></line>'
+    + '<line x1="'+padL+'" y1="'+baseY+'" x2="'+(padL+plotW)+'" y2="'+baseY+'" stroke="currentColor" stroke-width="1.4"></line>'
+    + '<line x1="'+(padL+plotW)+'" y1="'+padT+'" x2="'+(padL+plotW)+'" y2="'+baseY+'" stroke="currentColor" stroke-opacity="0.4" stroke-width="1"></line>';
+
+  var monthLabels="";
+  for(var i=0;i<n;i++){ monthLabels += '<text x="'+xAt(i).toFixed(1)+'" y="'+(baseY+12)+'" font-size="7" text-anchor="middle" fill="currentColor" fill-opacity="0.7">'+(i+1)+'</text>'; }
+
+  var tTicks="", pTicks="", steps=4;
+  for(var s=0;s<=steps;s++){
+    var tv = tLow + (tHigh-tLow)*s/steps, ty = yTemp(tv);
+    tTicks += '<text x="'+(padL-4)+'" y="'+(ty+2.5)+'" font-size="6.5" text-anchor="end" fill="currentColor" fill-opacity="0.7">'+Math.round(tv)+'</text>';
+    var pv = pHigh*s/steps, py = yPrecipTop(pv);
+    pTicks += '<text x="'+(padL+plotW+4)+'" y="'+(py+2.5)+'" font-size="6.5" text-anchor="start" fill="currentColor" fill-opacity="0.7">'+Math.round(pv)+'</text>';
+  }
+
+  var svg = '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'
+    + axis + bars
+    + '<polyline points="'+pts+'" fill="none" stroke="currentColor" stroke-width="2"></polyline>' + dots
+    + monthLabels + tTicks + pTicks
+    + '<text x="'+padL+'" y="9" font-size="7" fill="currentColor" fill-opacity="0.7">℃</text>'
+    + '<text x="'+(padL+plotW)+'" y="9" font-size="7" text-anchor="end" fill="currentColor" fill-opacity="0.7">mm</text>'
+    + '</svg>';
+  var caption = '<div class="rt-caption"><span class="rt-lg rt-lg-line"></span>気温<span class="rt-lg rt-lg-bar"></span>降水量</div>';
+  return '<div class="rt-block rt-graph">'+svg+caption+'</div>';
+}
+
+/* 棒グラフ｜ラベル: A,B,C｜値: n,n,n｜単位: 任意   /   折れ線グラフ｜同形式 */
+function rtXYChart(rest, kind){
+  var labels=null, values=null, unit="";
+  rest.forEach(function(r){
+    var f = rtParseField(r);
+    if(/単位|unit/i.test(f.label)){ unit = f.raw.join(""); return; }
+    if(f.nums && !values) values = f;
+    else if(!f.nums && !labels) labels = f;
+  });
+  if(!values) return '<div class="rt-block rt-unknown">'+esc(rest.join(" / "))+'</div>';
+
+  var nums = values.nums, n = nums.length;
+  var cats = (labels && labels.raw.length===n) ? labels.raw : nums.map(function(_,i){ return String(i+1); });
+
+  var W=300, H=176, padL=32, padR=14, padT=12, padB=26;
+  var plotW=W-padL-padR, plotH=H-padT-padB;
+  var vMax = Math.max.apply(null, nums.concat([0])), vMin = Math.min.apply(null, nums.concat([0]));
+  var top = vMax>0 ? vMax*1.15 : 1;
+  var bottom = vMin<0 ? vMin*1.15 : 0;
+  if(top===bottom) top = bottom+1;
+
+  function xAt(i){ return padL + (plotW/n)*(i+0.5); }
+  function yAt(v){ return padT + plotH*(1-(v-bottom)/(top-bottom)); }
+  var y0 = yAt(0);
+
+  var body;
+  if(kind==="bar"){
+    var bw=(plotW/n)*0.58;
+    body = nums.map(function(v,i){
+      var x=xAt(i)-bw/2, y=Math.min(yAt(v),y0), h=Math.abs(yAt(v)-y0);
+      return '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="currentColor" fill-opacity="0.24" stroke="currentColor" stroke-width="1"></rect>';
+    }).join("");
+  } else {
+    var pts = nums.map(function(v,i){ return xAt(i).toFixed(1)+","+yAt(v).toFixed(1); }).join(" ");
+    var dots = nums.map(function(v,i){ return '<circle cx="'+xAt(i).toFixed(1)+'" cy="'+yAt(v).toFixed(1)+'" r="2.6" fill="currentColor"></circle>'; }).join("");
+    body = '<polyline points="'+pts+'" fill="none" stroke="currentColor" stroke-width="2"></polyline>'+dots;
+  }
+
+  var axis = '<line x1="'+padL+'" y1="'+padT+'" x2="'+padL+'" y2="'+(padT+plotH)+'" stroke="currentColor" stroke-width="1.4"></line>'
+    + '<line x1="'+padL+'" y1="'+y0.toFixed(1)+'" x2="'+(padL+plotW)+'" y2="'+y0.toFixed(1)+'" stroke="currentColor" stroke-width="1.4"></line>';
+  var catLabels = cats.map(function(c,i){ return '<text x="'+xAt(i).toFixed(1)+'" y="'+(padT+plotH+13)+'" font-size="7" text-anchor="middle" fill="currentColor" fill-opacity="0.7">'+esc(String(c))+'</text>'; }).join("");
+  var yTicks="", steps=4;
+  for(var s=0;s<=steps;s++){
+    var val = bottom + (top-bottom)*s/steps, y = yAt(val);
+    yTicks += '<text x="'+(padL-4)+'" y="'+(y+2.5)+'" font-size="6.5" text-anchor="end" fill="currentColor" fill-opacity="0.7">'+Math.round(val)+'</text>';
+  }
+  var svg = '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'
+    + axis + body + catLabels + yTicks
+    + (unit ? '<text x="'+padL+'" y="9" font-size="7" fill="currentColor" fill-opacity="0.7">'+esc(unit)+'</text>' : '')
+    + '</svg>';
+  return '<div class="rt-block rt-graph">'+svg+'</div>';
+}
+
+/* 円グラフ｜ラベル: A,B,C｜値: n,n,n */
+function rtPieChart(rest){
+  var labels=null, values=null;
+  rest.forEach(function(r){
+    var f = rtParseField(r);
+    if(f.nums && !values) values = f;
+    else if(!f.nums && !labels) labels = f;
+  });
+  if(!values) return '<div class="rt-block rt-unknown">'+esc(rest.join(" / "))+'</div>';
+  var nums = values.nums, n = nums.length;
+  var cats = (labels && labels.raw.length===n) ? labels.raw : nums.map(function(_,i){ return "項目"+(i+1); });
+  var total = nums.reduce(function(a,b){ return a+b; }, 0) || 1;
+  var shades = ["#141414","#5a5a5a","#8f8f8f","#bcbcbc","#dcdcdc","#eeeeee"];
+  var cx=68, cy=68, r=60, angle=-90, paths="";
+  nums.forEach(function(v,i){
+    var frac=v/total, sweep=frac*360;
+    var a0=angle*Math.PI/180, a1=(angle+sweep)*Math.PI/180;
+    var x0=(cx+r*Math.cos(a0)).toFixed(1), y0=(cy+r*Math.sin(a0)).toFixed(1);
+    var x1=(cx+r*Math.cos(a1)).toFixed(1), y1=(cy+r*Math.sin(a1)).toFixed(1);
+    var large = sweep>180 ? 1 : 0;
+    paths += '<path d="M'+cx+','+cy+' L'+x0+','+y0+' A'+r+','+r+' 0 '+large+' 1 '+x1+','+y1+' Z" fill="'+shades[i%shades.length]+'" stroke="#fff" stroke-width="1.5"></path>';
+    angle += sweep;
+  });
+  var legend = cats.map(function(c,i){
+    var pct = Math.round(nums[i]/total*1000)/10;
+    return '<div class="rt-lgrow"><span class="rt-lgsw" style="background:'+shades[i%shades.length]+';"></span>'+rtInline(String(c))+'（'+pct+'%）</div>';
+  }).join("");
+  var svg = '<svg viewBox="0 0 136 136" width="120" style="display:block;">'+paths+'</svg>';
+  return '<div class="rt-block rt-graph"><div class="rt-pieflex">'+svg+'<div class="rt-legend">'+legend+'</div></div></div>';
+}
+function pad2(n){ return n<10 ? "0"+n : ""+n; }
+function dateStr(d){ return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
+function todayStr(){ return dateStr(new Date()); }
+function addDaysStr(baseStr, days){
+  var parts = baseStr.split("-").map(Number);
+  var d = new Date(parts[0], parts[1]-1, parts[2]);
+  d.setDate(d.getDate()+days);
+  return dateStr(d);
+}
+function daysBetween(aStr,bStr){
+  var a = aStr.split("-").map(Number), b = bStr.split("-").map(Number);
+  var da = new Date(a[0],a[1]-1,a[2]), db = new Date(b[0],b[1]-1,b[2]);
+  return Math.round((db-da)/86400000);
+}
+function hashStr(s){
+  var h = 0;
+  s = String(s);
+  for(var i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i))|0; }
+  return Math.abs(h).toString(36);
+}
+function shuffle(arr){
+  var a = arr.slice();
+  for(var i=a.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var t = a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+}
+function uniq(arr){ return arr.filter(function(v,i){ return arr.indexOf(v)===i; }); }
+
+function loadJSONStore(key, fallback){
+  try{
+    var raw = localStorage.getItem(key);
+    if(!raw) return fallback;
+    return JSON.parse(raw);
+  }catch(e){ return fallback; }
+}
+function saveJSONStore(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ /* ストレージ容量超過等は無視 */ }
+}
+
+/* ============================================================
+   状態
+   ============================================================ */
+var library  = loadJSONStore(STORAGE_KEY_LIB, { decks:[] });
+var progress = loadJSONStore(STORAGE_KEY_PROG, {});     // questionId -> {level,nextDue,correct,wrong,lastSeen}
+var stats    = loadJSONStore(STORAGE_KEY_STATS, { totalAnswered:0, totalCorrect:0, streak:0, lastStudyDate:null, studyDays:[], achievements:{} });
+var settings = loadJSONStore(STORAGE_KEY_SET, { newPerDay:8, reviewCap:40, defaultSetSize:10 });
+
+function persistLib(){ saveJSONStore(STORAGE_KEY_LIB, library); }
+function persistProg(){ saveJSONStore(STORAGE_KEY_PROG, progress); }
+function persistStats(){ saveJSONStore(STORAGE_KEY_STATS, stats); }
+function persistSettings(){ saveJSONStore(STORAGE_KEY_SET, settings); }
+
+var nav = { screen:"home", params:{} };
+var session = null; // 出題セッション
+var selectState = { subjects:[], units:[], tags:[], size:settings.defaultSetSize, mode:"due" };
+
+/* ============================================================
+   サンプルデータ（初回体験用）
+   ============================================================ */
+var SAMPLE_DECKS = [
+  {
+    subject:"英語", unit:"be動詞と一般動詞", tags:["文法","中1"],
+    questions:[
+      { question:"次の文の空欄に入る正しい語を選びなさい。\nShe ___ a student.", choices:["is","are","am","be"], answerIndex:0, explanation:"主語が三人称単数（She）のときはisを使う。" },
+      { question:"次の文の空欄に入る正しい語を選びなさい。\nThey ___ from Canada.", choices:["is","am","are","was"], answerIndex:2, explanation:"主語が複数（They）のときはareを使う。" },
+      { question:"次の文を否定文にするとき、空欄に入る語を選びなさい。\nI ___ not like coffee.", choices:["am","do","does","is"], answerIndex:1, explanation:"一般動詞likeの否定文はdo not（don't）を使う。" }
+    ]
+  },
+  {
+    subject:"数学", unit:"正負の数", tags:["計算","中1"],
+    questions:[
+      { question:"次の計算をしなさい。\n(-3) + 5 = ?", choices:["-8","-2","2","8"], answerIndex:2, explanation:"符号の異なる数の加法は、絶対値の大きい方から小さい方を引き、絶対値の大きい方の符号をつける。5-3=2。" },
+      { question:"次の計算をしなさい。\n(-4) × (-2) = ?", choices:["-8","-6","6","8"], answerIndex:3, explanation:"負の数×負の数は正の数になる。4×2=8。" }
+    ]
+  },
+  {
+    subject:"理科", unit:"植物のつくり", tags:["生物","中1"],
+    questions:[
+      { question:"光合成が主に行われる植物の部分はどれか。", choices:["根","茎","葉","花"], answerIndex:2, explanation:"葉緑体を多く含む葉で光合成が盛んに行われる。" }
+    ]
+  }
+];
+
+/* ============================================================
+   データ正規化・取り込み
+   ============================================================ */
+function normalizeQuestion(raw, subject, unit, idx){
+  if(!raw || typeof raw!=="object") return null;
+  var qtext = raw.question || raw.q || raw.text;
+  var choices = raw.choices || raw.options;
+  if(!qtext || !Array.isArray(choices) || choices.length<2) return null;
+  var ansIdx = raw.answerIndex;
+  if(typeof ansIdx !== "number" || ansIdx<0 || ansIdx>=choices.length){
+    if(typeof raw.answer === "string"){
+      var found = choices.indexOf(raw.answer);
+      ansIdx = found>=0 ? found : 0;
+    } else {
+      ansIdx = 0;
+    }
+  }
+  var id = raw.id ? String(raw.id) : (subject+"__"+unit+"__"+idx+"__"+hashStr(qtext));
+  return {
+    id:id,
+    question:String(qtext),
+    image: raw.image || raw.imageUrl || null,
+    choices: choices.map(function(c){ return String(c); }),
+    answerIndex: ansIdx,
+    explanation: raw.explanation || raw.note || ""
+  };
+}
+
+function normalizeDeck(raw){
+  if(!raw || typeof raw!=="object") return null;
+  var subject = String(raw.subject || raw.教科 || "未分類");
+  var unit = String(raw.unit || raw.単元 || "未分類単元");
+  var tags = raw.tags || raw.タグ || [];
+  if(!Array.isArray(tags)) tags = [String(tags)];
+  var srcQ = raw.questions || raw.問題 || [];
+  if(!Array.isArray(srcQ)) return null;
+  var qs = [];
+  for(var i=0;i<srcQ.length;i++){
+    var nq = normalizeQuestion(srcQ[i], subject, unit, i);
+    if(nq) qs.push(nq);
+  }
+  if(qs.length===0) return null;
+  return { subject:subject, unit:unit, tags:tags.map(String), questions:qs };
+}
+
+function extractDecks(parsed){
+  var decks = [];
+  if(Array.isArray(parsed)){
+    parsed.forEach(function(item){ var d=normalizeDeck(item); if(d) decks.push(d); });
+  } else if(parsed && typeof parsed==="object"){
+    if(Array.isArray(parsed.decks)){
+      parsed.decks.forEach(function(item){ var d=normalizeDeck(item); if(d) decks.push(d); });
+    } else if(parsed.questions){
+      var d = normalizeDeck(parsed);
+      if(d) decks.push(d);
+    }
+  }
+  return decks;
+}
+
+function mergeDeck(newDeck){
+  var existing = library.decks.filter(function(d){ return d.subject===newDeck.subject && d.unit===newDeck.unit; })[0];
+  if(existing){
+    var byId = {};
+    existing.questions.forEach(function(q){ byId[q.id]=q; });
+    newDeck.questions.forEach(function(q){ byId[q.id]=q; });
+    existing.questions = Object.keys(byId).map(function(k){ return byId[k]; });
+    existing.tags = uniq(existing.tags.concat(newDeck.tags));
+  } else {
+    library.decks.push(newDeck);
+  }
+}
+
+function importDecks(decks){
+  decks.forEach(mergeDeck);
+  persistLib();
+}
+
+function loadSample(){
+  var decks = SAMPLE_DECKS.map(normalizeDeck).filter(Boolean);
+  importDecks(decks);
+  toast("サンプルデータを追加しました");
+  render();
+}
+
+function deleteDeck(subject, unit){
+  library.decks = library.decks.filter(function(d){ return !(d.subject===subject && d.unit===unit); });
+  persistLib();
+  render();
+}
+
+function resetAllData(){
+  library = { decks:[] };
+  progress = {};
+  stats = { totalAnswered:0, totalCorrect:0, streak:0, lastStudyDate:null, studyDays:[], achievements:{} };
+  persistLib(); persistProg(); persistStats();
+  render();
+}
+
+function exportBackup(){
+  var payload = { library:library, progress:progress, stats:stats, settings:settings, exportedAt:new Date().toISOString() };
+  var blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = "drill_backup_"+todayStr()+".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+}
+
+/* ============================================================
+   出題範囲の集計ヘルパー
+   ============================================================ */
+function allSubjects(){ return uniq(library.decks.map(function(d){ return d.subject; })); }
+function unitsOfSubjects(subjects){
+  return library.decks.filter(function(d){ return subjects.length===0 || subjects.indexOf(d.subject)>=0; })
+    .map(function(d){ return d.subject+"｜"+d.unit; });
+}
+function tagsOf(subjects, units){
+  var t = [];
+  library.decks.forEach(function(d){
+    if(subjects.length && subjects.indexOf(d.subject)<0) return;
+    if(units.length && units.indexOf(d.subject+"｜"+d.unit)<0) return;
+    t = t.concat(d.tags);
+  });
+  return uniq(t);
+}
+function deckMatches(d, subjects, units, tags){
+  if(subjects.length && subjects.indexOf(d.subject)<0) return false;
+  if(units.length && units.indexOf(d.subject+"｜"+d.unit)<0) return false;
+  if(tags.length && !d.tags.some(function(t){ return tags.indexOf(t)>=0; })) return false;
+  return true;
+}
+
+function totalQuestionCount(subjects, units, tags){
+  var n = 0;
+  library.decks.forEach(function(d){ if(deckMatches(d,subjects||[],units||[],tags||[])) n += d.questions.length; });
+  return n;
+}
+
+function dueCount(subjects, units, tags){
+  var t = todayStr(); var n=0;
+  library.decks.forEach(function(d){
+    if(!deckMatches(d,subjects||[],units||[],tags||[])) return;
+    d.questions.forEach(function(q){
+      var p = progress[q.id];
+      if(p && p.nextDue<=t) n++;
+    });
+  });
+  return n;
+}
+function newCount(subjects, units, tags){
+  var n=0;
+  library.decks.forEach(function(d){
+    if(!deckMatches(d,subjects||[],units||[],tags||[])) return;
+    d.questions.forEach(function(q){ if(!progress[q.id]) n++; });
+  });
+  return n;
+}
+
+/* ============================================================
+   出題キューの構築
+   ============================================================ */
+function buildTodayQueue(subjects, units, tags){
+  var t = todayStr();
+  var due = [], fresh = [];
+  library.decks.forEach(function(d){
+    if(!deckMatches(d,subjects||[],units||[],tags||[])) return;
+    d.questions.forEach(function(q){
+      var p = progress[q.id];
+      if(p){ if(p.nextDue<=t) due.push({deck:d,q:q}); }
+      else { fresh.push({deck:d,q:q}); }
+    });
+  });
+  due.sort(function(a,b){ return (progress[a.q.id].nextDue).localeCompare(progress[b.q.id].nextDue); });
+  due = due.slice(0, settings.reviewCap);
+  fresh = shuffle(fresh).slice(0, settings.newPerDay);
+  return shuffle(due.concat(fresh));
+}
+
+function buildCustomQueue(subjects, units, tags, mode, size){
+  var t = todayStr();
+  var pool = [];
+  library.decks.forEach(function(d){
+    if(!deckMatches(d,subjects||[],units||[],tags||[])) return;
+    d.questions.forEach(function(q){
+      var p = progress[q.id];
+      if(mode==="due" && !(p && p.nextDue<=t)) return;
+      if(mode==="new" && p) return;
+      pool.push({deck:d,q:q});
+    });
+  });
+  pool = shuffle(pool);
+  if(size>0) pool = pool.slice(0, size);
+  return pool;
+}
+
+/* ============================================================
+   進捗更新（間隔反復）
+   ============================================================ */
+function recordAnswer(qid, correct){
+  var p = progress[qid];
+  if(!p){ p = { level:0, nextDue:todayStr(), correct:0, wrong:0, lastSeen:null, streak:0 }; progress[qid]=p; }
+  if(correct){
+    p.level = Math.min(p.level+1, INTERVALS.length-1);
+    p.correct++;
+    p.streak = (p.streak||0) + 1;   // 連続正解を加算
+  } else {
+    p.level = Math.max(p.level-1, 0);
+    p.wrong++;
+    p.streak = 0;                   // 一度でも間違えたら連続記録はリセット
+  }
+  p.nextDue = addDaysStr(todayStr(), INTERVALS[p.level]);
+  p.lastSeen = todayStr();
+  persistProg();
+}
+
+/* 問題1問ぶんの理解度（0〜100%）を算出する。
+   - 連続正解が3回未満なら、たとえ直近が正解でも上限は100%未満に抑える
+   - 連続3回正解した瞬間だけ100%になる
+   - そこから日数が経つほど指数関数的に下がる（半減期はレベルに応じる） */
+function computeRetention(qid){
+  var p = progress[qid];
+  if(!p) return { percent:0, mastered:false, streak:0 };
+  var streak = p.streak || 0;
+  var cap = streak>=MASTERY_STREAK ? 100 : Math.round(streak/MASTERY_STREAK*100);
+  var elapsed = daysBetween(p.lastSeen || todayStr(), todayStr());
+  var hl = HALF_LIFE[Math.min(p.level, HALF_LIFE.length-1)] || 1;
+  var percent = Math.round(cap * Math.pow(0.5, elapsed/hl));
+  if(percent<0) percent = 0;
+  if(percent>100) percent = 100;
+  return { percent:percent, mastered: streak>=MASTERY_STREAK, streak:streak };
+}
+function computeUnitRetention(deck){
+  if(!deck || !deck.questions.length) return 0;
+  var sum = 0;
+  deck.questions.forEach(function(q){ sum += computeRetention(q.id).percent; });
+  return Math.round(sum/deck.questions.length);
+}
+function computeSubjectRetention(subject){
+  var qs = [];
+  library.decks.forEach(function(d){ if(d.subject===subject) qs = qs.concat(d.questions); });
+  if(!qs.length) return 0;
+  var sum = 0;
+  qs.forEach(function(q){ sum += computeRetention(q.id).percent; });
+  return Math.round(sum/qs.length);
+}
+
+function recordSessionInStats(answeredCount, correctCount){
+  stats.totalAnswered += answeredCount;
+  stats.totalCorrect += correctCount;
+  var t = todayStr();
+  if(stats.studyDays.indexOf(t)<0) stats.studyDays.push(t);
+  if(stats.lastStudyDate){
+    var diff = daysBetween(stats.lastStudyDate, t);
+    if(diff===1) stats.streak += 1;
+    else if(diff===0) { /* 変化なし */ }
+    else if(diff>1) stats.streak = 1;
+  } else {
+    stats.streak = 1;
+  }
+  stats.lastStudyDate = t;
+  persistStats();
+}
+
+function checkAchievements(ctx){
+  var unlocked = [];
+  ACHIEVEMENTS.forEach(function(a){
+    if(stats.achievements[a.id]) return;
+    if(a.check(stats, ctx)){
+      stats.achievements[a.id] = new Date().toISOString();
+      unlocked.push(a);
+    }
+  });
+  if(unlocked.length) persistStats();
+  return unlocked;
+}
+
+/* ============================================================
+   トースト
+   ============================================================ */
+var toastTimer = null;
+function toast(msg){
+  var old = document.querySelector(".toast");
+  if(old) old.remove();
+  var el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = msg;
+  document.body.appendChild(el);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.remove(); }, 2200);
+}
+
+/* ============================================================
+   モーダル
+   ============================================================ */
+function openModal(html){
+  $("#modalBox").innerHTML = html;
+  $("#modalLayer").classList.add("open");
+}
+function closeModal(){
+  $("#modalLayer").classList.remove("open");
+  $("#modalBox").innerHTML = "";
+}
+
+/* ============================================================
+   画面遷移
+   ============================================================ */
+function goto(screen, params){
+  nav.screen = screen;
+  nav.params = params || {};
+  render();
+  $("#screens").scrollTop = 0;
+}
+
+/* ============================================================
+   レンダリング：トップバー & タブバー
+   ============================================================ */
+var TABS = [
+  { id:"home", label:"ホーム", icon:"■" },
+  { id:"select", label:"学習範囲", icon:"▤" },
+  { id:"achievements", label:"実績", icon:"◆" },
+  { id:"settings", label:"設定", icon:"⚙" }
+];
+
+function renderChrome(){
+  var tb = $("#tbTitle"), left = $("#tbLeft"), right = $("#tbRight");
+  var titles = { home:"暗記ドリル", select:"学習範囲を選ぶ", achievements:"実績", settings:"設定", quiz:"学習中", result:"結果" };
+  tb.textContent = titles[nav.screen] || "暗記ドリル";
+
+  left.innerHTML = ""; right.innerHTML = "";
+  if(nav.screen==="quiz"){
+    left.innerHTML = '<button class="tb-btn" data-action="exitQuiz">×</button>';
+  } else if(["home","select","achievements","settings"].indexOf(nav.screen)>=0){
+    // トップレベル画面はサイドボタンなし
+  } else if(nav.screen==="result"){
+    // 戻る不可（ホームへのみ）
+  }
+
+  var tabbar = $("#tabbar");
+  var showTabs = ["home","select","achievements","settings"].indexOf(nav.screen)>=0;
+  $("#screens").classList.toggle("no-tab", !showTabs);
+  if(showTabs){
+    tabbar.style.display = "flex";
+    tabbar.innerHTML = TABS.map(function(t){
+      return '<button data-action="nav" data-screen="'+t.id+'" class="'+(nav.screen===t.id?"active":"")+'">'+
+        '<span class="ic">'+t.icon+'</span><span>'+t.label+'</span></button>';
+    }).join("");
+  } else {
+    tabbar.style.display = "none";
+  }
+}
+
+/* ============================================================
+   レンダリング：ホーム
+   ============================================================ */
+function renderHome(){
+  var due = dueCount([],[],[]);
+  var fresh = newCount([],[],[]);
+  var todaysTotal = Math.min(due, settings.reviewCap) + Math.min(fresh, settings.newPerDay);
+  var subjects = allSubjects();
+
+  var html = "";
+  html += '<div class="hero">'
+    + '<div class="row"><div class="big">'+todaysTotal+'<span class="unit">問</span></div>'
+    + '<div class="sub">'+todayLabel()+'</div></div>'
+    + '<div class="sub">復習 '+Math.min(due,settings.reviewCap)+'問 ／ 新規 '+Math.min(fresh,settings.newPerDay)+'問</div>'
+    + '</div>';
+
+  html += '<div class="pad" style="padding-bottom:0;">'
+    + '<button class="btn-primary" data-action="startToday" '+(todaysTotal===0?"disabled":"")+' style="margin-top:12px;">'
+    + (todaysTotal>0 ? "今日の学習をはじめる" : "今日の分はありません")
+    + '</button></div>';
+
+  html += '<div class="streakbar">'
+    + '<div class="sb-cell"><div class="sb-num">'+stats.streak+'</div><div class="sb-lab">連続日数</div></div>'
+    + '<div class="sb-cell"><div class="sb-num">'+stats.totalAnswered+'</div><div class="sb-lab">累計回答数</div></div>'
+    + '<div class="sb-cell"><div class="sb-num">'+(stats.totalAnswered? Math.round(stats.totalCorrect/stats.totalAnswered*100):0)+'<span style="font-size:12px;">%</span></div><div class="sb-lab">正答率</div></div>'
+    + '</div>';
+
+  html += '<div class="section-label">教科</div>';
+  if(subjects.length===0){
+    html += '<div class="empty"><div class="eic">＋</div><p>まだ問題データがありません。<br>「学習範囲」タブからデータを追加してください。</p></div>';
+  } else {
+    html += '<div class="list">';
+    subjects.forEach(function(s){
+      var d = dueCount([s],[],[]);
+      var n = newCount([s],[],[]);
+      var total = totalQuestionCount([s],[],[]);
+      var mastery = computeSubjectRetention(s);
+      html += '<div class="card row-item hoverable" data-action="openSubject" data-subject="'+esc(s)+'">'
+        + '<div class="ri-main"><div class="ri-title">'+esc(s)+'</div><div class="ri-sub">全'+total+'問 ／ 新規'+n+'問</div>'
+        + '<div class="mbar-track"><div class="mbar-fill" style="width:'+mastery+'%;"></div></div>'
+        + '<div class="ri-sub" style="margin-top:3px;">理解度 '+mastery+'%</div>'
+        + '</div>'
+        + '<div class="ri-num'+(d===0?" zero":"")+'">'+d+'</div>'
+        + '<div class="ri-chev">›</div>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+  return html;
+}
+function todayLabel(){
+  var d = new Date();
+  var w = ["日","月","火","水","木","金","土"][d.getDay()];
+  return (d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）の学習";
+}
+
+/* ============================================================
+   レンダリング：学習範囲選択
+   ============================================================ */
+function renderSelect(){
+  var subs = allSubjects();
+  if(subs.length===0){
+    return '<div class="empty"><div class="eic">＋</div><p>まだ問題データがありません。<br>下のボタンから問題データ（JSON）を追加してください。</p></div>'
+      + '<div class="pad">'
+      + '<button class="btn-primary" data-action="pickFile">問題データ（JSON）を追加</button>'
+      + '<div style="height:10px;"></div>'
+      + '<button class="btn-outline" data-action="loadSample">サンプルデータを試す</button>'
+      + '</div>';
+  }
+
+  var units = unitsOfSubjects(selectState.subjects);
+  var tags = tagsOf(selectState.subjects, selectState.units);
+  var matchTotal = totalQuestionCount(selectState.subjects, selectState.units, selectState.tags);
+  var matchDue = dueCount(selectState.subjects, selectState.units, selectState.tags);
+  var matchNew = newCount(selectState.subjects, selectState.units, selectState.tags);
+
+  var html = "";
+  html += '<div class="section-label">教科（複数選択可・未選択＝すべて）</div>';
+  html += '<div class="chipwrap">' + subs.map(function(s){
+    return '<button class="chip'+(selectState.subjects.indexOf(s)>=0?" on":"")+'" data-action="toggleSubject" data-v="'+esc(s)+'">'+esc(s)+'</button>';
+  }).join("") + '</div>';
+
+  html += '<div class="section-label">単元（タップで選択・複数選択可・未選択＝すべて／理解度は日数が経つと下がります）</div>';
+  if(units.length){
+    html += '<div class="list">' + units.map(function(u){
+      var subj = u.split("｜")[0], label = u.split("｜")[1];
+      var deck = library.decks.filter(function(d){ return d.subject===subj && d.unit===label; })[0];
+      var mastery = deck ? computeUnitRetention(deck) : 0;
+      var qn = deck ? deck.questions.length : 0;
+      var on = selectState.units.indexOf(u)>=0;
+      return '<div class="card unit-row'+(on?" on":"")+'" data-action="toggleUnit" data-v="'+esc(u)+'">'
+        + '<div class="ur-top"><span class="ur-mark">'+(on?"■":"□")+'</span>'
+        + '<span class="ur-title">'+esc(label)+'</span>'
+        + '<span class="ur-pct">理解度 '+mastery+'%</span></div>'
+        + '<div class="ur-meta">全'+qn+'問'+(selectState.subjects.length!==1?"（"+esc(subj)+"）":"")+'</div>'
+        + '<div class="mbar-track" style="margin-left:25px;"><div class="mbar-fill" style="width:'+mastery+'%;"></div></div>'
+        + '</div>';
+    }).join("") + '</div>';
+  } else {
+    html += '<div class="empty" style="margin:12px 20px;"><p>該当する単元がありません。</p></div>';
+  }
+
+  html += '<div class="section-label">タグ（任意）</div>';
+  if(tags.length){
+    html += '<div class="chipwrap">' + tags.map(function(t){
+      return '<button class="chip'+(selectState.tags.indexOf(t)>=0?" on":"")+'" data-action="toggleTag" data-v="'+esc(t)+'">'+esc(t)+'</button>';
+    }).join("") + '</div>';
+  } else {
+    html += '<div class="pad" style="padding-top:0;padding-bottom:0;color:#a3a3a3;font-size:12.5px;font-weight:600;">タグなし</div>';
+  }
+
+  html += '<div class="section-label">出題モード</div>';
+  html += '<div class="pad" style="padding-top:0;">'
+    + '<div class="seg">'
+    + '<button data-action="setMode" data-v="due" class="'+(selectState.mode==="due"?"on":"")+'">復習中心</button>'
+    + '<button data-action="setMode" data-v="new" class="'+(selectState.mode==="new"?"on":"")+'">新規のみ</button>'
+    + '<button data-action="setMode" data-v="all" class="'+(selectState.mode==="all"?"on":"")+'">すべてから</button>'
+    + '</div></div>';
+
+  html += '<div class="field"><label>1セットの問題数</label>'
+    + '<div class="stepper">'
+    + '<button data-action="stepSize" data-v="-1">−</button>'
+    + '<div class="sval">'+selectState.size+'</div>'
+    + '<button data-action="stepSize" data-v="1">＋</button>'
+    + '</div></div>';
+
+  html += '<div class="filter-summary">対象：全'+matchTotal+'問（復習可'+matchDue+'／新規'+matchNew+'）</div>';
+
+  html += '<div class="pad" style="padding-top:0;">'
+    + '<button class="btn-primary" data-action="startCustom">この条件で学習をはじめる</button>'
+    + '<div style="height:10px;"></div>'
+    + '<button class="btn-outline" data-action="openLibrary">問題データを管理</button>'
+    + '</div>';
+
+  return html;
+}
+
+/* ============================================================
+   レンダリング：データ管理（モーダル）
+   ============================================================ */
+function libraryModalHtml(){
+  var html = '<div class="mb-head"><div class="mbt">問題データを管理</div><button data-action="closeModal">×</button></div>';
+  html += '<div class="pad">'
+    + '<button class="btn-primary" data-action="pickFile">JSONファイルを追加</button>'
+    + '<div style="height:10px;"></div>'
+    + '<button class="btn-outline" data-action="loadSample">サンプルデータを追加</button>'
+    + '</div>';
+  html += '<div class="section-label">読み込み済みデータ（'+library.decks.length+'）</div>';
+  if(library.decks.length===0){
+    html += '<div class="empty"><p>まだありません。</p></div>';
+  } else {
+    html += '<div class="list">' + library.decks.map(function(d){
+      return '<div class="card row-item">'
+        + '<div class="ri-main"><div class="ri-title">'+esc(d.subject)+' ／ '+esc(d.unit)+'</div>'
+        + '<div class="ri-sub">'+d.questions.length+'問　'+d.tags.map(function(t){return esc(t);}).join("・")+'</div></div>'
+        + '<button class="btn-ghost" data-action="deleteDeck" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'">削除</button>'
+        + '</div>';
+    }).join("") + '</div>';
+  }
+  return html;
+}
+
+/* ============================================================
+   レンダリング：実績
+   ============================================================ */
+function renderAchievements(){
+  var html = '<div class="hero"><div class="row"><div class="big">'+Object.keys(stats.achievements).length+'<span class="unit">／'+ACHIEVEMENTS.length+'</span></div><div class="sub">達成した実績</div></div></div>';
+  html += '<div class="section-label">一覧</div>';
+  html += '<div class="list">' + ACHIEVEMENTS.map(function(a){
+    var got = stats.achievements[a.id];
+    var mark = got ? "済" : "－";
+    var dateLabel = got ? new Date(got).toLocaleDateString("ja-JP") : "";
+    return '<div class="card ach-item'+(got?"":" locked")+'">'
+      + '<div class="ai-badge">'+mark+'</div>'
+      + '<div class="ai-main" style="flex:1;min-width:0;"><div class="ai-title">'+esc(a.title)+'</div><div class="ai-desc">'+esc(a.desc)+'</div></div>'
+      + (got ? '<div class="ai-date">'+dateLabel+'</div>' : '')
+      + '</div>';
+  }).join("") + '</div>';
+  return html;
+}
+
+/* ============================================================
+   レンダリング：設定
+   ============================================================ */
+function renderSettings(){
+  var html = "";
+  html += '<div class="section-label">学習ペースの設定</div>';
+  html += '<div class="field"><label>1日の新規カード上限（多すぎると負担になります）</label>'
+    + '<div class="stepper"><button data-action="stepSetting" data-k="newPerDay" data-v="-1">−</button>'
+    + '<div class="sval">'+settings.newPerDay+'</div>'
+    + '<button data-action="stepSetting" data-k="newPerDay" data-v="1">＋</button></div></div>';
+  html += '<div class="field"><label>1日の復習カード上限</label>'
+    + '<div class="stepper"><button data-action="stepSetting" data-k="reviewCap" data-v="-5">−</button>'
+    + '<div class="sval">'+settings.reviewCap+'</div>'
+    + '<button data-action="stepSetting" data-k="reviewCap" data-v="5">＋</button></div></div>';
+  html += '<div class="field"><label>カスタム学習の初期セット数</label>'
+    + '<div class="stepper"><button data-action="stepSetting" data-k="defaultSetSize" data-v="-1">−</button>'
+    + '<div class="sval">'+settings.defaultSetSize+'</div>'
+    + '<button data-action="stepSetting" data-k="defaultSetSize" data-v="1">＋</button></div></div>';
+
+  html += '<div class="section-label">データ</div>';
+  html += '<div class="pad" style="padding-top:0;">'
+    + '<button class="btn-outline" data-action="openLibrary">問題データを管理</button>'
+    + '<div style="height:10px;"></div>'
+    + '<button class="btn-outline" data-action="exportBackup">バックアップを書き出す（JSON）</button>'
+    + '<div style="height:10px;"></div>'
+    + '<button class="btn-outline" data-action="confirmReset" style="border-color:#000;">すべてのデータを初期化</button>'
+    + '</div>';
+
+  html += '<div class="section-label">このアプリについて</div>';
+  html += '<div class="pad" style="padding-top:0;color:#7a7a7a;font-size:12.5px;font-weight:600;line-height:1.8;">'
+    + '間隔反復方式（レベル0〜7、'+INTERVALS.join("/")+'日）で復習日を自動計算します。<br>'
+    + '「理解度」は連続'+MASTERY_STREAK+'回正解ではじめて100%になり、1回や2回の正解では上限を超えません。'
+    + 'また、復習しない日数が経つほど少しずつ下がっていきます（一度覚えても時間が経てば忘れる、という前提の表示です）。<br>'
+    + '一問ごとに正解・不正解どちらの体験も次回の出題タイミングに反映されるため、間違えた問題も記憶の定着に役立ちます。<br>'
+    + 'データはこの端末内にのみ保存されます。'
+    + '</div>';
+  return html;
+}
+
+/* ============================================================
+   レンダリング：クイズ
+   ============================================================ */
+function renderQuiz(){
+  if(!session) return "";
+  var idx = session.index;
+  var total = session.queue.length;
+  var cur = session.queue[idx];
+  var q = cur.q, deck = cur.deck;
+  var answered = session.answers[idx] != null;
+  var pct = Math.round((idx/total)*100);
+
+  var html = '<div id="quizscreen">';
+  html += '<div class="qz-progress-track"><div class="qz-progress-fill" style="width:'+pct+'%;"></div></div>';
+  html += '<div class="qz-meta"><div class="qm-tag">'+esc(deck.subject)+' ／ '+esc(deck.unit)+'</div><div class="qm-count">'+(idx+1)+' / '+total+'</div></div>';
+  html += '<div class="qz-body">';
+  html += '<div class="qz-question"><div class="qtxt">'+renderRichText(q.question)+'</div>';
+  if(q.image){ html += '<img src="'+esc(q.image)+'" alt="">'; }
+  html += '</div>';
+
+  var choicesAreGraphs = q.choices.every(function(c){
+    return RT_BLOCK_TYPES.some(function(t){ return String(c).trim().indexOf(t+"｜")===0; });
+  });
+  html += '<div class="qz-choices'+(choicesAreGraphs?" qz-choices-grid":"")+'">';
+  q.choices.forEach(function(c, ci){
+    var cls = "choice-btn"+(choicesAreGraphs?" choice-btn-grid":"");
+    var mark = "";
+    if(answered){
+      var picked = session.answers[idx];
+      if(ci===q.answerIndex){ cls += " sel-correct"; mark="○"; }
+      else if(ci===picked){ cls += " sel-wrong"; mark="×"; }
+    }
+    html += '<button class="'+cls+'" data-locked="'+(answered?1:0)+'" data-action="'+(answered?"":"answer")+'" data-idx="'+ci+'">'
+      + '<span class="cb-mark">'+(mark || (ci+1))+'</span>'
+      + '<span class="cb-txt">'+renderRichText(c)+'</span>'
+      + '</button>';
+  });
+  html += '</div>';
+
+  if(answered && q.explanation){
+    html += '<div class="qz-explain"><span class="el">解説</span>'+renderRichText(q.explanation)+'</div>';
+  }
+  html += '</div>'; // qz-body
+
+  html += '<div class="qz-footer">';
+  if(answered){
+    var wasCorrect = session.answers[idx] === q.answerIndex;
+    html += '<button class="btn-primary" data-action="nextQuestion">'+(idx+1<total ? "次の問題へ" : "結果を見る")+'</button>';
+    if(wasCorrect){
+      html += '<div class="autoadv-track"><div class="autoadv-fill" id="autoadvFill"></div></div>';
+    }
+  } else {
+    html += '<button class="btn-primary" disabled>選択肢をタップしてください</button>';
+  }
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+/* ============================================================
+   レンダリング：結果
+   ============================================================ */
+function renderResult(){
+  if(!session) return "";
+  var total = session.queue.length;
+  var correct = session.answers.filter(function(a,i){ return a === session.queue[i].q.answerIndex; }).length;
+  var pct = Math.round(correct/total*100);
+  var mistakes = session.queue.filter(function(cur,i){ return session.answers[i] !== cur.q.answerIndex; });
+
+  var html = "";
+  html += '<div class="result-score"><div class="rs-frac">'+correct+' / '+total+'</div><div class="rs-pct">正答率 '+pct+'%</div></div>';
+
+  if(session.unlocked && session.unlocked.length){
+    html += '<div class="section-label">新しい実績</div><div class="list">' + session.unlocked.map(function(a){
+      return '<div class="card ach-item"><div class="ai-badge">済</div><div class="ai-main" style="flex:1;"><div class="ai-title">'+esc(a.title)+'</div><div class="ai-desc">'+esc(a.desc)+'</div></div></div>';
+    }).join("") + '</div>';
+  }
+
+  html += '<div class="section-label">間違えた問題（'+mistakes.length+'）</div>';
+  if(mistakes.length===0){
+    html += '<div class="empty"><div class="eic">○</div><p>全問正解です。</p></div>';
+  } else {
+    html += '<div class="list"><div class="card">' + mistakes.map(function(cur){
+      return '<div class="mistake-item"><div class="mi-q">'+renderRichText(cur.q.question)+'</div>'
+        + '<div class="mi-a">正解：<b>'+renderRichText(cur.q.choices[cur.q.answerIndex])+'</b></div></div>';
+    }).join("") + '</div></div>';
+  }
+
+  html += '<div class="pad">';
+  if(mistakes.length>0){
+    html += '<button class="btn-primary" data-action="retryMistakes">間違えた問題だけ復習する</button><div style="height:10px;"></div>';
+  }
+  html += '<button class="btn-outline" data-action="backHome">ホームに戻る</button>';
+  html += '</div>';
+  return html;
+}
+
+/* ============================================================
+   メインレンダー
+   ============================================================ */
+function render(){
+  renderChrome();
+  var el = $("#screens");
+  var html = "";
+  switch(nav.screen){
+    case "home": html = renderHome(); break;
+    case "select": html = renderSelect(); break;
+    case "achievements": html = renderAchievements(); break;
+    case "settings": html = renderSettings(); break;
+    case "quiz": html = renderQuiz(); break;
+    case "result": html = renderResult(); break;
+    default: html = renderHome();
+  }
+  el.innerHTML = html;
+}
+
+/* ============================================================
+   セッション制御
+   ============================================================ */
+var autoAdvanceTimer = null;
+function clearAutoAdvance(){
+  if(autoAdvanceTimer){ clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+}
+
+function startSession(queue){
+  if(queue.length===0){ toast("該当する問題がありません"); return; }
+  clearAutoAdvance();
+  session = { queue:queue, index:0, answers:[], unlocked:[] };
+  goto("quiz");
+}
+
+function answerCurrent(choiceIdx){
+  if(!session) return;
+  var idx = session.index;
+  if(session.answers[idx] != null) return; // 二重回答防止
+  var cur = session.queue[idx];
+  var correct = choiceIdx === cur.q.answerIndex;
+  session.answers[idx] = choiceIdx;
+  recordAnswer(cur.q.id, correct);
+  render();
+  clearAutoAdvance();
+  if(correct){
+    /* 正解した場合のみ0.8秒後に自動で次の問題へ。
+       不正解の場合は解説を読めるよう手動で進めてもらう。
+       待たずに自分でタップして進むこともできる。 */
+    autoAdvanceTimer = setTimeout(function(){
+      autoAdvanceTimer = null;
+      if(session && session.index===idx){ nextQuestion(); }
+    }, 800);
+  }
+}
+
+function nextQuestion(){
+  clearAutoAdvance();
+  if(!session) return;
+  if(session.index+1 < session.queue.length){
+    session.index++;
+    render();
+    $("#screens").scrollTop = 0;
+  } else {
+    finishSession();
+  }
+}
+
+function finishSession(){
+  var total = session.queue.length;
+  var correct = session.answers.filter(function(a,i){ return a === session.queue[i].q.answerIndex; }).length;
+  recordSessionInStats(total, correct);
+  var unlocked = checkAchievements({ perfect: (correct===total) });
+  session.unlocked = unlocked;
+  goto("result");
+}
+
+function retryMistakes(){
+  var mistakes = session.queue.filter(function(cur,i){ return session.answers[i] !== cur.q.answerIndex; });
+  startSession(shuffle(mistakes));
+}
+
+/* ============================================================
+   イベント処理（委譲）
+   ============================================================ */
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-action]");
+  if(!btn) return;
+  var action = btn.getAttribute("data-action");
+  if(!action) return;
+
+  switch(action){
+    case "nav":
+      goto(btn.getAttribute("data-screen"));
+      break;
+    case "openSubject":
+      selectState = { subjects:[btn.getAttribute("data-subject")], units:[], tags:[], size:settings.defaultSetSize, mode:"due" };
+      goto("select");
+      break;
+    case "startToday":
+      startSession(buildTodayQueue([],[],[]));
+      break;
+    case "toggleSubject": toggleIn(selectState.subjects, btn.getAttribute("data-v")); selectState.units=[]; selectState.tags=[]; render(); break;
+    case "toggleUnit": toggleIn(selectState.units, btn.getAttribute("data-v")); selectState.tags=[]; render(); break;
+    case "toggleTag": toggleIn(selectState.tags, btn.getAttribute("data-v")); render(); break;
+    case "setMode": selectState.mode = btn.getAttribute("data-v"); render(); break;
+    case "stepSize": {
+      var d = parseInt(btn.getAttribute("data-v"),10);
+      selectState.size = Math.max(1, Math.min(200, selectState.size + d));
+      render();
+      break;
+    }
+    case "startCustom": {
+      var q = buildCustomQueue(selectState.subjects, selectState.units, selectState.tags, selectState.mode, selectState.size);
+      startSession(q);
+      break;
+    }
+    case "answer":
+      answerCurrent(parseInt(btn.getAttribute("data-idx"),10));
+      break;
+    case "nextQuestion": nextQuestion(); break;
+    case "exitQuiz":
+      if(confirm("学習を中断しますか？ここまでの回答は保存されます。")){
+        clearAutoAdvance();
+        session = null; goto("home");
+      }
+      break;
+    case "retryMistakes": retryMistakes(); break;
+    case "backHome": session=null; goto("home"); break;
+
+    case "openLibrary": openModal(libraryModalHtml()); break;
+    case "closeModal": closeModal(); break;
+    case "pickFile": $("#fileInput").click(); break;
+    case "loadSample": loadSample(); closeModal(); break;
+    case "deleteDeck":
+      if(confirm("「"+btn.getAttribute("data-subject")+" ／ "+btn.getAttribute("data-unit")+"」を削除しますか？進捗も削除されます。")){
+        deleteDeck(btn.getAttribute("data-subject"), btn.getAttribute("data-unit"));
+        openModal(libraryModalHtml());
+      }
+      break;
+    case "exportBackup": exportBackup(); break;
+    case "confirmReset":
+      if(confirm("すべてのデータ（問題・進捗・実績）を削除します。よろしいですか？")){
+        if(confirm("本当に元に戻せません。実行しますか？")) resetAllData();
+      }
+      break;
+    case "stepSetting": {
+      var k = btn.getAttribute("data-k");
+      var dv = parseInt(btn.getAttribute("data-v"),10);
+      var min = 1;
+      settings[k] = Math.max(min, settings[k] + dv);
+      persistSettings();
+      render();
+      break;
+    }
+  }
+});
+
+function toggleIn(arr, v){
+  var i = arr.indexOf(v);
+  if(i>=0) arr.splice(i,1); else arr.push(v);
+}
+
+/* タップの即時フィードバック（古い端末での反応遅延対策） */
+document.addEventListener("pointerdown", function(e){
+  var t = e.target.closest("button, .choice-btn");
+  if(t) t.classList.add("pressed");
+}, {passive:true});
+["pointerup","pointercancel","pointerleave"].forEach(function(ev){
+  document.addEventListener(ev, function(e){
+    var t = e.target.closest("button, .choice-btn");
+    if(t) t.classList.remove("pressed");
+    document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
+  }, {passive:true});
+});
+
+/* PCでのキーボード操作（数字キーで選択／Enterで次へ） */
+document.addEventListener("keydown", function(e){
+  if(nav.screen!=="quiz" || !session) return;
+  var idx = session.index;
+  var answered = session.answers[idx] != null;
+  if(!answered){
+    var n = parseInt(e.key,10);
+    if(n>=1 && n<=9){
+      var choices = session.queue[idx].q.choices;
+      if(n<=choices.length) answerCurrent(n-1);
+    }
+  } else {
+    if(e.key==="Enter" || e.key===" "){ e.preventDefault(); nextQuestion(); }
+  }
+});
+
+/* ファイル読み込み */
+$("#fileInput").addEventListener("change", function(e){
+  var files = Array.prototype.slice.call(e.target.files || []);
+  if(files.length===0) return;
+  var pending = files.length;
+  var addedDecks = 0, failedFiles = 0;
+  files.forEach(function(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var parsed = JSON.parse(reader.result);
+        var decks = extractDecks(parsed);
+        if(decks.length===0){ failedFiles++; }
+        else { importDecks(decks); addedDecks += decks.length; }
+      }catch(err){ failedFiles++; }
+      pending--;
+      if(pending===0){
+        var msg = addedDecks>0 ? (addedDecks+"個のデータを追加しました") : "追加できるデータがありませんでした";
+        if(failedFiles>0) msg += "（"+failedFiles+"件は形式エラーでスキップ）";
+        toast(msg);
+        e.target.value = "";
+        render();
+        if($("#modalLayer").classList.contains("open")) openModal(libraryModalHtml());
+      }
+    };
+    reader.onerror = function(){
+      failedFiles++; pending--;
+      if(pending===0){ toast("読み込みに失敗しました"); render(); }
+    };
+    reader.readAsText(file);
+  });
+});
+
+/* 初期化 */
+goto("home");
+
+})();
+</script>
+</body>
+</html>
