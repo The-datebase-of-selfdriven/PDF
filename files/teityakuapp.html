@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
+<html lang="ja"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
@@ -106,6 +104,11 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .pad{ padding:16px; }
 .section-label{ font-size:12px; font-weight:800; color:var(--g-500); letter-spacing:.08em; margin:20px 16px 8px; text-transform:uppercase; }
 .section-label:first-child{ margin-top:14px; }
+.section-row{ display:flex; align-items:center; justify-content:space-between; margin:20px 16px 8px; }
+.section-row:first-child{ margin-top:14px; }
+.section-row .section-label{ margin:0; }
+.add-btn{ width:30px; height:30px; flex:0 0 auto; border:2px solid var(--ink); background:#fff; font-size:17px; font-weight:900; line-height:1; display:flex; align-items:center; justify-content:center; }
+.add-btn:active, .add-btn.pressed{ background:var(--g-100); }
 
 .card{ border:2px solid var(--ink); background:#fff; }
 .card + .card{ border-top:none; }
@@ -194,6 +197,36 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .streakbar .sb-cell + .sb-cell{ border-left:2px solid var(--ink); }
 .streakbar .sb-num{ font-size:22px; font-weight:900; font-variant-numeric:tabular-nums; }
 .streakbar .sb-lab{ font-size:10.5px; font-weight:700; color:var(--g-500); margin-top:2px; }
+
+/* ホーム：教科／並び替えドロップダウン */
+.section-row{ flex-wrap:wrap; row-gap:8px; }
+.home-filters{ display:flex; gap:6px; flex:0 0 auto; }
+.home-select{
+  -webkit-appearance:none; appearance:none;
+  border:1.5px solid var(--ink); background-color:#fff; color:var(--ink);
+  font-size:11px; font-weight:800; padding:5px 20px 5px 8px; line-height:1.4;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'><path d='M0 0L5 6L10 0Z' fill='%23141414'/></svg>");
+  background-repeat:no-repeat; background-position:right 6px center; background-size:8px 5px;
+  max-width:34vw;
+}
+
+/* ============================================================
+   ログイン履歴（カレンダー）
+   ============================================================ */
+.hcal-wrap{ margin:14px 16px; border:2px solid var(--ink); }
+.hcal-grid{ display:grid; grid-template-columns:repeat(7,1fr); }
+.hcal-grid.hcal-head{ border-bottom:2px solid var(--ink); }
+.hc-wd{ text-align:center; font-size:11px; font-weight:800; color:var(--g-500); padding:8px 2px; }
+.hc-cell{ min-height:54px; border-right:1px solid var(--g-200); border-bottom:1px solid var(--g-200); padding:5px 4px; }
+.hc-cell:nth-child(7n){ border-right:none; }
+.hc-cell.hc-empty{ background:var(--g-50); }
+.hc-day{ font-size:11px; font-weight:700; color:var(--g-500); }
+.hc-cell.hc-today .hc-day{ color:#fff; background:var(--ink); display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; font-size:10px; }
+.hc-cell.hc-studied{ background:var(--g-50); }
+.hc-dot{ font-size:7px; margin-top:3px; line-height:1; }
+.hc-time{ font-size:9px; font-weight:800; margin-top:1px; line-height:1.2; font-variant-numeric:tabular-nums; }
+.hist-nav{ display:flex; align-items:center; justify-content:space-between; margin:20px 16px 8px; }
+.hist-nav .section-label{ margin:0; }
 
 /* ============================================================
    出題範囲選択
@@ -335,8 +368,8 @@ button.pressed, .choice-btn.pressed{ background:var(--g-100); }
     <div class="tb-title" id="tbTitle">暗記ドリル</div>
     <div class="tb-side" id="tbRight"></div>
   </div>
-  <div id="screens"></div>
-  <div id="tabbar"></div>
+  <div id="screens"><div class="streakbar" style="margin-top:14px;"><div class="sb-cell"><div class="sb-num">0</div><div class="sb-lab">連続日数</div></div><div class="sb-cell"><div class="sb-num">0</div><div class="sb-lab">累計回答数</div></div><div class="sb-cell"><div class="sb-num">0<span style="font-size:12px;">%</span></div><div class="sb-lab">正答率</div></div></div><div class="section-row"><div class="section-label">単元選択</div><div class="home-filters"><select class="home-select" data-action="setHomeSubject" aria-label="教科で絞り込み"><option value="" selected="">教科</option></select><select class="home-select" data-action="setHomeSort" aria-label="並び替え"><option value="mastery" selected="">理解度（低い）順</option><option value="new">新着順</option></select></div><button class="add-btn" data-action="pickFile" aria-label="JSONを追加">＋</button></div><div class="empty"><div class="eic">＋</div><p>まだ問題データがありません。<br>右上の「＋」からJSONファイルを追加してください。</p></div></div>
+  <div id="tabbar" style="display: flex;"><button data-action="nav" data-screen="home" class="active"><span class="ic">■</span><span>ホーム</span></button><button data-action="nav" data-screen="history" class=""><span class="ic">▦</span><span>履歴</span></button><button data-action="nav" data-screen="achievements" class=""><span class="ic">◆</span><span>実績</span></button><button data-action="nav" data-screen="settings" class=""><span class="ic">⚙</span><span>設定</span></button></div>
 </div>
 
 <div id="modalLayer">
@@ -344,7 +377,7 @@ button.pressed, .choice-btn.pressed{ background:var(--g-100); }
   <div class="modal-box" id="modalBox"></div>
 </div>
 
-<input type="file" id="fileInput" class="hidden-input" accept="application/json,.json" multiple>
+<input type="file" id="fileInput" class="hidden-input" accept="application/json,.json" multiple="">
 
 <script>
 (function(){
@@ -668,7 +701,8 @@ function saveJSONStore(key, val){
    ============================================================ */
 var library  = loadJSONStore(STORAGE_KEY_LIB, { decks:[] });
 var progress = loadJSONStore(STORAGE_KEY_PROG, {});     // questionId -> {level,nextDue,correct,wrong,lastSeen}
-var stats    = loadJSONStore(STORAGE_KEY_STATS, { totalAnswered:0, totalCorrect:0, streak:0, lastStudyDate:null, studyDays:[], achievements:{} });
+var stats    = loadJSONStore(STORAGE_KEY_STATS, { totalAnswered:0, totalCorrect:0, streak:0, lastStudyDate:null, studyDays:[], achievements:{}, dailySeconds:{} });
+if(!stats.dailySeconds) stats.dailySeconds = {}; // 旧バージョンのデータ互換
 var settings = loadJSONStore(STORAGE_KEY_SET, { newPerDay:8, reviewCap:40, defaultSetSize:10 });
 
 function persistLib(){ saveJSONStore(STORAGE_KEY_LIB, library); }
@@ -678,7 +712,9 @@ function persistSettings(){ saveJSONStore(STORAGE_KEY_SET, settings); }
 
 var nav = { screen:"home", params:{} };
 var session = null; // 出題セッション
-var selectState = { subjects:[], units:[], tags:[], size:settings.defaultSetSize, mode:"due" };
+var selectState = { subjects:[], units:[], size:settings.defaultSetSize };
+var homeFilter = { subject:"", sort:"mastery" };  // ホームの「教科／更新順」ドロップダウン
+var historyState = (function(){ var d=new Date(); return { year:d.getFullYear(), month:d.getMonth() }; })(); // ログイン履歴カレンダーの表示年月
 
 /* ============================================================
    サンプルデータ（初回体験用）
@@ -775,7 +811,9 @@ function mergeDeck(newDeck){
     newDeck.questions.forEach(function(q){ byId[q.id]=q; });
     existing.questions = Object.keys(byId).map(function(k){ return byId[k]; });
     existing.tags = uniq(existing.tags.concat(newDeck.tags));
+    existing.addedAt = Date.now(); // 「更新順」ソート用：追加・更新された時刻を記録
   } else {
+    newDeck.addedAt = Date.now();
     library.decks.push(newDeck);
   }
 }
@@ -867,40 +905,48 @@ function newCount(subjects, units, tags){
 }
 
 /* ============================================================
-   出題キューの構築
+   出題キューの構築（出現確率の重みづけサンプリング）
+   ------------------------------------------------------------
+   「復習中心／新規のみ／すべてから」のようなモード切り替えは廃止し、
+   常に単元の全問題からランダムに出題する。ただし、間違えた問題
+   （直近の連続正解数=0）ほど出やすく、3回連続正解して「クリア」した
+   問題は出現確率を下げる（消えはしない）。また、一度も出題して
+   いない問題もある程度優先して出す。
    ============================================================ */
-function buildTodayQueue(subjects, units, tags){
-  var t = todayStr();
-  var due = [], fresh = [];
-  library.decks.forEach(function(d){
-    if(!deckMatches(d,subjects||[],units||[],tags||[])) return;
-    d.questions.forEach(function(q){
-      var p = progress[q.id];
-      if(p){ if(p.nextDue<=t) due.push({deck:d,q:q}); }
-      else { fresh.push({deck:d,q:q}); }
-    });
-  });
-  due.sort(function(a,b){ return (progress[a.q.id].nextDue).localeCompare(progress[b.q.id].nextDue); });
-  due = due.slice(0, settings.reviewCap);
-  fresh = shuffle(fresh).slice(0, settings.newPerDay);
-  return shuffle(due.concat(fresh));
+function questionWeight(qid){
+  var p = progress[qid];
+  if(!p) return 1.4;                                  // 未回答：やや優先
+  var streak = p.streak || 0;
+  if(streak >= MASTERY_STREAK) return 0.35;            // クリア済み：出現を抑える
+  if(streak === 0) return 3.0;                         // 直近で間違えた：出現を増やす
+  return 1.0;                                          // 連続正解1〜2回目：通常
 }
 
-function buildCustomQueue(subjects, units, tags, mode, size){
-  var t = todayStr();
+/* 重み付き無作為抽出（A-ExpJアルゴリズム）。
+   重みが大きいほど選ばれやすいが、重みが小さくても選ばれる可能性は残る。 */
+function weightedSample(pool, size){
+  if(size<=0 || pool.length<=size) return shuffle(pool.slice());
+  var keyed = pool.map(function(item){
+    var w = Math.max(0.01, questionWeight(item.q.id));
+    var r = Math.random();
+    return { item:item, key:Math.pow(r, 1/w) };
+  });
+  keyed.sort(function(a,b){ return b.key - a.key; });
+  return shuffle(keyed.slice(0, size).map(function(k){ return k.item; }));
+}
+
+function buildWeightedQueue(deck, size){
+  var pool = deck.questions.map(function(q){ return {deck:deck, q:q}; });
+  return weightedSample(pool, size);
+}
+
+function buildCustomQueue(subjects, units, size){
   var pool = [];
   library.decks.forEach(function(d){
-    if(!deckMatches(d,subjects||[],units||[],tags||[])) return;
-    d.questions.forEach(function(q){
-      var p = progress[q.id];
-      if(mode==="due" && !(p && p.nextDue<=t)) return;
-      if(mode==="new" && p) return;
-      pool.push({deck:d,q:q});
-    });
+    if(!deckMatches(d,subjects||[],units||[],[])) return;
+    d.questions.forEach(function(q){ pool.push({deck:d,q:q}); });
   });
-  pool = shuffle(pool);
-  if(size>0) pool = pool.slice(0, size);
-  return pool;
+  return weightedSample(pool, size);
 }
 
 /* ============================================================
@@ -954,11 +1000,14 @@ function computeSubjectRetention(subject){
   return Math.round(sum/qs.length);
 }
 
-function recordSessionInStats(answeredCount, correctCount){
+function recordSessionInStats(answeredCount, correctCount, durationMs){
   stats.totalAnswered += answeredCount;
   stats.totalCorrect += correctCount;
   var t = todayStr();
   if(stats.studyDays.indexOf(t)<0) stats.studyDays.push(t);
+  if(!stats.dailySeconds) stats.dailySeconds = {};
+  var addSec = Math.max(1, Math.round((durationMs||0)/1000));
+  stats.dailySeconds[t] = (stats.dailySeconds[t]||0) + addSec;
   if(stats.lastStudyDate){
     var diff = daysBetween(stats.lastStudyDate, t);
     if(diff===1) stats.streak += 1;
@@ -1026,27 +1075,27 @@ function goto(screen, params){
    ============================================================ */
 var TABS = [
   { id:"home", label:"ホーム", icon:"■" },
-  { id:"select", label:"学習範囲", icon:"▤" },
+  { id:"history", label:"履歴", icon:"▦" },
   { id:"achievements", label:"実績", icon:"◆" },
   { id:"settings", label:"設定", icon:"⚙" }
 ];
 
 function renderChrome(){
   var tb = $("#tbTitle"), left = $("#tbLeft"), right = $("#tbRight");
-  var titles = { home:"暗記ドリル", select:"学習範囲を選ぶ", achievements:"実績", settings:"設定", quiz:"学習中", result:"結果" };
+  var titles = { home:"暗記ドリル", history:"ログイン履歴", achievements:"実績", settings:"設定", quiz:"学習中", result:"結果" };
   tb.textContent = titles[nav.screen] || "暗記ドリル";
 
   left.innerHTML = ""; right.innerHTML = "";
   if(nav.screen==="quiz"){
     left.innerHTML = '<button class="tb-btn" data-action="exitQuiz">×</button>';
-  } else if(["home","select","achievements","settings"].indexOf(nav.screen)>=0){
+  } else if(["home","history","achievements","settings"].indexOf(nav.screen)>=0){
     // トップレベル画面はサイドボタンなし
   } else if(nav.screen==="result"){
     // 戻る不可（ホームへのみ）
   }
 
   var tabbar = $("#tabbar");
-  var showTabs = ["home","select","achievements","settings"].indexOf(nav.screen)>=0;
+  var showTabs = ["home","history","achievements","settings"].indexOf(nav.screen)>=0;
   $("#screens").classList.toggle("no-tab", !showTabs);
   if(showTabs){
     tabbar.style.display = "flex";
@@ -1063,49 +1112,58 @@ function renderChrome(){
    レンダリング：ホーム
    ============================================================ */
 function renderHome(){
-  var due = dueCount([],[],[]);
-  var fresh = newCount([],[],[]);
-  var todaysTotal = Math.min(due, settings.reviewCap) + Math.min(fresh, settings.newPerDay);
-  var subjects = allSubjects();
-
   var html = "";
-  html += '<div class="hero">'
-    + '<div class="row"><div class="big">'+todaysTotal+'<span class="unit">問</span></div>'
-    + '<div class="sub">'+todayLabel()+'</div></div>'
-    + '<div class="sub">復習 '+Math.min(due,settings.reviewCap)+'問 ／ 新規 '+Math.min(fresh,settings.newPerDay)+'問</div>'
-    + '</div>';
-
-  html += '<div class="pad" style="padding-bottom:0;">'
-    + '<button class="btn-primary" data-action="startToday" '+(todaysTotal===0?"disabled":"")+' style="margin-top:12px;">'
-    + (todaysTotal>0 ? "今日の学習をはじめる" : "今日の分はありません")
-    + '</button></div>';
-
-  html += '<div class="streakbar">'
+  html += '<div class="streakbar" style="margin-top:14px;">'
     + '<div class="sb-cell"><div class="sb-num">'+stats.streak+'</div><div class="sb-lab">連続日数</div></div>'
     + '<div class="sb-cell"><div class="sb-num">'+stats.totalAnswered+'</div><div class="sb-lab">累計回答数</div></div>'
     + '<div class="sb-cell"><div class="sb-num">'+(stats.totalAnswered? Math.round(stats.totalCorrect/stats.totalAnswered*100):0)+'<span style="font-size:12px;">%</span></div><div class="sb-lab">正答率</div></div>'
     + '</div>';
 
-  html += '<div class="section-label">教科</div>';
-  if(subjects.length===0){
-    html += '<div class="empty"><div class="eic">＋</div><p>まだ問題データがありません。<br>「学習範囲」タブからデータを追加してください。</p></div>';
+  var subjectsAvail = allSubjects();
+
+  html += '<div class="section-row">'
+    + '<div class="section-label">単元選択</div>'
+    + '<div class="home-filters">'
+      + '<select class="home-select" data-action="setHomeSubject" aria-label="教科で絞り込み">'
+        + '<option value=""'+(homeFilter.subject===""?" selected":"")+'>教科</option>'
+        + subjectsAvail.map(function(s){
+            return '<option value="'+esc(s)+'"'+(homeFilter.subject===s?" selected":"")+'>'+esc(s)+'</option>';
+          }).join("")
+      + '</select>'
+      + '<select class="home-select" data-action="setHomeSort" aria-label="並び替え">'
+        + '<option value="mastery"'+(homeFilter.sort==="mastery"?" selected":"")+'>理解度（低い）順</option>'
+        + '<option value="new"'+(homeFilter.sort==="new"?" selected":"")+'>新着順</option>'
+      + '</select>'
+    + '</div>'
+    + '<button class="add-btn" data-action="pickFile" aria-label="JSONを追加">＋</button>'
+    + '</div>';
+
+  if(library.decks.length===0){
+    html += '<div class="empty"><div class="eic">＋</div><p>まだ問題データがありません。<br>右上の「＋」からJSONファイルを追加してください。</p></div>';
   } else {
-    html += '<div class="list">';
-    subjects.forEach(function(s){
-      var d = dueCount([s],[],[]);
-      var n = newCount([s],[],[]);
-      var total = totalQuestionCount([s],[],[]);
-      var mastery = computeSubjectRetention(s);
-      html += '<div class="card row-item hoverable" data-action="openSubject" data-subject="'+esc(s)+'">'
-        + '<div class="ri-main"><div class="ri-title">'+esc(s)+'</div><div class="ri-sub">全'+total+'問 ／ 新規'+n+'問</div>'
-        + '<div class="mbar-track"><div class="mbar-fill" style="width:'+mastery+'%;"></div></div>'
-        + '<div class="ri-sub" style="margin-top:3px;">理解度 '+mastery+'%</div>'
-        + '</div>'
-        + '<div class="ri-num'+(d===0?" zero":"")+'">'+d+'</div>'
-        + '<div class="ri-chev">›</div>'
-        + '</div>';
-    });
-    html += '</div>';
+    var decks = library.decks.slice();
+    if(homeFilter.subject) decks = decks.filter(function(d){ return d.subject===homeFilter.subject; });
+    if(homeFilter.sort==="new"){
+      decks.sort(function(a,b){ return (b.addedAt||0) - (a.addedAt||0); });
+    } else {
+      decks.sort(function(a,b){ return computeUnitRetention(a) - computeUnitRetention(b); });
+    }
+
+    if(decks.length===0){
+      html += '<div class="empty"><p>該当する単元がありません。</p></div>';
+    } else {
+      html += '<div class="list">';
+      decks.forEach(function(d){
+        var mastery = computeUnitRetention(d);
+        html += '<div class="card unit-row hoverable" data-action="startUnit" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'">'
+          + '<div class="ur-top"><span class="ur-title">'+esc(d.unit)+'</span>'
+          + '<span class="ur-pct">理解度 '+mastery+'%</span></div>'
+          + '<div class="ur-meta">全'+d.questions.length+'問'+(homeFilter.subject?"":"（"+esc(d.subject)+"）")+'</div>'
+          + '<div class="mbar-track"><div class="mbar-fill" style="width:'+mastery+'%;"></div></div>'
+          + '</div>';
+      });
+      html += '</div>';
+    }
   }
   return html;
 }
@@ -1116,82 +1174,68 @@ function todayLabel(){
 }
 
 /* ============================================================
-   レンダリング：学習範囲選択
+   レンダリング：ログイン履歴（学習カレンダー）
+   ------------------------------------------------------------
+   その日に学習したかどうかと、学習時間（分／時間）をカレンダー
+   形式で表示する。実績タブの連続日数と重なる情報だが、こちらは
+   月単位で「いつ・どれくらい」学習したかを一覧できるようにする。
    ============================================================ */
-function renderSelect(){
-  var subs = allSubjects();
-  if(subs.length===0){
-    return '<div class="empty"><div class="eic">＋</div><p>まだ問題データがありません。<br>下のボタンから問題データ（JSON）を追加してください。</p></div>'
-      + '<div class="pad">'
-      + '<button class="btn-primary" data-action="pickFile">問題データ（JSON）を追加</button>'
-      + '<div style="height:10px;"></div>'
-      + '<button class="btn-outline" data-action="loadSample">サンプルデータを試す</button>'
+function formatDuration(sec){
+  sec = sec||0;
+  if(sec<=0) return "0分";
+  if(sec<60) return "1分未満";
+  var mins = Math.round(sec/60);
+  if(mins<60) return mins+"分";
+  var hrs = Math.round(mins/60*10)/10;
+  return hrs+"時間";
+}
+
+function shiftHistoryMonth(delta){
+  var m = historyState.month + delta, y = historyState.year;
+  while(m<0){ m += 12; y--; }
+  while(m>11){ m -= 12; y++; }
+  historyState.month = m; historyState.year = y;
+}
+
+function renderHistory(){
+  var y = historyState.year, m = historyState.month;
+  var monthLabel = y+"年"+(m+1)+"月";
+  var firstWeekday = new Date(y, m, 1).getDay();
+  var daysInMonth = new Date(y, m+1, 0).getDate();
+  var today = todayStr();
+
+  var studiedDays = 0, monthSeconds = 0;
+  var cells = "";
+  for(var i=0;i<firstWeekday;i++){ cells += '<div class="hc-cell hc-empty"></div>'; }
+  for(var day=1; day<=daysInMonth; day++){
+    var ds = y+"-"+pad2(m+1)+"-"+pad2(day);
+    var studied = stats.studyDays.indexOf(ds)>=0;
+    var sec = (stats.dailySeconds && stats.dailySeconds[ds]) || 0;
+    if(studied){ studiedDays++; monthSeconds += sec; }
+    cells += '<div class="hc-cell'+(studied?" hc-studied":"")+(ds===today?" hc-today":"")+'">'
+      + '<div class="hc-day">'+day+'</div>'
+      + (studied ? '<div class="hc-dot">●</div><div class="hc-time">'+esc(formatDuration(sec))+'</div>' : '')
       + '</div>';
   }
 
-  var units = unitsOfSubjects(selectState.subjects);
-  var tags = tagsOf(selectState.subjects, selectState.units);
-  var matchTotal = totalQuestionCount(selectState.subjects, selectState.units, selectState.tags);
-  var matchDue = dueCount(selectState.subjects, selectState.units, selectState.tags);
-  var matchNew = newCount(selectState.subjects, selectState.units, selectState.tags);
-
   var html = "";
-  html += '<div class="section-label">教科（複数選択可・未選択＝すべて）</div>';
-  html += '<div class="chipwrap">' + subs.map(function(s){
-    return '<button class="chip'+(selectState.subjects.indexOf(s)>=0?" on":"")+'" data-action="toggleSubject" data-v="'+esc(s)+'">'+esc(s)+'</button>';
-  }).join("") + '</div>';
-
-  html += '<div class="section-label">単元（タップで選択・複数選択可・未選択＝すべて／理解度は日数が経つと下がります）</div>';
-  if(units.length){
-    html += '<div class="list">' + units.map(function(u){
-      var subj = u.split("｜")[0], label = u.split("｜")[1];
-      var deck = library.decks.filter(function(d){ return d.subject===subj && d.unit===label; })[0];
-      var mastery = deck ? computeUnitRetention(deck) : 0;
-      var qn = deck ? deck.questions.length : 0;
-      var on = selectState.units.indexOf(u)>=0;
-      return '<div class="card unit-row'+(on?" on":"")+'" data-action="toggleUnit" data-v="'+esc(u)+'">'
-        + '<div class="ur-top"><span class="ur-mark">'+(on?"■":"□")+'</span>'
-        + '<span class="ur-title">'+esc(label)+'</span>'
-        + '<span class="ur-pct">理解度 '+mastery+'%</span></div>'
-        + '<div class="ur-meta">全'+qn+'問'+(selectState.subjects.length!==1?"（"+esc(subj)+"）":"")+'</div>'
-        + '<div class="mbar-track" style="margin-left:25px;"><div class="mbar-fill" style="width:'+mastery+'%;"></div></div>'
-        + '</div>';
-    }).join("") + '</div>';
-  } else {
-    html += '<div class="empty" style="margin:12px 20px;"><p>該当する単元がありません。</p></div>';
-  }
-
-  html += '<div class="section-label">タグ（任意）</div>';
-  if(tags.length){
-    html += '<div class="chipwrap">' + tags.map(function(t){
-      return '<button class="chip'+(selectState.tags.indexOf(t)>=0?" on":"")+'" data-action="toggleTag" data-v="'+esc(t)+'">'+esc(t)+'</button>';
-    }).join("") + '</div>';
-  } else {
-    html += '<div class="pad" style="padding-top:0;padding-bottom:0;color:#a3a3a3;font-size:12.5px;font-weight:600;">タグなし</div>';
-  }
-
-  html += '<div class="section-label">出題モード</div>';
-  html += '<div class="pad" style="padding-top:0;">'
-    + '<div class="seg">'
-    + '<button data-action="setMode" data-v="due" class="'+(selectState.mode==="due"?"on":"")+'">復習中心</button>'
-    + '<button data-action="setMode" data-v="new" class="'+(selectState.mode==="new"?"on":"")+'">新規のみ</button>'
-    + '<button data-action="setMode" data-v="all" class="'+(selectState.mode==="all"?"on":"")+'">すべてから</button>'
-    + '</div></div>';
-
-  html += '<div class="field"><label>1セットの問題数</label>'
-    + '<div class="stepper">'
-    + '<button data-action="stepSize" data-v="-1">−</button>'
-    + '<div class="sval">'+selectState.size+'</div>'
-    + '<button data-action="stepSize" data-v="1">＋</button>'
-    + '</div></div>';
-
-  html += '<div class="filter-summary">対象：全'+matchTotal+'問（復習可'+matchDue+'／新規'+matchNew+'）</div>';
-
-  html += '<div class="pad" style="padding-top:0;">'
-    + '<button class="btn-primary" data-action="startCustom">この条件で学習をはじめる</button>'
-    + '<div style="height:10px;"></div>'
-    + '<button class="btn-outline" data-action="openLibrary">問題データを管理</button>'
+  html += '<div class="streakbar" style="margin-top:14px;">'
+    + '<div class="sb-cell"><div class="sb-num">'+stats.streak+'</div><div class="sb-lab">連続学習日数</div></div>'
+    + '<div class="sb-cell"><div class="sb-num">'+stats.studyDays.length+'</div><div class="sb-lab">のべ学習日数</div></div>'
     + '</div>';
+
+  html += '<div class="hist-nav">'
+    + '<button class="btn-ghost" data-action="historyMonth" data-v="-1">＜ 前の月</button>'
+    + '<div class="section-label">'+monthLabel+'</div>'
+    + '<button class="btn-ghost" data-action="historyMonth" data-v="1">次の月 ＞</button>'
+    + '</div>';
+
+  html += '<div class="hcal-wrap">'
+    + '<div class="hcal-grid hcal-head">' + ["日","月","火","水","木","金","土"].map(function(w){ return '<div class="hc-wd">'+w+'</div>'; }).join("") + '</div>'
+    + '<div class="hcal-grid">' + cells + '</div>'
+    + '</div>';
+
+  html += '<div class="filter-summary">この月の学習日数：'+studiedDays+'日／合計学習時間：'+formatDuration(monthSeconds)+'</div>';
 
   return html;
 }
@@ -1213,7 +1257,7 @@ function libraryModalHtml(){
     html += '<div class="list">' + library.decks.map(function(d){
       return '<div class="card row-item">'
         + '<div class="ri-main"><div class="ri-title">'+esc(d.subject)+' ／ '+esc(d.unit)+'</div>'
-        + '<div class="ri-sub">'+d.questions.length+'問　'+d.tags.map(function(t){return esc(t);}).join("・")+'</div></div>'
+        + '<div class="ri-sub">'+d.questions.length+'問</div></div>'
         + '<button class="btn-ghost" data-action="deleteDeck" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'">削除</button>'
         + '</div>';
     }).join("") + '</div>';
@@ -1246,15 +1290,7 @@ function renderAchievements(){
 function renderSettings(){
   var html = "";
   html += '<div class="section-label">学習ペースの設定</div>';
-  html += '<div class="field"><label>1日の新規カード上限（多すぎると負担になります）</label>'
-    + '<div class="stepper"><button data-action="stepSetting" data-k="newPerDay" data-v="-1">−</button>'
-    + '<div class="sval">'+settings.newPerDay+'</div>'
-    + '<button data-action="stepSetting" data-k="newPerDay" data-v="1">＋</button></div></div>';
-  html += '<div class="field"><label>1日の復習カード上限</label>'
-    + '<div class="stepper"><button data-action="stepSetting" data-k="reviewCap" data-v="-5">−</button>'
-    + '<div class="sval">'+settings.reviewCap+'</div>'
-    + '<button data-action="stepSetting" data-k="reviewCap" data-v="5">＋</button></div></div>';
-  html += '<div class="field"><label>カスタム学習の初期セット数</label>'
+  html += '<div class="field"><label>1回の学習で出題する問題数（デフォルト）</label>'
     + '<div class="stepper"><button data-action="stepSetting" data-k="defaultSetSize" data-v="-1">−</button>'
     + '<div class="sval">'+settings.defaultSetSize+'</div>'
     + '<button data-action="stepSetting" data-k="defaultSetSize" data-v="1">＋</button></div></div>';
@@ -1270,10 +1306,12 @@ function renderSettings(){
 
   html += '<div class="section-label">このアプリについて</div>';
   html += '<div class="pad" style="padding-top:0;color:#7a7a7a;font-size:12.5px;font-weight:600;line-height:1.8;">'
-    + '間隔反復方式（レベル0〜7、'+INTERVALS.join("/")+'日）で復習日を自動計算します。<br>'
+    + '出題は単元内の全問題からランダムに選ばれますが、直近で間違えた問題（連続正解が0の問題）ほど出やすくなります。'
+    + '3回連続で正解すると「クリア」扱いになり出現頻度は下がりますが、そのあと1回でも間違えるとまた出やすくなります。<br>'
     + '「理解度」は連続'+MASTERY_STREAK+'回正解ではじめて100%になり、1回や2回の正解では上限を超えません。'
-    + 'また、復習しない日数が経つほど少しずつ下がっていきます（一度覚えても時間が経てば忘れる、という前提の表示です）。<br>'
-    + '一問ごとに正解・不正解どちらの体験も次回の出題タイミングに反映されるため、間違えた問題も記憶の定着に役立ちます。<br>'
+    + '一度も出題していない問題は0%として計算されるため、答えた問題だけで見かけ上100%になることはありません。'
+    + 'また、答えてから日数が経つほど少しずつ下がっていきます（一度覚えても時間が経てば忘れる、という前提の表示です）。<br>'
+    + '完璧を目指すより、毎日少しずつ続けることを優先した設計です。<br>'
     + 'データはこの端末内にのみ保存されます。'
     + '</div>';
   return html;
@@ -1302,16 +1340,21 @@ function renderQuiz(){
   var choicesAreGraphs = q.choices.every(function(c){
     return RT_BLOCK_TYPES.some(function(t){ return String(c).trim().indexOf(t+"｜")===0; });
   });
+  /* 表示順は session 開始時に決めた item.order（元のインデックスの並び）に
+     従う。正誤判定は常に元のインデックス(origIdx)で行うため、JSON側の
+     並び順やshuffleの有無に関係なく採点は正しく動く。 */
+  var order = cur.order || q.choices.map(function(_,i){ return i; });
   html += '<div class="qz-choices'+(choicesAreGraphs?" qz-choices-grid":"")+'">';
-  q.choices.forEach(function(c, ci){
+  order.forEach(function(origIdx, ci){
+    var c = q.choices[origIdx];
     var cls = "choice-btn"+(choicesAreGraphs?" choice-btn-grid":"");
     var mark = "";
     if(answered){
       var picked = session.answers[idx];
-      if(ci===q.answerIndex){ cls += " sel-correct"; mark="○"; }
-      else if(ci===picked){ cls += " sel-wrong"; mark="×"; }
+      if(origIdx===q.answerIndex){ cls += " sel-correct"; mark="○"; }
+      else if(origIdx===picked){ cls += " sel-wrong"; mark="×"; }
     }
-    html += '<button class="'+cls+'" data-locked="'+(answered?1:0)+'" data-action="'+(answered?"":"answer")+'" data-idx="'+ci+'">'
+    html += '<button class="'+cls+'" data-locked="'+(answered?1:0)+'" data-action="'+(answered?"":"answer")+'" data-idx="'+origIdx+'">'
       + '<span class="cb-mark">'+(mark || (ci+1))+'</span>'
       + '<span class="cb-txt">'+renderRichText(c)+'</span>'
       + '</button>';
@@ -1385,7 +1428,7 @@ function render(){
   var html = "";
   switch(nav.screen){
     case "home": html = renderHome(); break;
-    case "select": html = renderSelect(); break;
+    case "history": html = renderHistory(); break;
     case "achievements": html = renderAchievements(); break;
     case "settings": html = renderSettings(); break;
     case "quiz": html = renderQuiz(); break;
@@ -1406,7 +1449,16 @@ function clearAutoAdvance(){
 function startSession(queue){
   if(queue.length===0){ toast("該当する問題がありません"); return; }
   clearAutoAdvance();
-  session = { queue:queue, index:0, answers:[], unlocked:[] };
+  /* 選択肢の表示順は、JSON内の並び順に関わらず毎回ランダムにする。
+     item.order[表示位置] = 元のchoices配列でのインデックス、という
+     対応表をセッション開始時に1回だけ作り、以後の再描画では
+     このorderを使い回すことで、同じ問題を見ている間は順番が
+     ぶれないようにする（正誤判定は常に元のインデックスで行う）。 */
+  queue.forEach(function(item){
+    var idxs = item.q.choices.map(function(_,i){ return i; });
+    item.order = shuffle(idxs);
+  });
+  session = { queue:queue, index:0, answers:[], unlocked:[], startedAt:Date.now() };
   goto("quiz");
 }
 
@@ -1446,7 +1498,8 @@ function nextQuestion(){
 function finishSession(){
   var total = session.queue.length;
   var correct = session.answers.filter(function(a,i){ return a === session.queue[i].q.answerIndex; }).length;
-  recordSessionInStats(total, correct);
+  var durationMs = Date.now() - (session.startedAt || Date.now());
+  recordSessionInStats(total, correct, durationMs);
   var unlocked = checkAchievements({ perfect: (correct===total) });
   session.unlocked = unlocked;
   goto("result");
@@ -1460,9 +1513,21 @@ function retryMistakes(){
 /* ============================================================
    イベント処理（委譲）
    ============================================================ */
-document.addEventListener("click", function(e){
-  var btn = e.target.closest("[data-action]");
-  if(!btn) return;
+/* ============================================================
+   タップ処理（ポインタ一致方式）
+   ------------------------------------------------------------
+   従来は "click" イベント委譲で処理していたが、スマートフォンでは
+   タップ中（指を置いてから離すまでの間）に auto-advance などで
+   画面が再描画されると、離した瞬間の座標にあった「別の新しいボタン」
+   に click が発火してしまい、位置がずれたような誤タップが発生する。
+   そこで、指を置いた瞬間の要素（DOMノードそのもの）を覚えておき、
+   離した瞬間に「同じノードの上」であった場合だけ処理を実行する。
+   再描画で要素が入れ替わっていれば別ノード扱いになり、誤タップは
+   自動的に無効化される。
+   ============================================================ */
+var pendingTapEl = null;
+
+function handleAction(btn, e){
   var action = btn.getAttribute("data-action");
   if(!action) return;
 
@@ -1471,16 +1536,18 @@ document.addEventListener("click", function(e){
       goto(btn.getAttribute("data-screen"));
       break;
     case "openSubject":
-      selectState = { subjects:[btn.getAttribute("data-subject")], units:[], tags:[], size:settings.defaultSetSize, mode:"due" };
-      goto("select");
+      homeFilter.subject = btn.getAttribute("data-subject") || "";
+      goto("home");
       break;
-    case "startToday":
-      startSession(buildTodayQueue([],[],[]));
+    case "startUnit": {
+      var deck = library.decks.filter(function(dd){
+        return dd.subject===btn.getAttribute("data-subject") && dd.unit===btn.getAttribute("data-unit");
+      })[0];
+      if(deck) startSession(buildWeightedQueue(deck, settings.defaultSetSize));
       break;
-    case "toggleSubject": toggleIn(selectState.subjects, btn.getAttribute("data-v")); selectState.units=[]; selectState.tags=[]; render(); break;
-    case "toggleUnit": toggleIn(selectState.units, btn.getAttribute("data-v")); selectState.tags=[]; render(); break;
-    case "toggleTag": toggleIn(selectState.tags, btn.getAttribute("data-v")); render(); break;
-    case "setMode": selectState.mode = btn.getAttribute("data-v"); render(); break;
+    }
+    case "toggleSubject": toggleIn(selectState.subjects, btn.getAttribute("data-v")); selectState.units=[]; render(); break;
+    case "toggleUnit": toggleIn(selectState.units, btn.getAttribute("data-v")); render(); break;
     case "stepSize": {
       var d = parseInt(btn.getAttribute("data-v"),10);
       selectState.size = Math.max(1, Math.min(200, selectState.size + d));
@@ -1488,7 +1555,7 @@ document.addEventListener("click", function(e){
       break;
     }
     case "startCustom": {
-      var q = buildCustomQueue(selectState.subjects, selectState.units, selectState.tags, selectState.mode, selectState.size);
+      var q = buildCustomQueue(selectState.subjects, selectState.units, selectState.size);
       startSession(q);
       break;
     }
@@ -1504,6 +1571,7 @@ document.addEventListener("click", function(e){
       break;
     case "retryMistakes": retryMistakes(); break;
     case "backHome": session=null; goto("home"); break;
+    case "historyMonth": shiftHistoryMonth(parseInt(btn.getAttribute("data-v"),10)); render(); break;
 
     case "openLibrary": openModal(libraryModalHtml()); break;
     case "closeModal": closeModal(); break;
@@ -1531,24 +1599,77 @@ document.addEventListener("click", function(e){
       break;
     }
   }
-});
+}
 
 function toggleIn(arr, v){
   var i = arr.indexOf(v);
   if(i>=0) arr.splice(i,1); else arr.push(v);
 }
 
-/* タップの即時フィードバック（古い端末での反応遅延対策） */
+/* タップの即時フィードバック（古い端末での反応遅延対策）と、
+   ポインタ一致方式によるアクション実行を同時に行う。
+   ------------------------------------------------------------
+   【iOS(WebKit)のホーム画面追加(PWA)時などに当たり判定がずれる問題について】
+   iOSのWebKitは、タッチ由来のpointer/touchイベントに対して
+   「暗黙のポインタキャプチャ」を行う。これは、指を置いた瞬間の
+   要素(touchstart/pointerdownのtarget)を覚えておき、指が実際に
+   別の位置に動いてもpointerup/touchendの e.target を「最初の要素の
+   ままにする」という仕様（実装依存の挙動を含む）で、通常は
+   スクロール中の誤タップを防ぐのに役立つ。
+   しかし、ホーム画面に追加してスタンドアロン表示（standalone）に
+   した場合や、セーフエリア(env(safe-area-inset-*))の再計算タイミング、
+   自動採点後の再描画などで「指を置いてから離すまでの間にレイアウトが
+   わずかにシフトする」ことがある。このとき e.target は指を置いた瞬間の
+   古い要素を指したままなので、画面上は別のボタンの位置に指があるのに
+   古いボタンのアクションが実行されてしまう＝「当たり判定がずれる」
+   という現象が起きる（頻度は低いが通常のSafariでも起こり得る）。
+   対策として、指を離した瞬間の実座標(clientX/clientY)から
+   document.elementFromPoint()で「今、実際にその位置にある要素」を
+   取得し直し、pointerdown時に覚えておいた要素と一致する場合のみ
+   アクションを実行する。レイアウトがずれて別の要素が来ていた場合は
+   誤タップとして無視し、意図しない別ボタンの発火を防ぐ。 */
 document.addEventListener("pointerdown", function(e){
+  pendingTapEl = e.target.closest("[data-action]") || null;
   var t = e.target.closest("button, .choice-btn");
   if(t) t.classList.add("pressed");
 }, {passive:true});
-["pointerup","pointercancel","pointerleave"].forEach(function(ev){
+
+document.addEventListener("pointerup", function(e){
+  var t = e.target.closest("button, .choice-btn");
+  if(t) t.classList.remove("pressed");
+  document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
+
+  if(pendingTapEl){
+    var atPoint = (typeof e.clientX==="number")
+      ? document.elementFromPoint(e.clientX, e.clientY)
+      : e.target;
+    var actualBtn = atPoint ? atPoint.closest("[data-action]") : null;
+    /* pointerdown時の要素と、指を離した実座標に今あるDOMノードが
+       一致した場合のみ実行する。単なる target 一致より厳密で、
+       レイアウトシフトによる誤爆を確実に防げる。 */
+    if(actualBtn && actualBtn === pendingTapEl){
+      handleAction(pendingTapEl, e);
+    }
+  }
+  pendingTapEl = null;
+}, {passive:true});
+
+["pointercancel","pointerleave"].forEach(function(ev){
   document.addEventListener(ev, function(e){
     var t = e.target.closest("button, .choice-btn");
     if(t) t.classList.remove("pressed");
     document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
+    pendingTapEl = null;
   }, {passive:true});
+});
+
+/* ホームの「教科／更新順」ドロップダウン（<select>のchangeイベント） */
+document.addEventListener("change", function(e){
+  var el = e.target.closest("select[data-action]");
+  if(!el) return;
+  var action = el.getAttribute("data-action");
+  if(action==="setHomeSubject"){ homeFilter.subject = el.value; render(); }
+  else if(action==="setHomeSort"){ homeFilter.sort = el.value; render(); }
 });
 
 /* PCでのキーボード操作（数字キーで選択／Enterで次へ） */
@@ -1559,8 +1680,9 @@ document.addEventListener("keydown", function(e){
   if(!answered){
     var n = parseInt(e.key,10);
     if(n>=1 && n<=9){
-      var choices = session.queue[idx].q.choices;
-      if(n<=choices.length) answerCurrent(n-1);
+      var cur = session.queue[idx];
+      var order = cur.order || cur.q.choices.map(function(_,i){ return i; });
+      if(n<=order.length) answerCurrent(order[n-1]);
     }
   } else {
     if(e.key==="Enter" || e.key===" "){ e.preventDefault(); nextQuestion(); }
@@ -1605,5 +1727,6 @@ goto("home");
 
 })();
 </script>
-</body>
-</html>
+
+
+</body></html>
