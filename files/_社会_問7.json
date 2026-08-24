@@ -1,0 +1,1534 @@
+{
+  "questions": [
+    {
+      "id": "K7-001",
+      "major": "大問7：国際社会",
+      "theme": "国際社会・国際関係",
+      "subtheme": "主権国家",
+      "level": 1,
+      "knowledgeId": "international_sovereign_state",
+      "question": "それぞれの国が、自国の政治について最終的に決定する権限をもつことを何というか。",
+      "choices": [
+        "主権",
+        "国際分業",
+        "国際協力",
+        "関税"
+      ],
+      "answerIndex": 0,
+      "explanation": "主権とは、国家が自国の政治について最終的に決定する権限をもつことです。"
+    },
+    {
+      "id": "K7-002",
+      "major": "大問7：国際社会",
+      "theme": "国際社会・国際関係",
+      "subtheme": "外交",
+      "level": 1,
+      "knowledgeId": "international_diplomacy",
+      "question": "国と国との間で、政治・経済・文化などについて交渉や連絡を行う活動を何というか。",
+      "choices": [
+        "外交",
+        "選挙",
+        "地方自治",
+        "国際分業"
+      ],
+      "answerIndex": 0,
+      "explanation": "外交は、国家間で交渉や連絡などを行い、関係を調整する活動です。"
+    },
+    {
+      "id": "K7-003",
+      "major": "大問7：国際社会",
+      "theme": "国際社会・国際関係",
+      "subtheme": "国際協力",
+      "level": 1,
+      "knowledgeId": "international_cooperation",
+      "question": "一国だけでは解決が難しい地球環境問題や感染症などに対して、複数の国が協力して取り組むことを何というか。",
+      "choices": [
+        "国際協力",
+        "国際分業",
+        "国内分権",
+        "保護貿易"
+      ],
+      "answerIndex": 0,
+      "explanation": "国際協力とは、国境を越える課題に対して、国や国際機関などが協力して取り組むことです。"
+    },
+    {
+      "id": "K7-004",
+      "major": "大問7：国際社会",
+      "theme": "国際社会・国際関係",
+      "subtheme": "国際社会の相互依存",
+      "level": 2,
+      "knowledgeId": "international_interdependence",
+      "question": "日本の企業が海外から原料を輸入し、その製品を別の国へ輸出している。このような活動から分かることとして最も適切なものはどれか。",
+      "choices": [
+        "各国の経済は互いに結び付いている",
+        "各国は貿易を行わなくなっている",
+        "国内市場だけで生産が完結している",
+        "国際協力は経済と関係しない"
+      ],
+      "answerIndex": 0,
+      "explanation": "原料の輸入や製品の輸出を通して、企業や消費者を含む各国の経済が相互に結び付いていることが分かります。"
+    },
+    {
+      "id": "K7-005",
+      "major": "大問7：国際社会",
+      "theme": "国際社会・国際関係",
+      "subtheme": "国家間の利害調整",
+      "level": 2,
+      "knowledgeId": "international_interest_coordination",
+      "question": "ある国は自国の産業を守るため輸入品を減らしたいと考え、別の国はその国への輸出を増やしたいと考えている。このような場合に必要となる取り組みはどれか。",
+      "choices": [
+        "国家間の交渉による利害調整",
+        "すべての貿易の停止",
+        "各国による外交の廃止",
+        "国際機関の活動禁止"
+      ],
+      "answerIndex": 0,
+      "explanation": "国家間で利害が異なる場合には、交渉などを通して互いの立場を調整することが重要です。"
+    },
+    {
+      "id": "K7-006",
+      "major": "大問7：国際社会",
+      "theme": "国際社会・国際関係",
+      "subtheme": "国際法・条約",
+      "level": 1,
+      "knowledgeId": "international_treaty",
+      "question": "国家間で合意し、国際的な取り決めとして結ばれるものを何というか。",
+      "choices": [
+        "条約",
+        "予算",
+        "条例",
+        "政令"
+      ],
+      "answerIndex": 0,
+      "explanation": "条約は、国家間などで結ばれる国際的な取り決めです。"
+    },
+    {
+      "id": "K7-007",
+      "major": "大問7：国際社会",
+      "theme": "国際社会・国際関係",
+      "subtheme": "国際紛争",
+      "level": 2,
+      "knowledgeId": "international_conflict",
+      "question": "国境や資源などをめぐって国家間の対立が起きた場合、武力行使以外の方法として特に重要なのはどれか。",
+      "choices": [
+        "外交による交渉",
+        "貿易の全面禁止",
+        "国際機関からの脱退",
+        "相手国との連絡停止"
+      ],
+      "answerIndex": 0,
+      "explanation": "国家間の対立を解決するためには、外交や交渉などによって平和的に利害を調整することが重要です。"
+    },
+    {
+      "id": "K7-008",
+      "major": "大問7：国際社会",
+      "theme": "国際社会・国際関係",
+      "subtheme": "国際的課題",
+      "level": 2,
+      "knowledgeId": "international_global_issues",
+      "question": "地球温暖化や海洋汚染が国際的な課題となる理由として最も適切なものはどれか。",
+      "choices": [
+        "影響が国境を越えて広がるため",
+        "一つの国の法律だけで完全に解決できるため",
+        "特定の都市だけに影響するため",
+        "経済活動とは関係がないため"
+      ],
+      "answerIndex": 0,
+      "explanation": "環境問題は国境を越えて影響が及ぶため、一国だけでなく国際的な協力が必要になります。"
+    },
+    {
+      "id": "K7-009",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "国際連合の目的",
+      "level": 1,
+      "knowledgeId": "international_un",
+      "question": "国際連合が設立された目的の一つとして最も適切なものはどれか。",
+      "choices": [
+        "国際の平和と安全を維持する",
+        "世界のすべての国を一つの政府で統治する",
+        "各国の貿易を禁止する",
+        "すべての国の文化を統一する"
+      ],
+      "answerIndex": 0,
+      "explanation": "国際連合は、国際の平和と安全の維持や国際協力の推進などを目的としています。"
+    },
+    {
+      "id": "K7-010",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "国際連合総会",
+      "level": 1,
+      "knowledgeId": "international_un_general_assembly",
+      "question": "国際連合のすべての加盟国が参加する主要機関はどれか。",
+      "choices": [
+        "総会",
+        "安全保障理事会",
+        "国際司法裁判所",
+        "事務局"
+      ],
+      "answerIndex": 0,
+      "explanation": "総会は国際連合の主要機関の一つで、すべての加盟国が参加します。"
+    },
+    {
+      "id": "K7-011",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "安全保障理事会",
+      "level": 1,
+      "knowledgeId": "international_un_security_council",
+      "question": "国際連合で、国際の平和と安全の維持について主要な責任をもつ機関はどれか。",
+      "choices": [
+        "安全保障理事会",
+        "総会",
+        "国際司法裁判所",
+        "UNESCO"
+      ],
+      "answerIndex": 0,
+      "explanation": "安全保障理事会は、国際の平和と安全の維持について主要な責任をもつ機関です。"
+    },
+    {
+      "id": "K7-012",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "安全保障理事会の常任理事国",
+      "level": 1,
+      "knowledgeId": "international_un_permanent_members",
+      "question": "国際連合安全保障理事会の常任理事国に含まれる国はどれか。",
+      "choices": [
+        "フランス",
+        "ドイツ",
+        "日本",
+        "インド"
+      ],
+      "answerIndex": 0,
+      "explanation": "安全保障理事会の常任理事国は、アメリカ・イギリス・フランス・ロシア・中国の5か国です。"
+    },
+    {
+      "id": "K7-013",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "安全保障理事会の拒否権",
+      "level": 2,
+      "knowledgeId": "international_un_veto",
+      "question": "国際連合安全保障理事会で、常任理事国がもつ拒否権が問題となるのはなぜか。",
+      "choices": [
+        "常任理事国の反対によって重要な決定が採択されない場合があるため",
+        "総会の加盟国数を増やせるため",
+        "国際司法裁判所の判決を自由に変更できるため",
+        "すべての条約を一国だけで成立させられるため"
+      ],
+      "answerIndex": 0,
+      "explanation": "安全保障理事会では、常任理事国の反対が重要な決定の採択に影響する仕組みがあります。"
+    },
+    {
+      "id": "K7-014",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "国際司法裁判所",
+      "level": 1,
+      "knowledgeId": "international_judicial_court",
+      "question": "国家間の法律上の争いを扱う国際連合の主要な司法機関はどれか。",
+      "choices": [
+        "国際司法裁判所",
+        "国際刑事裁判所",
+        "安全保障理事会",
+        "UNICEF"
+      ],
+      "answerIndex": 0,
+      "explanation": "国際司法裁判所は、国家間の法律上の争いなどを扱う国際連合の主要な司法機関です。"
+    },
+    {
+      "id": "K7-015",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "UNICEF",
+      "level": 1,
+      "knowledgeId": "international_unicef",
+      "question": "紛争地域の子どもに教育や保健などの支援を行う国際連合の機関として知られているのはどれか。",
+      "choices": [
+        "UNICEF",
+        "WHO",
+        "FAO",
+        "UNESCO"
+      ],
+      "answerIndex": 0,
+      "explanation": "UNICEFは、子どもの生命や健康、教育などを支える活動を行っています。"
+    },
+    {
+      "id": "K7-016",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "WHO",
+      "level": 1,
+      "knowledgeId": "international_who",
+      "question": "感染症対策や世界の人々の健康に関する国際協力を進める機関はどれか。",
+      "choices": [
+        "WHO",
+        "UNICEF",
+        "FAO",
+        "UNESCO"
+      ],
+      "answerIndex": 0,
+      "explanation": "WHOは、世界保健機関であり、国際的な保健・衛生分野の活動を行っています。"
+    },
+    {
+      "id": "K7-017",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "UNESCO",
+      "level": 1,
+      "knowledgeId": "international_unesco",
+      "question": "教育・科学・文化の分野で国際協力を進める機関はどれか。",
+      "choices": [
+        "UNESCO",
+        "WHO",
+        "FAO",
+        "UNICEF"
+      ],
+      "answerIndex": 0,
+      "explanation": "UNESCOは、教育・科学・文化を通じた国際協力を進めています。"
+    },
+    {
+      "id": "K7-018",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "FAO",
+      "level": 1,
+      "knowledgeId": "international_fao",
+      "question": "食料や農業の分野で国際協力を進める機関はどれか。",
+      "choices": [
+        "FAO",
+        "WHO",
+        "UNESCO",
+        "UNICEF"
+      ],
+      "answerIndex": 0,
+      "explanation": "FAOは国連食糧農業機関で、食料・農業などの分野で国際協力を進めています。"
+    },
+    {
+      "id": "K7-019",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "課題と国際機関",
+      "level": 2,
+      "knowledgeId": "international_agency_roles",
+      "question": "ある地域で感染症が広がり、各国が情報を共有して対策を進めている。この課題と特に関係が深い国際機関はどれか。",
+      "choices": [
+        "WHO",
+        "UNESCO",
+        "FAO",
+        "UNICEF"
+      ],
+      "answerIndex": 0,
+      "explanation": "感染症など保健分野の国際協力にはWHOが深く関わります。"
+    },
+    {
+      "id": "K7-020",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "課題と国際機関",
+      "level": 2,
+      "knowledgeId": "international_agency_child_support",
+      "question": "紛争によって生活が困難になった子どもに、教育や保健面の支援を行う活動と特に関係が深い機関はどれか。",
+      "choices": [
+        "UNICEF",
+        "FAO",
+        "WHO",
+        "国際司法裁判所"
+      ],
+      "answerIndex": 0,
+      "explanation": "UNICEFは、紛争などの影響を受ける子どもを含め、子どもの支援に取り組んでいます。"
+    },
+    {
+      "id": "K7-021",
+      "major": "大問7：国際社会",
+      "theme": "国際連合・国際機関",
+      "subtheme": "課題と国際機関",
+      "level": 2,
+      "knowledgeId": "international_agency_education_culture",
+      "question": "世界遺産の保護や教育・文化に関する国際協力と特に関係が深い機関はどれか。",
+      "choices": [
+        "UNESCO",
+        "WHO",
+        "FAO",
+        "UNICEF"
+      ],
+      "answerIndex": 0,
+      "explanation": "教育・科学・文化の分野で国際協力を進めるUNESCOが関係します。"
+    },
+    {
+      "id": "K7-022",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "貿易",
+      "level": 1,
+      "knowledgeId": "international_trade",
+      "question": "外国から商品を買い入れることを何というか。",
+      "choices": [
+        "輸入",
+        "輸出",
+        "国際分業",
+        "投資"
+      ],
+      "answerIndex": 0,
+      "explanation": "外国から商品やサービスを買い入れることを輸入といいます。"
+    },
+    {
+      "id": "K7-023",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "貿易",
+      "level": 1,
+      "knowledgeId": "international_export",
+      "question": "国内で生産した商品を外国へ売ることを何というか。",
+      "choices": [
+        "輸出",
+        "輸入",
+        "関税",
+        "為替"
+      ],
+      "answerIndex": 0,
+      "explanation": "国内で生産した商品などを外国へ売ることを輸出といいます。"
+    },
+    {
+      "id": "K7-024",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "国際分業",
+      "level": 1,
+      "knowledgeId": "international_division_of_labor",
+      "question": "国ごとに得意な製品や工程を分担し、それぞれを貿易によって結び付けることを何というか。",
+      "choices": [
+        "国際分業",
+        "地方自治",
+        "直接請求",
+        "財政政策"
+      ],
+      "answerIndex": 0,
+      "explanation": "国際分業とは、国ごとに生産などを分担し、貿易を通して結び付くことです。"
+    },
+    {
+      "id": "K7-025",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "国際分業の具体例",
+      "level": 2,
+      "knowledgeId": "international_division_example",
+      "question": "ある製品について、原料をA国から輸入し、B国で部品を作り、C国で組み立て、世界各地で販売している。この生産の特徴として最も適切なものはどれか。",
+      "choices": [
+        "複数国が生産工程を分担している",
+        "一国だけで生産が完結している",
+        "国際貿易を必要としない",
+        "企業活動が国内だけに限られている"
+      ],
+      "answerIndex": 0,
+      "explanation": "複数の国が原料・部品・組み立てなどを分担しているため、国際分業の例です。"
+    },
+    {
+      "id": "K7-026",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "関税",
+      "level": 1,
+      "knowledgeId": "international_tariff",
+      "question": "外国から輸入する商品にかける税を何というか。",
+      "choices": [
+        "関税",
+        "所得税",
+        "住民税",
+        "消費税"
+      ],
+      "answerIndex": 0,
+      "explanation": "関税は、輸入品などに対して課される税です。"
+    },
+    {
+      "id": "K7-027",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "為替",
+      "level": 1,
+      "knowledgeId": "international_exchange_rate",
+      "question": "円とドルなど、異なる国の通貨を交換するときの比率を何というか。",
+      "choices": [
+        "為替レート",
+        "関税率",
+        "失業率",
+        "識字率"
+      ],
+      "answerIndex": 0,
+      "explanation": "為替レートは、異なる通貨を交換するときの比率です。"
+    },
+    {
+      "id": "K7-028",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "円高",
+      "level": 2,
+      "knowledgeId": "international_yen_appreciation",
+      "question": "1ドル＝150円から1ドル＝120円になった。この変化を何というか。",
+      "choices": [
+        "円高",
+        "円安",
+        "物価上昇",
+        "関税上昇"
+      ],
+      "answerIndex": 0,
+      "explanation": "1ドルを買うために必要な円が150円から120円に減っているので、円の価値が高くなった円高です。"
+    },
+    {
+      "id": "K7-029",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "円高と輸入",
+      "level": 2,
+      "knowledgeId": "international_exchange_import_effect",
+      "question": "他の条件が変わらないとすると、円高になったとき、日本企業が海外から同じ価格の商品を輸入する場合、円で支払う金額はどうなりやすいか。",
+      "choices": [
+        "少なくなる",
+        "多くなる",
+        "必ず2倍になる",
+        "変化しないと決まっている"
+      ],
+      "answerIndex": 0,
+      "explanation": "円高では外国通貨を円に交換するために必要な円が相対的に少なくなるため、輸入品を円で支払う金額は少なくなりやすいです。"
+    },
+    {
+      "id": "K7-030",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "円安と輸出",
+      "level": 2,
+      "knowledgeId": "international_exchange_export_effect",
+      "question": "他の条件が変わらないとすると、円安になった場合、日本から外国へ輸出する企業にとってどのような影響が考えられるか。",
+      "choices": [
+        "外国通貨で見た日本製品の価格が安くなりやすい",
+        "外国通貨で見た日本製品の価格が必ず高くなる",
+        "輸出が法律で禁止される",
+        "為替レートが存在しなくなる"
+      ],
+      "answerIndex": 0,
+      "explanation": "円安では、同じ円価格の商品を外国通貨に換算したときの価格が安くなりやすく、輸出に有利に働く場合があります。"
+    },
+    {
+      "id": "K7-031",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "グローバル化",
+      "level": 1,
+      "knowledgeId": "international_globalization",
+      "question": "企業活動や人・物・情報の移動が国境を越えて広がり、各国の結び付きが強まることを何というか。",
+      "choices": [
+        "グローバル化",
+        "地方分権",
+        "鎖国",
+        "保護貿易"
+      ],
+      "answerIndex": 0,
+      "explanation": "グローバル化とは、経済活動などが国境を越えて広がり、世界の結び付きが強まることです。"
+    },
+    {
+      "id": "K7-032",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "多国籍企業",
+      "level": 1,
+      "knowledgeId": "international_multinational_corporation",
+      "question": "複数の国で生産や販売などの企業活動を行う企業を何というか。",
+      "choices": [
+        "多国籍企業",
+        "地方公共団体",
+        "協同組合",
+        "中央銀行"
+      ],
+      "answerIndex": 0,
+      "explanation": "多国籍企業は、複数の国に生産・販売などの拠点を置いて活動する企業です。"
+    },
+    {
+      "id": "K7-033",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "地域統合",
+      "level": 1,
+      "knowledgeId": "international_regional_integration",
+      "question": "ヨーロッパの国々が経済などの分野で結び付きを強めている地域統合の組織はどれか。",
+      "choices": [
+        "EU",
+        "ASEAN",
+        "UNICEF",
+        "WHO"
+      ],
+      "answerIndex": 0,
+      "explanation": "EUはヨーロッパの国々による地域統合の組織です。"
+    },
+    {
+      "id": "K7-034",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "ASEAN",
+      "level": 1,
+      "knowledgeId": "international_asean",
+      "question": "東南アジア諸国が地域の協力を進めるために結成した組織はどれか。",
+      "choices": [
+        "ASEAN",
+        "EU",
+        "UNESCO",
+        "OPEC"
+      ],
+      "answerIndex": 0,
+      "explanation": "ASEANは東南アジア諸国連合で、東南アジア諸国の協力を進める組織です。"
+    },
+    {
+      "id": "K7-035",
+      "major": "大問7：国際社会",
+      "theme": "貿易・世界経済・グローバル化",
+      "subtheme": "国際分業と相互依存",
+      "level": 2,
+      "knowledgeId": "international_trade_interdependence",
+      "question": "ある国で生産された部品の供給が止まったことで、別の国の工場の生産が減少した。この事例から読み取れることはどれか。",
+      "choices": [
+        "国際分業によって各国の生産活動が相互に依存している",
+        "各国の企業活動は完全に独立している",
+        "国際貿易は国内生産に影響しない",
+        "外国からの部品輸入は禁止されている"
+      ],
+      "answerIndex": 0,
+      "explanation": "複数国で生産工程を分担すると、一国で供給が滞った場合に他国の生産にも影響が及びます。"
+    },
+    {
+      "id": "K7-036",
+      "major": "大問7：国際社会",
+      "theme": "南北問題・格差・開発",
+      "subtheme": "経済格差",
+      "level": 1,
+      "knowledgeId": "international_north_south",
+      "question": "世界の国々の間にある経済的な豊かさや発展の差を表す問題として扱われるものはどれか。",
+      "choices": [
+        "南北問題",
+        "三権分立",
+        "少子高齢化",
+        "地方分権"
+      ],
+      "answerIndex": 0,
+      "explanation": "南北問題は、世界の国々の間にある経済格差や発展の差に関する問題です。"
+    },
+    {
+      "id": "K7-037",
+      "major": "大問7：国際社会",
+      "theme": "南北問題・格差・開発",
+      "subtheme": "一人あたりGDP",
+      "level": 1,
+      "knowledgeId": "international_per_capita_gdp",
+      "question": "国の経済規模だけでなく、人口の違いも考慮して経済的な豊かさを比較するときに利用される指標はどれか。",
+      "choices": [
+        "一人あたりGDP",
+        "人口増加率",
+        "識字率",
+        "輸出額"
+      ],
+      "answerIndex": 0,
+      "explanation": "一人あたりGDPは、GDPを人口で割った値で、国全体の経済規模だけでは分からない平均的な経済水準を比較する手がかりになります。"
+    },
+    {
+      "id": "K7-038",
+      "major": "大問7：国際社会",
+      "theme": "南北問題・格差・開発",
+      "subtheme": "開発",
+      "level": 2,
+      "knowledgeId": "international_development",
+      "question": "ある国で所得が低く、学校や医療施設も不足している。この国の発展を考える際、所得だけでなく重視すべきものはどれか。",
+      "choices": [
+        "教育や保健の充実",
+        "輸入の全面禁止",
+        "外交関係の縮小",
+        "国際機関への参加停止"
+      ],
+      "answerIndex": 0,
+      "explanation": "開発を考える際には、所得だけでなく教育や保健、雇用など人々の生活に関わる面も重要です。"
+    },
+    {
+      "id": "K7-039",
+      "major": "大問7：国際社会",
+      "theme": "南北問題・格差・開発",
+      "subtheme": "貧困と教育",
+      "level": 2,
+      "knowledgeId": "international_poverty_education",
+      "question": "貧困によって子どもが学校に通えない状況が続くと、将来の就業機会にも影響する可能性がある。この問題への対応として適切なのはどれか。",
+      "choices": [
+        "教育機会を広げる支援を行う",
+        "学校を減らす",
+        "医療支援を停止する",
+        "国際協力をなくす"
+      ],
+      "answerIndex": 0,
+      "explanation": "教育機会を広げることは、将来の就業機会や生活の改善につながる重要な開発支援です。"
+    },
+    {
+      "id": "K7-040",
+      "major": "大問7：国際社会",
+      "theme": "南北問題・格差・開発",
+      "subtheme": "持続可能な開発",
+      "level": 2,
+      "knowledgeId": "international_sustainable_development",
+      "question": "経済成長を進めながら、環境を守り、将来の世代の生活も考えて開発を行う考え方として適切なものはどれか。",
+      "choices": [
+        "持続可能な開発",
+        "無制限な資源消費",
+        "鎖国",
+        "保護貿易"
+      ],
+      "answerIndex": 0,
+      "explanation": "持続可能な開発は、現在の生活や発展だけでなく、将来の世代や環境にも配慮する考え方です。"
+    },
+    {
+      "id": "K7-041",
+      "major": "大問7：国際社会",
+      "theme": "ODA・NGO・国際協力",
+      "subtheme": "ODA",
+      "level": 1,
+      "knowledgeId": "international_oda",
+      "question": "政府が開発途上国の経済や社会の発展を支援するために行う政府開発援助を何というか。",
+      "choices": [
+        "ODA",
+        "NGO",
+        "GDP",
+        "FTA"
+      ],
+      "answerIndex": 0,
+      "explanation": "ODAは政府開発援助で、政府が開発途上国などの経済・社会の発展を支援するものです。"
+    },
+    {
+      "id": "K7-042",
+      "major": "大問7：国際社会",
+      "theme": "ODA・NGO・国際協力",
+      "subtheme": "NGO",
+      "level": 1,
+      "knowledgeId": "international_ngo",
+      "question": "政府とは異なる立場で、国際協力や人道支援などに取り組む民間の非政府組織を何というか。",
+      "choices": [
+        "NGO",
+        "ODA",
+        "EU",
+        "WHO"
+      ],
+      "answerIndex": 0,
+      "explanation": "NGOは非政府組織で、国際協力や人道支援などさまざまな活動を行っています。"
+    },
+    {
+      "id": "K7-043",
+      "major": "大問7：国際社会",
+      "theme": "ODA・NGO・国際協力",
+      "subtheme": "ODAとNGO",
+      "level": 2,
+      "knowledgeId": "international_oda_ngo_comparison",
+      "question": "政府が学校建設などを通して開発途上国の発展を支援する場合、その活動を表す用語として最も適切なのはどれか。",
+      "choices": [
+        "ODA",
+        "NGO",
+        "難民",
+        "関税"
+      ],
+      "answerIndex": 0,
+      "explanation": "政府による開発途上国への支援はODAに当たります。"
+    },
+    {
+      "id": "K7-044",
+      "major": "大問7：国際社会",
+      "theme": "ODA・NGO・国際協力",
+      "subtheme": "NGOの活動",
+      "level": 2,
+      "knowledgeId": "international_ngo_activity",
+      "question": "市民が設立した団体が、紛争地域の子どもに食料や教育の支援を行っている。この活動の担い手として最も適切なのはどれか。",
+      "choices": [
+        "NGO",
+        "中央政府だけ",
+        "中央銀行",
+        "安全保障理事会"
+      ],
+      "answerIndex": 0,
+      "explanation": "政府ではなく民間の団体が国際協力を行っているため、NGOの活動の例です。"
+    },
+    {
+      "id": "K7-045",
+      "major": "大問7：国際社会",
+      "theme": "ODA・NGO・国際協力",
+      "subtheme": "人道支援と開発支援",
+      "level": 2,
+      "knowledgeId": "international_humanitarian_development_aid",
+      "question": "大規模な災害で住む場所を失った人々に、緊急に食料や水を届ける支援は、主にどのような支援といえるか。",
+      "choices": [
+        "人道支援",
+        "関税政策",
+        "地域統合",
+        "為替政策"
+      ],
+      "answerIndex": 0,
+      "explanation": "災害や紛争などで困難な状況にある人々の生命や生活を守るための緊急支援は人道支援です。"
+    },
+    {
+      "id": "K7-046",
+      "major": "大問7：国際社会",
+      "theme": "人権・難民・国際的課題",
+      "subtheme": "難民",
+      "level": 1,
+      "knowledgeId": "international_refugees",
+      "question": "紛争や迫害などから逃れるため、国境を越えて他国へ避難した人々を何というか。",
+      "choices": [
+        "難民",
+        "移民労働者",
+        "観光客",
+        "投資家"
+      ],
+      "answerIndex": 0,
+      "explanation": "紛争や迫害などから逃れるため国境を越えて避難した人々を難民といいます。"
+    },
+    {
+      "id": "K7-047",
+      "major": "大問7：国際社会",
+      "theme": "人権・難民・国際的課題",
+      "subtheme": "避難民",
+      "level": 1,
+      "knowledgeId": "international_displaced_persons",
+      "question": "紛争などによって住んでいた場所を離れたものの、国境を越えず国内にとどまっている人々を何と呼ぶか。",
+      "choices": [
+        "国内避難民",
+        "難民",
+        "観光客",
+        "多国籍企業"
+      ],
+      "answerIndex": 0,
+      "explanation": "国境を越えず国内で避難している人々は国内避難民と呼ばれます。"
+    },
+    {
+      "id": "K7-048",
+      "major": "大問7：国際社会",
+      "theme": "人権・難民・国際的課題",
+      "subtheme": "難民と人権",
+      "level": 2,
+      "knowledgeId": "international_refugee_human_rights",
+      "question": "紛争から逃れてきた人々が安全な生活や教育を受けられない状況にある。この問題を考える際に特に関係するものはどれか。",
+      "choices": [
+        "人権と人道支援",
+        "関税と為替だけ",
+        "企業の株価だけ",
+        "地方議会の議員定数"
+      ],
+      "answerIndex": 0,
+      "explanation": "難民が安全や教育などを確保できない問題は、人権や人道支援と深く関係します。"
+    },
+    {
+      "id": "K7-049",
+      "major": "大問7：国際社会",
+      "theme": "人権・難民・国際的課題",
+      "subtheme": "子どもの権利",
+      "level": 1,
+      "knowledgeId": "international_child_rights",
+      "question": "世界のすべての子どもが教育や健康などを保障されることを考える際、特に関係する考え方はどれか。",
+      "choices": [
+        "子どもの権利",
+        "関税",
+        "国際分業",
+        "為替"
+      ],
+      "answerIndex": 0,
+      "explanation": "教育や健康などを含む子どもの権利を守ることは国際的な人権課題です。"
+    },
+    {
+      "id": "K7-050",
+      "major": "大問7：国際社会",
+      "theme": "人権・難民・国際的課題",
+      "subtheme": "人権と国際協力",
+      "level": 2,
+      "knowledgeId": "international_human_rights_cooperation",
+      "question": "ある国で特定の人々が教育を受ける機会を大きく制限されている。この問題に国際社会が関わる理由として最も適切なものはどれか。",
+      "choices": [
+        "人権に関わる問題であり、国際的な協力が求められるため",
+        "教育は国際社会と無関係だから",
+        "国際協力によって必ず国内法が無効になるから",
+        "教育問題は貿易だけで解決できるから"
+      ],
+      "answerIndex": 0,
+      "explanation": "教育を受ける機会などの人権に関わる問題は、国際社会全体で考えるべき課題の一つです。"
+    },
+    {
+      "id": "K7-051",
+      "major": "大問7：国際社会",
+      "theme": "人権・難民・国際的課題",
+      "subtheme": "女性の人権",
+      "level": 2,
+      "knowledgeId": "international_womens_rights",
+      "question": "女性が教育や仕事の機会を十分に得られない状況を改善する取り組みは、どの課題と特に関係が深いか。",
+      "choices": [
+        "人権と機会の平等",
+        "為替レート",
+        "関税",
+        "国際分業"
+      ],
+      "answerIndex": 0,
+      "explanation": "教育や就業の機会を保障することは、人権や機会の平等に関わる国際的な課題です。"
+    },
+    {
+      "id": "K7-052",
+      "major": "大問7：国際社会",
+      "theme": "人権・難民・国際的課題",
+      "subtheme": "人道支援",
+      "level": 2,
+      "knowledgeId": "international_humanitarian_support",
+      "question": "紛争によって住居を失った人々に、食料・水・医療を提供する活動として最も適切なものはどれか。",
+      "choices": [
+        "人道支援",
+        "関税引き上げ",
+        "輸出規制",
+        "地域統合"
+      ],
+      "answerIndex": 0,
+      "explanation": "紛争や災害などで生命や生活が危機にある人々を支える活動は人道支援です。"
+    },
+    {
+      "id": "K7-053",
+      "major": "大問7：国際社会",
+      "theme": "環境・持続可能な社会",
+      "subtheme": "地球温暖化",
+      "level": 1,
+      "knowledgeId": "international_global_warming",
+      "question": "二酸化炭素などの温室効果ガスの排出が増えることと関係が深い地球規模の環境問題はどれか。",
+      "choices": [
+        "地球温暖化",
+        "砂漠化だけ",
+        "酸性雨だけ",
+        "騒音問題"
+      ],
+      "answerIndex": 0,
+      "explanation": "温室効果ガスの増加は地球温暖化や気候変動と深く関係しています。"
+    },
+    {
+      "id": "K7-054",
+      "major": "大問7：国際社会",
+      "theme": "環境・持続可能な社会",
+      "subtheme": "気候変動と国際協力",
+      "level": 2,
+      "knowledgeId": "international_climate_cooperation",
+      "question": "温室効果ガスの排出削減が国際協力を必要とする理由として最も適切なものはどれか。",
+      "choices": [
+        "排出された温室効果ガスの影響が国境を越えて広がるため",
+        "温室効果ガスは一国の中だけで影響するため",
+        "環境問題は経済活動と無関係だから",
+        "各国が協力すると環境問題が必ず悪化するため"
+      ],
+      "answerIndex": 0,
+      "explanation": "気候変動は地球規模で影響するため、各国が協力して対策を進める必要があります。"
+    },
+    {
+      "id": "K7-055",
+      "major": "大問7：国際社会",
+      "theme": "環境・持続可能な社会",
+      "subtheme": "海洋環境",
+      "level": 2,
+      "knowledgeId": "international_ocean_environment",
+      "question": "海に流出したプラスチックごみが複数の国の海岸や生態系に影響を与えている。この問題への対応として適切なのはどれか。",
+      "choices": [
+        "複数の国が協力して排出削減や回収に取り組む",
+        "影響を受けた国だけが単独で対応すればよい",
+        "海洋へのごみの流出を問題にしない",
+        "国際的な情報共有を停止する"
+      ],
+      "answerIndex": 0,
+      "explanation": "海洋環境は国境を越えてつながっているため、複数の国による協力が必要です。"
+    },
+    {
+      "id": "K7-056",
+      "major": "大問7：国際社会",
+      "theme": "環境・持続可能な社会",
+      "subtheme": "森林",
+      "level": 2,
+      "knowledgeId": "international_forest_environment",
+      "question": "森林の減少が進む地域で、森林を守りながら地域の生活も支えることを目指す考え方として適切なのはどれか。",
+      "choices": [
+        "持続可能な資源利用",
+        "資源の無制限な利用",
+        "国際協力の停止",
+        "貿易の全面禁止"
+      ],
+      "answerIndex": 0,
+      "explanation": "森林を将来にわたって利用できるようにするには、環境と生活の両方に配慮した持続可能な利用が重要です。"
+    },
+    {
+      "id": "K7-057",
+      "major": "大問7：国際社会",
+      "theme": "環境・持続可能な社会",
+      "subtheme": "資源・エネルギー",
+      "level": 2,
+      "knowledgeId": "international_resources_energy",
+      "question": "化石燃料への依存を減らし、将来も利用できるエネルギーを増やす取り組みと特に関係が深いものはどれか。",
+      "choices": [
+        "持続可能な社会",
+        "関税の引き上げだけ",
+        "国際分業の廃止",
+        "外交関係の縮小"
+      ],
+      "answerIndex": 0,
+      "explanation": "再生可能エネルギーの利用などは、環境への負荷を抑えながら将来の資源利用を考える持続可能な社会と関係します。"
+    },
+    {
+      "id": "K7-058",
+      "major": "大問7：国際社会",
+      "theme": "環境・持続可能な社会",
+      "subtheme": "SDGs",
+      "level": 1,
+      "knowledgeId": "international_sdgs",
+      "question": "2030年までに持続可能でよりよい世界を目指す国際的な目標を何というか。",
+      "choices": [
+        "SDGs",
+        "ODA",
+        "ASEAN",
+        "GDP"
+      ],
+      "answerIndex": 0,
+      "explanation": "SDGsは持続可能な開発目標で、2030年までに持続可能な社会を実現するための国際的な目標です。"
+    },
+    {
+      "id": "K7-059",
+      "major": "大問7：国際社会",
+      "theme": "環境・持続可能な社会",
+      "subtheme": "SDGsの特徴",
+      "level": 2,
+      "knowledgeId": "international_sdgs_integrated",
+      "question": "SDGsについて、貧困、教育、健康、環境など複数の目標を関連付けて考えることが重要なのはなぜか。",
+      "choices": [
+        "社会・経済・環境の課題が互いに関係しているため",
+        "環境問題だけが国際課題だから",
+        "貧困と教育は関係がないため",
+        "各国が別々に目標を立てる必要がないため"
+      ],
+      "answerIndex": 0,
+      "explanation": "SDGsの課題は相互に関係しており、貧困・教育・健康・環境などを総合的に考えることが重要です。"
+    },
+    {
+      "id": "K7-060",
+      "major": "大問7：国際社会",
+      "theme": "環境・持続可能な社会",
+      "subtheme": "環境問題の因果関係",
+      "level": 2,
+      "knowledgeId": "international_environment_cause_effect",
+      "question": "ある国で森林伐採が急速に進み、土壌の流出や生物多様性の低下が起きている。この事例から考えられる対応として最も適切なのはどれか。",
+      "choices": [
+        "森林を保全しながら持続可能な利用を進める",
+        "森林伐採をさらに増やす",
+        "環境に関する情報を公開しない",
+        "国際協力を停止する"
+      ],
+      "answerIndex": 0,
+      "explanation": "森林の減少による環境への影響を抑えるには、保全と持続可能な利用を両立させることが重要です。"
+    },
+    {
+      "id": "K7-061",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "GDPと一人あたりGDP",
+      "level": 2,
+      "knowledgeId": "international_gdp_comparison",
+      "question": "A国のGDPは大きいが人口も非常に多く、B国はGDPが小さいが人口も少ない。この2国の平均的な経済水準を比較する際に特に参考になる指標はどれか。",
+      "choices": [
+        "一人あたりGDP",
+        "総人口だけ",
+        "国土面積だけ",
+        "輸入品の種類だけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "人口規模の違いを考慮して比較するには、一人あたりGDPが参考になります。"
+    },
+    {
+      "id": "K7-062",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "統計の読み取り",
+      "level": 2,
+      "knowledgeId": "international_statistics_trend",
+      "question": "次の表はA国の一人あたりGDPの推移を示している。\n\n| 年 | 一人あたりGDP |\n|---|---:|\n| 2010年 | 5000ドル |\n| 2015年 | 6000ドル |\n| 2020年 | 7200ドル |\n\nこの資料から正しく読み取れることはどれか。",
+      "choices": [
+        "一人あたりGDPは一貫して増加している",
+        "一人あたりGDPは一貫して減少している",
+        "2015年から2020年に変化していない",
+        "2010年と2020年の値は同じである"
+      ],
+      "answerIndex": 0,
+      "explanation": "5000ドル、6000ドル、7200ドルと順に増加しているため、一人あたりGDPは一貫して増加しています。"
+    },
+    {
+      "id": "K7-063",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "人口増加率",
+      "level": 2,
+      "knowledgeId": "international_population_growth",
+      "question": "A国とB国の人口がともに1000万人だった。A国は年間人口増加率2％、B国は0.2％だった。この資料から読み取れることはどれか。",
+      "choices": [
+        "A国の方が人口増加の割合が大きい",
+        "B国の方が人口増加の割合が大きい",
+        "両国の人口増加率は同じである",
+        "人口増加率からは何も判断できない"
+      ],
+      "answerIndex": 0,
+      "explanation": "2％は0.2％より大きいため、同じ人口規模ならA国の方が人口増加の割合が大きいといえます。"
+    },
+    {
+      "id": "K7-064",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "教育指標",
+      "level": 2,
+      "knowledgeId": "international_literacy",
+      "question": "A国は一人あたりGDPがB国より低いが、識字率はB国より高い。この資料から最も適切に判断できることはどれか。",
+      "choices": [
+        "経済水準だけでは教育の状況をすべて判断できない",
+        "一人あたりGDPが低ければ識字率も必ず低い",
+        "識字率が高ければ所得も必ず高い",
+        "GDPと教育には何の関係もないことが証明された"
+      ],
+      "answerIndex": 0,
+      "explanation": "経済指標と教育指標は別の側面を表すため、経済水準だけで教育状況のすべてを判断することはできません。"
+    },
+    {
+      "id": "K7-065",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "ODA統計",
+      "level": 2,
+      "knowledgeId": "international_oda_statistics",
+      "question": "次の資料を見て、A国とB国のODAの規模を比較するときに必要な情報を選びなさい。\n\n| 国 | ODA総額 | 人口 |\n|---|---:|---:|\n| A | 100億円 | 5000万人 |\n| B | 50億円 | 1000万人 |\n\n国民一人あたりのODA規模を比較するために、特に注目すべき点はどれか。",
+      "choices": [
+        "ODA総額だけでなく人口も考えて比較する",
+        "ODA総額が大きい国の方が必ず一人あたりでも大きい",
+        "人口が多い国ほど必ず一人あたりODAも大きい",
+        "国土面積だけを比較すればよい"
+      ],
+      "answerIndex": 0,
+      "explanation": "総額だけでは人口規模の違いを考慮できないため、人口も合わせて一人あたりの規模を比較する必要があります。"
+    },
+    {
+      "id": "K7-066",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "貿易統計",
+      "level": 2,
+      "knowledgeId": "international_trade_statistics",
+      "question": "A国の輸出額が800億ドル、輸入額が500億ドルだった。この資料から正しく読み取れることはどれか。",
+      "choices": [
+        "輸出額が輸入額を300億ドル上回っている",
+        "輸入額が輸出額を300億ドル上回っている",
+        "輸出額と輸入額は同じである",
+        "輸出額は輸入額の半分である"
+      ],
+      "answerIndex": 0,
+      "explanation": "800億ドル−500億ドル＝300億ドルなので、輸出額が300億ドル上回っています。"
+    },
+    {
+      "id": "K7-067",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "複数指標の比較",
+      "level": 3,
+      "knowledgeId": "international_population_gdp_education",
+      "question": "次の表を見て、開発上の課題がより大きいと考えられる国を選びなさい。\n\n| 国 | 一人あたりGDP | 識字率 | 人口増加率 |\n| A | 4200ドル | 62％ | 2.8％ |\n| B | 18000ドル | 97％ | 0.5％ |\n| C | 25000ドル | 99％ | 0.3％ |\n| D | 31000ドル | 99％ | 0.1％ |",
+      "choices": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "answerIndex": 0,
+      "explanation": "A国は一人あたりGDPと識字率が4か国の中で低く、人口増加率が高いため、複数の開発課題を抱えていると判断できます。"
+    },
+    {
+      "id": "K7-068",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "貿易と資源",
+      "level": 3,
+      "knowledgeId": "international_trade_resource_dependency",
+      "question": "日本のエネルギー資源について、国内生産より輸入への依存が大きいことを示す資料がある。この資料から考えられる日本経済の特徴として最も適切なものはどれか。",
+      "choices": [
+        "海外の資源供給や国際価格の変化が日本経済に影響しうる",
+        "資源価格が世界で変化しても日本経済には影響しない",
+        "日本は資源をすべて国内で生産している",
+        "国際貿易は日本の企業活動と無関係である"
+      ],
+      "answerIndex": 0,
+      "explanation": "資源輸入への依存が大きい場合、海外の供給状況や国際価格の変化が国内経済に影響します。"
+    },
+    {
+      "id": "K7-069",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "資料の組み合わせ",
+      "level": 3,
+      "knowledgeId": "international_development_multiple_statistics",
+      "question": "次の資料から、国際協力の必要性が最も強く示されている国を選びなさい。\n\n| 国 | 一人あたりGDP | 識字率 | 安全な水を利用できる人口の割合 |\n| A | 35000ドル | 99％ | 99％ |\n| B | 28000ドル | 98％ | 98％ |\n| C | 4200ドル | 68％ | 61％ |\n| D | 22000ドル | 96％ | 97％ |",
+      "choices": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "answerIndex": 2,
+      "explanation": "C国は経済・教育・生活環境の複数の指標で他国より低く、開発や国際協力の課題が大きいと判断できます。"
+    },
+    {
+      "id": "K7-070",
+      "major": "大問7：国際社会",
+      "theme": "国際統計・資料",
+      "subtheme": "人口と経済",
+      "level": 3,
+      "knowledgeId": "international_population_economy_comparison",
+      "question": "次の資料を見て、人口規模だけで経済的な豊かさを判断することが適切でない理由として最も適切なものはどれか。\n\n| 国 | 人口 | GDP |\n| A | 1億人 | 5000億ドル |\n| B | 2000万人 | 2000億ドル |",
+      "choices": [
+        "人口が異なるため、一人あたりGDPなども確認する必要がある",
+        "人口が多い国は必ず豊かな国だから",
+        "GDPは人口と無関係なので比較できないから",
+        "国の経済を比較するには国土面積だけが必要だから"
+      ],
+      "answerIndex": 0,
+      "explanation": "人口規模が異なるため、GDP総額だけでなく一人あたりGDPなどを確認する必要があります。"
+    },
+    {
+      "id": "K7-071",
+      "major": "大問7：国際社会",
+      "theme": "国際経済と日本",
+      "subtheme": "日本の輸入",
+      "level": 1,
+      "knowledgeId": "international_japan_imports",
+      "question": "日本の企業が海外から原油などの資源を購入することは、国際経済のどの活動に当たるか。",
+      "choices": [
+        "輸入",
+        "輸出",
+        "関税",
+        "地域統合"
+      ],
+      "answerIndex": 0,
+      "explanation": "海外から資源を購入することは輸入に当たります。"
+    },
+    {
+      "id": "K7-072",
+      "major": "大問7：国際社会",
+      "theme": "国際経済と日本",
+      "subtheme": "日本企業の海外進出",
+      "level": 2,
+      "knowledgeId": "international_japan_overseas_business",
+      "question": "日本企業が海外に工場を建設し、その国や周辺地域でも製品を販売している。この活動から分かることはどれか。",
+      "choices": [
+        "日本企業の活動が国境を越えて広がっている",
+        "日本企業の活動が国内だけに限られている",
+        "国際分業がなくなっている",
+        "海外市場との関係がなくなっている"
+      ],
+      "answerIndex": 0,
+      "explanation": "海外に工場や販売拠点を置くことは、企業活動が国境を越えて広がるグローバル化の一例です。"
+    },
+    {
+      "id": "K7-073",
+      "major": "大問7：国際社会",
+      "theme": "国際経済と日本",
+      "subtheme": "円安と日本の輸入",
+      "level": 2,
+      "knowledgeId": "international_japan_yen_imports",
+      "question": "日本がドルで取引される資源を多く輸入しているとき、円安が進んだ場合に起こりやすいことはどれか。",
+      "choices": [
+        "同じドル価格なら円で支払う金額が増えやすい",
+        "同じドル価格なら円で支払う金額が減りやすい",
+        "輸入価格は必ず変化しない",
+        "資源の輸入が自動的に禁止される"
+      ],
+      "answerIndex": 0,
+      "explanation": "円安では、同じドル額を支払うために必要な円が増えるため、輸入額が円換算で増えやすくなります。"
+    },
+    {
+      "id": "K7-074",
+      "major": "大問7：国際社会",
+      "theme": "国際経済と日本",
+      "subtheme": "日本と国際分業",
+      "level": 2,
+      "knowledgeId": "international_japan_division_of_labor",
+      "question": "日本企業が海外から部品を輸入し、日本国内で製品を組み立て、その製品を海外へ輸出している。この活動を説明する用語として最も適切なのはどれか。",
+      "choices": [
+        "国際分業",
+        "地方自治",
+        "三権分立",
+        "直接民主制"
+      ],
+      "answerIndex": 0,
+      "explanation": "部品の生産と製品の組み立て・販売を複数の国にまたがって行っているため、国際分業の例です。"
+    },
+    {
+      "id": "K7-075",
+      "major": "大問7：国際社会",
+      "theme": "国際経済と日本",
+      "subtheme": "日本と世界経済",
+      "level": 3,
+      "knowledgeId": "international_japan_global_economy",
+      "question": "日本企業A社について、海外から原料を輸入し、海外の工場でも生産を行い、国内外で販売していることが資料から分かった。この資料から読み取れる日本企業の特徴として最も適切なものはどれか。",
+      "choices": [
+        "国際的な分業や市場との結び付きが強い",
+        "企業活動が国内市場だけで完結している",
+        "輸入と輸出は企業活動に関係しない",
+        "海外の経済状況から影響を受けない"
+      ],
+      "answerIndex": 0,
+      "explanation": "原料調達、生産、販売の複数の段階が国境を越えているため、国際分業や世界市場との結び付きが強いと判断できます。"
+    },
+    {
+      "id": "K7-076",
+      "major": "大問7：国際社会",
+      "theme": "国際経済と日本",
+      "subtheme": "日本と資源",
+      "level": 3,
+      "knowledgeId": "international_japan_resource_risk",
+      "question": "日本が特定地域から多くの資源を輸入しているとする。輸出国で紛争が発生し、供給量が減少した場合、日本への影響として考えられるものはどれか。",
+      "choices": [
+        "資源価格の上昇や供給不足が日本経済に影響する可能性がある",
+        "日本では資源価格が必ず下落する",
+        "輸入先の変化は日本経済に影響しない",
+        "日本の企業はすべて国内資源だけで生産できる"
+      ],
+      "answerIndex": 0,
+      "explanation": "資源輸入への依存が大きい場合、海外の紛争などによる供給減少が価格や国内の生産活動に影響する可能性があります。"
+    },
+    {
+      "id": "K7-077",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "難民と国際機関",
+      "level": 3,
+      "knowledgeId": "international_refugee_agency_support",
+      "question": "次のレポートを読んで、最も適切な組合せを選びなさい。\n\n「紛争から逃れた子どもたちが国境を越えて避難し、教育や医療を受けることが難しくなっている。各国や国際機関が支援を行っている。」\n\nこの課題と特に関係が深いものはどれか。",
+      "choices": [
+        "難民・人道支援",
+        "関税・地域統合",
+        "為替・輸出",
+        "多国籍企業・国際分業"
+      ],
+      "answerIndex": 0,
+      "explanation": "紛争から国境を越えて避難した人々への教育や医療の支援は、難民問題と人道支援に関係します。"
+    },
+    {
+      "id": "K7-078",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "難民と子どもの支援",
+      "level": 3,
+      "knowledgeId": "international_refugee_child_support",
+      "question": "次の会話を読んで、Bさんの考えに最も関係する国際機関を選びなさい。\n\nA「紛争から逃れた子どもたちが学校に通えないことが問題になっています。」\nB「子どもの健康や教育を支える国際協力が必要ですね。」",
+      "choices": [
+        "UNICEF",
+        "FAO",
+        "WHO",
+        "国際司法裁判所"
+      ],
+      "answerIndex": 0,
+      "explanation": "子どもの健康や教育を支える国際協力という内容から、UNICEFが特に関係します。"
+    },
+    {
+      "id": "K7-079",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "感染症と国際協力",
+      "level": 3,
+      "knowledgeId": "international_health_cooperation",
+      "question": "次の資料を読んで、国際協力が必要な理由として最も適切なものを選びなさい。\n\n【資料】\n国Aで感染症が発生した。その後、旅行者を通じて国B・国Cでも患者が確認された。3か国は感染状況や対策について情報を共有し始めた。",
+      "choices": [
+        "人や物の国際的な移動によって影響が国境を越えるため",
+        "感染症は国内だけで広がるため",
+        "国際協力をすると感染症が必ず増えるため",
+        "各国の保健制度は互いに関係しないため"
+      ],
+      "answerIndex": 0,
+      "explanation": "人の国際的な移動などによって感染症が国境を越えて広がる可能性があるため、国際的な情報共有や協力が必要です。"
+    },
+    {
+      "id": "K7-080",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "環境問題と国際協力",
+      "level": 3,
+      "knowledgeId": "international_environment_cooperation",
+      "question": "次の会話と資料を読んで、最も適切な考えを選びなさい。\n\n【会話】\nA「国Aだけが二酸化炭素を減らしても、世界全体の気候変動を完全に解決するのは難しいですね。」\nB「では、各国がそれぞれの立場に応じて排出削減に取り組む必要があります。」\n\n【資料】\n国A：排出量が多い\n国B：人口が多く排出量が増加中\n国C：排出量は少ないが気候変動の影響を受けやすい",
+      "choices": [
+        "各国の状況を考慮しながら国際協力を進める",
+        "排出量の少ない国だけに対策を任せる",
+        "影響を受けやすい国の対策をやめる",
+        "国際的な情報共有を禁止する"
+      ],
+      "answerIndex": 0,
+      "explanation": "気候変動は地球規模の課題なので、各国の排出状況や影響の違いを考慮しながら協力することが重要です。"
+    },
+    {
+      "id": "K7-081",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "開発とODA",
+      "level": 3,
+      "knowledgeId": "international_development_oda",
+      "question": "次のレポートを読んで、最も適切な支援を選びなさい。\n\n「国Aでは学校が不足し、医療施設も少ない。政府は国際協力を受けながら学校建設や医療体制の整備を進めようとしている。」",
+      "choices": [
+        "ODAなどによる開発支援",
+        "関税の引き上げ",
+        "輸入の全面停止",
+        "為替レートの固定"
+      ],
+      "answerIndex": 0,
+      "explanation": "学校や医療施設などの整備を通して経済・社会の発展を支援することは、ODAなどの開発支援と関係します。"
+    },
+    {
+      "id": "K7-082",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "経済格差と教育",
+      "level": 3,
+      "knowledgeId": "international_inequality_education_development",
+      "question": "次の表を見て、国際協力の重点を考えるときに最も適切な判断を選びなさい。\n\n| 国 | 一人あたりGDP | 識字率 |\n| A | 32000ドル | 99％ |\n| B | 4100ドル | 64％ |\n| C | 24000ドル | 97％ |\n| D | 28000ドル | 98％ |",
+      "choices": [
+        "Bでは教育と経済の両面から開発支援を考える必要がある",
+        "Aでは教育支援だけを直ちに停止する必要がある",
+        "Cは識字率が低いので教育支援が最優先である",
+        "Dは国際協力を必要としないと統計だけから断定できる"
+      ],
+      "answerIndex": 0,
+      "explanation": "Bは一人あたりGDPと識字率がともに低く、教育と経済の両面から支援を考える材料になります。"
+    },
+    {
+      "id": "K7-083",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "国際分業と貿易",
+      "level": 3,
+      "knowledgeId": "international_division_trade_complex",
+      "question": "次の資料を読んで、企業活動について最も適切な説明を選びなさい。\n\n【資料】\n原料：国A\n部品生産：国B\n組み立て：国C\n販売：国A・B・C・D\n\nこの企業の活動から分かることはどれか。",
+      "choices": [
+        "複数の国が生産や販売を分担している",
+        "一国だけで生産から販売まで行っている",
+        "貿易を行わずに世界で販売している",
+        "国際的な企業活動を行っていない"
+      ],
+      "answerIndex": 0,
+      "explanation": "原料、生産、組み立て、販売を複数の国で分担しているため、国際分業とグローバル化の例です。"
+    },
+    {
+      "id": "K7-084",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "為替と日本経済",
+      "level": 3,
+      "knowledgeId": "international_exchange_japan_complex",
+      "question": "次の資料を読んで、円安による日本企業への影響として最も適切なものを選びなさい。\n\n【資料】\n日本企業A社は海外から原料を輸入し、国内で製品を生産して海外へ輸出している。\n為替レート：1ドル＝120円 → 1ドル＝150円",
+      "choices": [
+        "輸入原料の円換算額は増えやすい",
+        "輸入原料の円換算額は必ず減る",
+        "輸出先の通貨との交換は不要になる",
+        "為替レートは企業活動に影響しない"
+      ],
+      "answerIndex": 0,
+      "explanation": "1ドルを購入するのに必要な円が増えているため円安であり、ドル建ての輸入原料は円換算で高くなりやすいです。"
+    },
+    {
+      "id": "K7-085",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "国際紛争と国際連合",
+      "level": 3,
+      "knowledgeId": "international_conflict_un",
+      "question": "次のレポートを読んで、国際連合の役割として最も適切なものを選びなさい。\n\n「国家間の武力衝突が続き、停戦を求める国際的な働きかけが行われている。国際の平和と安全を維持するため、国際連合の機関も対応を検討している。」",
+      "choices": [
+        "安全保障理事会などを通じて国際の平和と安全に取り組む",
+        "各国の国内選挙を直接管理する",
+        "加盟国の経済活動をすべて禁止する",
+        "世界中の法律を一つに統一する"
+      ],
+      "answerIndex": 0,
+      "explanation": "国際の平和と安全の維持は国際連合の重要な目的であり、安全保障理事会が主要な役割を担います。"
+    },
+    {
+      "id": "K7-086",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "複数資料による国際課題判断",
+      "level": 3,
+      "knowledgeId": "international_multiple_sources_issue",
+      "question": "次の資料を組み合わせて考えたとき、最も適切な判断を選びなさい。\n\n【資料A】国Aは一人あたりGDPが低く、識字率も低い。\n【資料B】国Aでは干ばつが続き、農業生産が減少している。\n【資料C】国際機関やNGOが学校・保健・農業への支援を行っている。",
+      "choices": [
+        "国Aでは教育・保健・農業などを含む総合的な開発支援が重要である",
+        "国Aでは経済指標だけ改善すればすべての問題が解決する",
+        "干ばつは教育と関係がないので支援は不要である",
+        "国際機関やNGOの活動は開発と無関係である"
+      ],
+      "answerIndex": 0,
+      "explanation": "経済、教育、自然環境、農業など複数の課題が重なっているため、総合的な開発支援を考える必要があります。"
+    },
+    {
+      "id": "K7-087",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "正誤組合せ・国際機関",
+      "level": 2,
+      "knowledgeId": "international_agency_true_false",
+      "question": "次のX・Yについて、正しい組合せを選びなさい。\n\nX：WHOは保健・医療の分野で国際協力を進める。\nY：UNESCOは教育・科学・文化の分野で国際協力を進める。",
+      "choices": [
+        "X：正しい　Y：正しい",
+        "X：正しい　Y：誤り",
+        "X：誤り　Y：正しい",
+        "X：誤り　Y：誤り"
+      ],
+      "answerIndex": 0,
+      "explanation": "WHOは保健分野、UNESCOは教育・科学・文化分野で国際協力を進めています。"
+    },
+    {
+      "id": "K7-088",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "正誤組合せ・国際経済",
+      "level": 2,
+      "knowledgeId": "international_trade_true_false",
+      "question": "次のX・Yについて、正しい組合せを選びなさい。\n\nX：外国から商品を買うことを輸入という。\nY：円高になると、同じドル価格の輸入品を円で支払う金額は少なくなりやすい。",
+      "choices": [
+        "X：正しい　Y：正しい",
+        "X：正しい　Y：誤り",
+        "X：誤り　Y：正しい",
+        "X：誤り　Y：誤り"
+      ],
+      "answerIndex": 0,
+      "explanation": "外国から商品を買うことは輸入です。また、円高では同じドル額を支払うために必要な円が少なくなりやすいです。"
+    },
+    {
+      "id": "K7-089",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "正誤組合せ・国際協力",
+      "level": 3,
+      "knowledgeId": "international_cooperation_true_false",
+      "question": "次のX・Yについて、正しい組合せを選びなさい。\n\nX：地球温暖化は国境を越えて影響するため、国際協力が必要である。\nY：国際協力とは政府だけが行う活動を指し、NGOは関係しない。",
+      "choices": [
+        "X：正しい　Y：誤り",
+        "X：正しい　Y：正しい",
+        "X：誤り　Y：正しい",
+        "X：誤り　Y：誤り"
+      ],
+      "answerIndex": 0,
+      "explanation": "Xは正しいです。Yは誤りで、NGOも国際協力や人道支援などに取り組んでいます。"
+    },
+    {
+      "id": "K7-090",
+      "major": "大問7：国際社会",
+      "theme": "総合・資料",
+      "subtheme": "国際社会の総合判断",
+      "level": 3,
+      "knowledgeId": "international_global_issue_integration",
+      "question": "次の会話と資料を組み合わせて考え、最も適切な判断を選びなさい。\n\n【会話】\nA「紛争によって多くの人が住む場所を失い、国境を越えて避難しています。」\nB「避難した人々の安全だけでなく、子どもの教育や健康も考える必要があります。」\nC「一つの国だけで対応するのは難しいので、国際機関や各国、NGOが協力する必要があります。」\n\n【資料】\n・難民の受け入れ国では、学校や医療施設への負担が増えている。\n・国際機関は食料・医療・教育などの支援を行っている。\n・NGOも現地で生活支援や教育支援を行っている。\n\nこの情報から最も適切に考えられることはどれか。",
+      "choices": [
+        "紛争・難民・人権・教育・健康を関連付け、国際機関やNGOを含む協力を考える",
+        "難民問題は国境を越えないため、受け入れ国だけで対応すればよい",
+        "教育や健康は国内問題なので、国際協力とは関係しない",
+        "国際機関やNGOが支援する場合、各国政府は関わる必要がない"
+      ],
+      "answerIndex": 0,
+      "explanation": "資料と会話から、難民問題は安全だけでなく教育・健康などの人権にも関わり、受け入れ国だけでなく国際機関やNGOを含む協力が必要だと判断できます。"
+    }
+  ]
+}
