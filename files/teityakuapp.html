@@ -955,22 +955,72 @@ function buildCustomQueue(subjects, units, size){
    自動タスク生成
    ============================================================ */
 function buildAutoTask(size){
-  var pool = [];
+  size = (typeof size === "number" && size > 0) ? size : (settings.defaultSetSize || 10);
   var today = todayStr();
+  var seenIds = {};
+  var duePool = [];     // 復習期限到来（最優先）
+  var unseenPool = [];  // 未学習問題（新出開拓）
+  var reviewPool = [];  // その他既習問題（低定着・直近誤答優先）
+
   library.decks.forEach(function(deck){
     deck.questions.forEach(function(q){
+      if(seenIds[q.id]) return; // 同一IDの重複登録防止
+      seenIds[q.id] = true;
+
       var lvl = getQuestionLevel(q);
       if(!isLevelAvailable(deck, lvl)) return; // レベル未解放なら出さない
+
       var p = progress[q.id];
-      var ret = computeRetention(q.id);
-      var weight = 1.0;
-      if(!p) weight = 2.0; // 未学習優先
-      else if(p.nextDue <= today) weight = 5.0; // 復習期限最優先
-      else if(ret.percent < 50) weight = 3.0; // 忘れそうなもの優先
-      pool.push({ item:{deck:deck, q:q}, weight: weight * (Math.random() + 0.5) });
+      if(!p){
+        // 未学習問題
+        unseenPool.push({ deck: deck, q: q, weight: Math.random() });
+      } else if(p.nextDue <= today){
+        // 復習期限到来：直近で間違えたもの(streak=0)や定着度が低いものをより優先
+        var ret = computeRetention(q.id);
+        var w = (p.streak === 0 ? 10.0 : (100 - (ret.percent || 0)) / 10 + 5.0) * (Math.random() * 0.4 + 0.8);
+        duePool.push({ deck: deck, q: q, weight: w });
+      } else {
+        // 復習期限前：直近誤答や定着度50%未満を優先
+        var ret = computeRetention(q.id);
+        var w = (p.streak === 0 ? 5.0 : ((ret.percent || 0) < 50 ? 3.0 : 1.0)) * (Math.random() * 0.4 + 0.8);
+        reviewPool.push({ deck: deck, q: q, weight: w });
+      }
     });
   });
-  return pool.sort(function(a,b){ return b.weight - a.weight; }).slice(0, size).map(function(c){ return c.item; });
+
+  // 各プールを重み順・ランダム順にソート
+  duePool.sort(function(a, b){ return b.weight - a.weight; });
+  unseenPool.sort(function(a, b){ return b.weight - a.weight; });
+  reviewPool.sort(function(a, b){ return b.weight - a.weight; });
+
+  var selected = [];
+  var added = {};
+
+  function addFrom(pool, limit){
+    for(var i = 0; i < pool.length && selected.length < limit; i++){
+      var item = pool[i];
+      if(!added[item.q.id]){
+        added[item.q.id] = true;
+        selected.push({ deck: item.deck, q: item.q });
+      }
+    }
+  }
+
+  // 1. 復習期限到来問題を最優先で選出
+  addFrom(duePool, size);
+
+  // 2. 残り枠に未学習問題を積極的に選出
+  if(selected.length < size){
+    addFrom(unseenPool, size);
+  }
+
+  // 3. まだ枠が余っていれば、低定着・直近誤答などの既習問題で補充
+  if(selected.length < size){
+    addFrom(reviewPool, size);
+  }
+
+  // バランスよく混ざるようシャッフルして返す
+  return shuffle(selected);
 }
 
 /* ============================================================
