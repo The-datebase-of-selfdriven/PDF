@@ -1,0 +1,2171 @@
+{
+  "subject": "社会",
+  "unit": "世界地理",
+  "tags": [
+    "世界地理",
+    "神奈川県公立高校入試",
+    "大問1"
+  ],
+  "questions": [
+    {
+      "id": "worldgeo_l1_001",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "大陸・海洋",
+      "knowledgeId": "worldgeo_continents_oceans",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "六大州のうち、アフリカ大陸の東側に広がる大洋はどれか。",
+      "choices": [
+        "太平洋",
+        "インド洋",
+        "大西洋",
+        "北極海"
+      ],
+      "answerIndex": 1,
+      "explanation": "アフリカ大陸の東側にはインド洋が広がる。"
+    },
+    {
+      "id": "worldgeo_l1_002",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "大陸・海洋",
+      "knowledgeId": "worldgeo_continents_oceans",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "南北アメリカ大陸の西側に広がる大洋はどれか。",
+      "choices": [
+        "大西洋",
+        "インド洋",
+        "太平洋",
+        "北極海"
+      ],
+      "answerIndex": 2,
+      "explanation": "南北アメリカ大陸の西側には太平洋が広がる。"
+    },
+    {
+      "id": "worldgeo_l1_003",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "緯度・経度",
+      "knowledgeId": "worldgeo_latitude_longitude",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "赤道を0度として、南北の位置を表すものは何か。",
+      "choices": [
+        "経度",
+        "緯度",
+        "標準時",
+        "縮尺"
+      ],
+      "answerIndex": 1,
+      "explanation": "南北の位置を表すのが緯度、東西の位置を表すのが経度である。"
+    },
+    {
+      "id": "worldgeo_l1_004",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "緯度・経度",
+      "knowledgeId": "worldgeo_latitude_longitude",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "本初子午線を0度として、東西の位置を表すものは何か。",
+      "choices": [
+        "緯度",
+        "経度",
+        "時差",
+        "方位"
+      ],
+      "answerIndex": 1,
+      "explanation": "本初子午線を0度として東西を表すのが経度である。"
+    },
+    {
+      "id": "worldgeo_l1_005",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "緯度・経度",
+      "knowledgeId": "worldgeo_latitude_longitude",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "赤道上の地点の緯度として正しいものはどれか。",
+      "choices": [
+        "北緯90度",
+        "南緯90度",
+        "0度",
+        "東経0度"
+      ],
+      "answerIndex": 2,
+      "explanation": "赤道は緯度0度である。"
+    },
+    {
+      "id": "worldgeo_l1_006",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "時差",
+      "knowledgeId": "worldgeo_time_difference",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "経度15度の差で生じる時差は何時間か。",
+      "choices": [
+        "1時間",
+        "15時間",
+        "30分",
+        "2時間"
+      ],
+      "answerIndex": 0,
+      "explanation": "地球は24時間で360度回転するため、経度15度で1時間の差になる。"
+    },
+    {
+      "id": "worldgeo_l1_007",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "主要地域",
+      "knowledgeId": "worldgeo_region_location",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "インドが位置する地域として最も適切なものはどれか。",
+      "choices": [
+        "南アジア",
+        "西アジア",
+        "北アフリカ",
+        "南ヨーロッパ"
+      ],
+      "answerIndex": 0,
+      "explanation": "インドは南アジアに位置する。"
+    },
+    {
+      "id": "worldgeo_l1_008",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "主要地域",
+      "knowledgeId": "worldgeo_region_location",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "サウジアラビアが位置する地域として最も適切なものはどれか。",
+      "choices": [
+        "東アジア",
+        "西アジア",
+        "南アメリカ",
+        "東ヨーロッパ"
+      ],
+      "answerIndex": 1,
+      "explanation": "サウジアラビアは西アジアのアラビア半島に位置する。"
+    },
+    {
+      "id": "worldgeo_l1_009",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "主要地域",
+      "knowledgeId": "worldgeo_region_location",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "エジプトが位置する地域として最も適切なものはどれか。",
+      "choices": [
+        "北アフリカ",
+        "南アフリカ",
+        "東南アジア",
+        "北ヨーロッパ"
+      ],
+      "answerIndex": 0,
+      "explanation": "エジプトは北東アフリカに位置する。"
+    },
+    {
+      "id": "worldgeo_l1_010",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "主要地域",
+      "knowledgeId": "worldgeo_region_location",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "ブラジルが位置する大陸はどれか。",
+      "choices": [
+        "北アメリカ",
+        "南アメリカ",
+        "アフリカ",
+        "アジア"
+      ],
+      "answerIndex": 1,
+      "explanation": "ブラジルは南アメリカ最大の国である。"
+    },
+    {
+      "id": "worldgeo_l1_011",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_oceans_currents",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "日本付近を北上する暖流はどれか。",
+      "choices": [
+        "親潮",
+        "黒潮",
+        "リマン海流",
+        "ベンゲラ海流"
+      ],
+      "answerIndex": 1,
+      "explanation": "黒潮（日本海流）は日本列島の太平洋側を北上する暖流である。"
+    },
+    {
+      "id": "worldgeo_l1_012",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_oceans_currents",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "日本付近を南下する寒流はどれか。",
+      "choices": [
+        "黒潮",
+        "親潮",
+        "北大西洋海流",
+        "メキシコ湾流"
+      ],
+      "answerIndex": 1,
+      "explanation": "親潮（千島海流）は北海道・東北沖を南下する寒流である。"
+    },
+    {
+      "id": "worldgeo_l1_013",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_natural_environment",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "赤道付近に多く見られる、年間を通して高温で多量の降水がある自然環境と関係が深いものはどれか。",
+      "choices": [
+        "熱帯雨林",
+        "ツンドラ",
+        "タイガ",
+        "ステップ"
+      ],
+      "answerIndex": 0,
+      "explanation": "赤道付近の高温多雨の地域には熱帯雨林が広がる。"
+    },
+    {
+      "id": "worldgeo_l1_014",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_natural_environment",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "乾燥した内陸部などで、草原が広がり降水量が比較的少ない地域の植生として適切なものはどれか。",
+      "choices": [
+        "熱帯雨林",
+        "ステップ",
+        "マングローブ",
+        "ツンドラ"
+      ],
+      "answerIndex": 1,
+      "explanation": "乾燥帯の半乾燥地域では短い草が中心のステップなどが見られる。"
+    },
+    {
+      "id": "worldgeo_l1_015",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_natural_environment",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "高緯度地域で、夏でも気温があまり上がらず樹木が育ちにくい地域に見られる植生はどれか。",
+      "choices": [
+        "サバナ",
+        "ツンドラ",
+        "照葉樹林",
+        "熱帯雨林"
+      ],
+      "answerIndex": 1,
+      "explanation": "ツンドラは寒帯に見られ、樹木が育ちにくい。"
+    },
+    {
+      "id": "worldgeo_l1_016",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "季節風",
+      "knowledgeId": "worldgeo_monsoon",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "東南アジアや南アジアで、季節によって風向が変化し降水に影響を与える風を何というか。",
+      "choices": [
+        "偏西風",
+        "季節風（モンスーン）",
+        "貿易風",
+        "極東風"
+      ],
+      "answerIndex": 1,
+      "explanation": "モンスーンは季節によって風向が変わり、降水にも大きな影響を与える。"
+    },
+    {
+      "id": "worldgeo_l1_017",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_monsoon",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "南アジアや東南アジアで、夏の降水量が多くなる主な要因の一つは何か。",
+      "choices": [
+        "季節風の影響",
+        "氷河の融解だけ",
+        "偏西風の消失",
+        "海流がなくなること"
+      ],
+      "answerIndex": 0,
+      "explanation": "夏の季節風が海から湿った空気を運び、降水をもたらす。"
+    },
+    {
+      "id": "worldgeo_l1_018",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "地形",
+      "knowledgeId": "worldgeo_terrain",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "大陸の西岸を流れ、沿岸の気候に影響を与える海流のうち、低緯度から高緯度へ流れる暖流を何というか。",
+      "choices": [
+        "暖流",
+        "寒流",
+        "潮汐",
+        "偏西風"
+      ],
+      "answerIndex": 0,
+      "explanation": "暖流は低緯度から高緯度へ比較的暖かい海水を運ぶ。"
+    },
+    {
+      "id": "worldgeo_l1_019",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候帯",
+      "knowledgeId": "worldgeo_climate_basic",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "赤道付近を中心に、一年を通して高温となる気候帯はどれか。",
+      "choices": [
+        "熱帯",
+        "乾燥帯",
+        "温帯",
+        "寒帯"
+      ],
+      "answerIndex": 0,
+      "explanation": "赤道付近の低緯度地域に熱帯が広がる。"
+    },
+    {
+      "id": "worldgeo_l1_020",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候帯",
+      "knowledgeId": "worldgeo_climate_basic",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "降水量が少なく乾燥している地域に広がる気候帯はどれか。",
+      "choices": [
+        "温帯",
+        "乾燥帯",
+        "冷帯",
+        "寒帯"
+      ],
+      "answerIndex": 1,
+      "explanation": "年間降水量が少ない地域を乾燥帯という。"
+    },
+    {
+      "id": "worldgeo_l1_021",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_af",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "一年を通して高温で、毎月の降水量も多い雨温図に当てはまりやすい気候はどれか。",
+      "choices": [
+        "Af",
+        "BW",
+        "Cs",
+        "ET"
+      ],
+      "answerIndex": 0,
+      "explanation": "Afは熱帯雨林気候で、一年中高温多雨である。"
+    },
+    {
+      "id": "worldgeo_l1_022",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_am",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "一年を通して高温で、乾季はあるものの降水量が多い気候はどれか。",
+      "choices": [
+        "Am",
+        "BW",
+        "Cs",
+        "Df"
+      ],
+      "answerIndex": 0,
+      "explanation": "Amは熱帯モンスーン気候で、高温で季節による降水差が見られる。"
+    },
+    {
+      "id": "worldgeo_l1_023",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_aw",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "高温で、雨季と乾季がはっきりする気候はどれか。",
+      "choices": [
+        "Cfb",
+        "Aw",
+        "ET",
+        "EF"
+      ],
+      "answerIndex": 1,
+      "explanation": "Awはサバナ気候で、雨季と乾季が明瞭である。"
+    },
+    {
+      "id": "worldgeo_l1_024",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_bw",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "年間を通して降水量が極めて少ない気候はどれか。",
+      "choices": [
+        "BS",
+        "BW",
+        "Cfa",
+        "Df"
+      ],
+      "answerIndex": 1,
+      "explanation": "BWは砂漠気候で、降水量が非常に少ない。"
+    },
+    {
+      "id": "worldgeo_l1_025",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_bs",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "乾燥帯のうち、BWよりは降水量が多く、草原が広がる地域に多い気候はどれか。",
+      "choices": [
+        "BS",
+        "ET",
+        "Cfb",
+        "EF"
+      ],
+      "answerIndex": 0,
+      "explanation": "BSはステップ気候で、BWより降水量が多い。"
+    },
+    {
+      "id": "worldgeo_l1_026",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_cs",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "夏に乾燥し、冬に降水量が多くなる温帯の気候はどれか。",
+      "choices": [
+        "Cfa",
+        "Cfb",
+        "Cs",
+        "Cw"
+      ],
+      "answerIndex": 2,
+      "explanation": "Csは地中海性気候で、夏季乾燥・冬季多雨が特徴である。"
+    },
+    {
+      "id": "worldgeo_l1_027",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_cfb",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "年間を通して降水があり、年較差が比較的小さい温帯の気候はどれか。",
+      "choices": [
+        "Cs",
+        "Cfb",
+        "BW",
+        "Aw"
+      ],
+      "answerIndex": 1,
+      "explanation": "Cfbは西岸海洋性気候で、年較差が小さく降水が年間を通じてある。"
+    },
+    {
+      "id": "worldgeo_l1_028",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_cfa",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "日本の太平洋側や東アジアの一部にも見られ、年間を通して降水がある温帯の気候はどれか。",
+      "choices": [
+        "Cfa",
+        "Cs",
+        "BS",
+        "ET"
+      ],
+      "answerIndex": 0,
+      "explanation": "Cfaは温暖湿潤気候で、日本の多くの地域にも分布する。"
+    },
+    {
+      "id": "worldgeo_l1_029",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_cw",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "冬に降水量が少なく、夏に多くなる温帯の気候はどれか。",
+      "choices": [
+        "Cfb",
+        "Cw",
+        "Cs",
+        "BW"
+      ],
+      "answerIndex": 1,
+      "explanation": "Cwは温帯冬季少雨気候で、夏に降水が多く冬に少ない。"
+    },
+    {
+      "id": "worldgeo_l1_030",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "ケッペン気候区",
+      "knowledgeId": "worldgeo_koppen_df_dw",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "冷帯のうち、年間を通して比較的降水がある気候と、冬に降水が少なく夏に集中しやすい気候の組合せとして正しいものはどれか。",
+      "choices": [
+        "DfとDw",
+        "CsとCfa",
+        "AwとAm",
+        "BSとBW"
+      ],
+      "answerIndex": 0,
+      "explanation": "Dfは冷帯湿潤気候、Dwは冷帯冬季少雨気候である。"
+    },
+    {
+      "id": "worldgeo_l1_031",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "寒帯",
+      "knowledgeId": "worldgeo_polar_climate",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "最暖月の平均気温が10℃未満で、樹木が育ちにくい寒帯の気候はどれか。",
+      "choices": [
+        "ET",
+        "Cfa",
+        "BW",
+        "Aw"
+      ],
+      "answerIndex": 0,
+      "explanation": "ETはツンドラ気候で、最暖月の平均気温が10℃未満である。"
+    },
+    {
+      "id": "worldgeo_l1_032",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "寒帯",
+      "knowledgeId": "worldgeo_polar_climate",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "一年を通して平均気温が非常に低く、氷雪におおわれる地域の気候はどれか。",
+      "choices": [
+        "ET",
+        "EF",
+        "Df",
+        "BS"
+      ],
+      "answerIndex": 1,
+      "explanation": "EFは氷雪気候で、最暖月の平均気温も0℃未満である。"
+    },
+    {
+      "id": "worldgeo_l1_033",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と農業",
+      "knowledgeId": "worldgeo_agriculture_climate",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "地中海性気候の地域で栽培が盛んな農作物として最も適切なものはどれか。",
+      "choices": [
+        "オリーブ",
+        "カカオ",
+        "天然ゴム",
+        "茶だけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "地中海沿岸などではオリーブやぶどうなどが盛んである。"
+    },
+    {
+      "id": "worldgeo_l1_034",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と農業",
+      "knowledgeId": "worldgeo_agriculture_climate",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "熱帯の高温多雨な地域で、輸出向けの作物を大規模に栽培する農業を何というか。",
+      "choices": [
+        "地中海式農業",
+        "混合農業",
+        "プランテーション農業",
+        "遊牧"
+      ],
+      "answerIndex": 2,
+      "explanation": "熱帯などで輸出向け作物を大規模に栽培するのがプランテーション農業である。"
+    },
+    {
+      "id": "worldgeo_l1_035",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "農業形態",
+      "knowledgeId": "worldgeo_mixed_farming",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "西ヨーロッパなどで、家畜の飼育と飼料作物・穀物などの栽培を組み合わせる農業を何というか。",
+      "choices": [
+        "混合農業",
+        "プランテーション農業",
+        "焼畑農業",
+        "遊牧"
+      ],
+      "answerIndex": 0,
+      "explanation": "混合農業は耕種農業と畜産を組み合わせる。"
+    },
+    {
+      "id": "worldgeo_l1_036",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "農業形態",
+      "knowledgeId": "worldgeo_dairy_farming",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "冷涼で降水が比較的多い西ヨーロッパなどで、牧草を利用して乳牛を飼育する農業を何というか。",
+      "choices": [
+        "酪農",
+        "地中海式農業",
+        "移牧",
+        "焼畑農業"
+      ],
+      "answerIndex": 0,
+      "explanation": "酪農は乳牛を飼育し、牛乳や乳製品を生産する農業である。"
+    },
+    {
+      "id": "worldgeo_l1_037",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "資源",
+      "knowledgeId": "worldgeo_oil_resource",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "ペルシア湾沿岸を中心に産出量が多い資源はどれか。",
+      "choices": [
+        "石油",
+        "鉄鉱石",
+        "ウラン",
+        "木材"
+      ],
+      "answerIndex": 0,
+      "explanation": "西アジアのペルシア湾沿岸には大規模な油田が分布する。"
+    },
+    {
+      "id": "worldgeo_l1_038",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "資源",
+      "knowledgeId": "worldgeo_natural_gas",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "石油とともに西アジアやロシアなどで産出量が多く、エネルギー資源として利用されるものはどれか。",
+      "choices": [
+        "天然ガス",
+        "綿花",
+        "小麦",
+        "ボーキサイト"
+      ],
+      "answerIndex": 0,
+      "explanation": "天然ガスは石油と並ぶ重要な化石燃料である。"
+    },
+    {
+      "id": "worldgeo_l1_039",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "産業",
+      "knowledgeId": "worldgeo_industry_structure",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "原料を加工して製品を作る産業は、産業分類では主に何次産業に当たるか。",
+      "choices": [
+        "第一次産業",
+        "第二次産業",
+        "第三次産業",
+        "第四次産業"
+      ],
+      "answerIndex": 1,
+      "explanation": "工業は原料を加工する第二次産業に含まれる。"
+    },
+    {
+      "id": "worldgeo_l1_040",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "産業構造",
+      "knowledgeId": "worldgeo_industry_structure",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "サービス業や情報通信業などが含まれる産業は何次産業か。",
+      "choices": [
+        "第一次産業",
+        "第二次産業",
+        "第三次産業",
+        "第一次と第二次のみ"
+      ],
+      "answerIndex": 2,
+      "explanation": "サービス業や情報通信業などは第三次産業に含まれる。"
+    },
+    {
+      "id": "worldgeo_l1_041",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "人口",
+      "knowledgeId": "worldgeo_population_distribution",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "人口が集中しやすい地域として一般に適切なものはどれか。",
+      "choices": [
+        "砂漠の中心部",
+        "大河川の下流域や平野",
+        "高緯度の氷雪地域",
+        "険しい高山地帯"
+      ],
+      "answerIndex": 1,
+      "explanation": "水や交通、農業などの条件に恵まれた平野や河川下流域には人口が集まりやすい。"
+    },
+    {
+      "id": "worldgeo_l1_042",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "人口密度",
+      "knowledgeId": "worldgeo_population_density",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "人口密度は何を人口で割って求めるか。",
+      "choices": [
+        "面積",
+        "人口",
+        "GDP",
+        "輸出額"
+      ],
+      "answerIndex": 0,
+      "explanation": "人口密度は人口÷面積で求める。"
+    },
+    {
+      "id": "worldgeo_l1_043",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "都市化",
+      "knowledgeId": "worldgeo_urbanization",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "都市に人口が集中し、都市人口の割合が高くなる現象を何というか。",
+      "choices": [
+        "都市化",
+        "過疎",
+        "砂漠化",
+        "少子化"
+      ],
+      "answerIndex": 0,
+      "explanation": "都市化は都市人口の増加や都市への人口集中が進む現象である。"
+    },
+    {
+      "id": "worldgeo_l1_044",
+      "major": "大問1",
+      "theme": "宗教・文化",
+      "subtheme": "宗教分布",
+      "knowledgeId": "worldgeo_religion_distribution",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "西アジアや北アフリカを中心に広く信仰されている宗教はどれか。",
+      "choices": [
+        "イスラム教",
+        "ヒンドゥー教",
+        "仏教",
+        "儒教"
+      ],
+      "answerIndex": 0,
+      "explanation": "イスラム教は西アジア・北アフリカを中心に広く分布する。"
+    },
+    {
+      "id": "worldgeo_l1_045",
+      "major": "大問1",
+      "theme": "宗教・文化",
+      "subtheme": "宗教分布",
+      "knowledgeId": "worldgeo_religion_distribution",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "インドで信者が最も多い宗教はどれか。",
+      "choices": [
+        "キリスト教",
+        "ヒンドゥー教",
+        "イスラム教",
+        "仏教"
+      ],
+      "answerIndex": 1,
+      "explanation": "インドではヒンドゥー教徒が多数を占める。"
+    },
+    {
+      "id": "worldgeo_l1_046",
+      "major": "大問1",
+      "theme": "宗教・文化",
+      "subtheme": "言語・文化",
+      "knowledgeId": "worldgeo_language_culture",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "世界で広く使われ、国際的な共通語としても用いられている言語の一つはどれか。",
+      "choices": [
+        "英語",
+        "アイスランド語だけ",
+        "ラテン語だけ",
+        "エスペラントだけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "英語は多くの国で使用され、国際的な共通語としても広く使われる。"
+    },
+    {
+      "id": "worldgeo_l1_047",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "地域統合",
+      "knowledgeId": "worldgeo_eu",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "ヨーロッパの国々が政治的・経済的な結び付きを強めている地域統合の組織はどれか。",
+      "choices": [
+        "EU",
+        "ASEAN",
+        "OPEC",
+        "AU"
+      ],
+      "answerIndex": 0,
+      "explanation": "EUはヨーロッパ諸国の政治的・経済的統合を進める組織である。"
+    },
+    {
+      "id": "worldgeo_l1_048",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "地域統合",
+      "knowledgeId": "worldgeo_asean",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "東南アジア諸国による地域協力組織はどれか。",
+      "choices": [
+        "EU",
+        "ASEAN",
+        "OPEC",
+        "AU"
+      ],
+      "answerIndex": 1,
+      "explanation": "ASEANは東南アジア諸国連合である。"
+    },
+    {
+      "id": "worldgeo_l1_049",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "貿易",
+      "knowledgeId": "worldgeo_trade_basic",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "外国へ商品を売ることを何というか。",
+      "choices": [
+        "輸入",
+        "輸出",
+        "為替",
+        "関税"
+      ],
+      "answerIndex": 1,
+      "explanation": "外国へ商品を売ることを輸出、外国から買うことを輸入という。"
+    },
+    {
+      "id": "worldgeo_l1_050",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "貿易",
+      "knowledgeId": "worldgeo_trade_basic",
+      "level": 1,
+      "questionType": "knowledge",
+      "question": "外国から商品を買い入れることを何というか。",
+      "choices": [
+        "輸出",
+        "輸入",
+        "生産",
+        "工業化"
+      ],
+      "answerIndex": 1,
+      "explanation": "外国から商品を買い入れることを輸入という。"
+    },
+    {
+      "id": "worldgeo_l1_051",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "国際分業",
+      "knowledgeId": "worldgeo_international_division",
+      "level": 2,
+      "questionType": "combination",
+      "question": "国や地域によって得意な生産物をつくり、それを互いに貿易する関係を何というか。",
+      "choices": [
+        "国際分業",
+        "鎖国",
+        "自給自足",
+        "人口転換"
+      ],
+      "answerIndex": 0,
+      "explanation": "国際分業は各国・地域が得意分野を分担して生産し、貿易する関係である。"
+    },
+    {
+      "id": "worldgeo_l2_001",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "緯度と気候",
+      "knowledgeId": "worldgeo_latitude_longitude",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "A地点は赤道に近く、B地点はA地点よりかなり高緯度にある。一般的な傾向として、どの組合せが適切か。",
+      "choices": [
+        "AはBより低温になりやすい",
+        "AはBより高温になりやすい",
+        "緯度は気温に関係しない",
+        "Bは必ず熱帯になる"
+      ],
+      "answerIndex": 1,
+      "explanation": "緯度が低いほど太陽から受ける光が強く、一般に気温が高くなりやすい。ただし海流や標高など他の要因もある。"
+    },
+    {
+      "id": "worldgeo_l2_002",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "時差",
+      "knowledgeId": "worldgeo_time_difference",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "東京が午前10時のとき、経度0度を基準とする標準時を使う地域では、おおよそ何時になるか。",
+      "choices": [
+        "午前1時",
+        "午前10時",
+        "午後1時",
+        "午後7時"
+      ],
+      "answerIndex": 0,
+      "explanation": "東京は東経135度付近で、経度0度との時差は9時間。東側の東京が9時間進んでいるため、経度0度側は午前1時。"
+    },
+    {
+      "id": "worldgeo_l2_003",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "海流と気候",
+      "knowledgeId": "worldgeo_oceans_currents",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "同じくらいの緯度にある2地点のうち、一方は暖流の影響を強く受けている。一般にどの説明が適切か。",
+      "choices": [
+        "暖流の影響を受ける地点は温暖になりやすい",
+        "暖流の影響を受ける地点は必ず乾燥する",
+        "暖流は気候に影響しない",
+        "暖流は高緯度へ流れない"
+      ],
+      "answerIndex": 0,
+      "explanation": "暖流は周辺の海水温を通じて沿岸の気温などに影響し、同緯度の内陸などと比べて温暖な場合がある。"
+    },
+    {
+      "id": "worldgeo_l2_004",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "季節風と降水",
+      "knowledgeId": "worldgeo_monsoon",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "ある地域では夏に海から湿った風が吹き、降水量が増えている。この現象と関係が深いのはどれか。",
+      "choices": [
+        "季節風",
+        "極地の寒気だけ",
+        "時差",
+        "経度0度"
+      ],
+      "answerIndex": 0,
+      "explanation": "夏に海から湿った季節風が吹く地域では、降水量が増える。"
+    },
+    {
+      "id": "worldgeo_l2_005",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_natural_environment",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "海からの湿った風が山地にぶつかって上昇すると、山地の風上側で降水が多くなりやすい。これは何と関係するか。",
+      "choices": [
+        "地形の影響",
+        "時差の影響",
+        "経度の影響だけ",
+        "人口密度の影響"
+      ],
+      "answerIndex": 0,
+      "explanation": "山地による上昇気流で雲ができ、風上側で降水が増えることがある。"
+    },
+    {
+      "id": "worldgeo_l2_006",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "主要地域",
+      "knowledgeId": "worldgeo_region_location",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "次の4地域のうち、地中海に面する地域として適切なものはどれか。",
+      "choices": [
+        "南ヨーロッパ",
+        "東アジア",
+        "南アジア",
+        "北極圏"
+      ],
+      "answerIndex": 0,
+      "explanation": "地中海はヨーロッパ南部・アフリカ北部・西アジアに囲まれた海域である。"
+    },
+    {
+      "id": "worldgeo_l2_007",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_oceans_currents",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "北大西洋海流の影響を受けるヨーロッパ西岸が、同緯度の大陸東部より温暖になりやすい理由として最も適切なものはどれか。",
+      "choices": [
+        "暖流が熱を運ぶため",
+        "寒流が熱を運ぶため",
+        "緯度が0度だから",
+        "標高が必ず低いから"
+      ],
+      "answerIndex": 0,
+      "explanation": "北大西洋海流は暖流で、ヨーロッパ西岸へ比較的暖かい海水を運ぶ。"
+    },
+    {
+      "id": "worldgeo_l2_008",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "雨温図",
+      "knowledgeId": "worldgeo_rain_climate",
+      "level": 2,
+      "questionType": "graph",
+      "question": "次の雨温図の特徴をもつ気候として最も適切なものはどれか。\n[[雨温図｜気温:10,11,13,16,19,22,25,25,22,18,14,11｜降水量:90,80,65,45,25,10,5,8,20,55,80,95]]",
+      "choices": [
+        "Cs",
+        "Cfb",
+        "Cfa",
+        "Aw"
+      ],
+      "answerIndex": 0,
+      "explanation": "夏に降水量が大きく減り、冬に多くなるため地中海性気候（Cs）である。"
+    },
+    {
+      "id": "worldgeo_l2_009",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "雨温図",
+      "knowledgeId": "worldgeo_rain_climate",
+      "level": 2,
+      "questionType": "graph",
+      "question": "次の雨温図の特徴をもつ気候として最も適切なものはどれか。\n[[雨温図｜気温:5,6,8,10,13,16,18,18,15,11,8,6｜降水量:55,50,55,55,60,55,50,55,60,65,65,60]]",
+      "choices": [
+        "Cfb",
+        "Cs",
+        "BW",
+        "Aw"
+      ],
+      "answerIndex": 0,
+      "explanation": "年間を通じて降水があり、気温の年較差が比較的小さいためCfbが適切。"
+    },
+    {
+      "id": "worldgeo_l2_010",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "雨温図",
+      "knowledgeId": "worldgeo_rain_climate",
+      "level": 2,
+      "questionType": "graph",
+      "question": "一年中高温で、特定の時期に降水量が極端に増える雨温図がある。この特徴から考えられる気候はどれか。",
+      "choices": [
+        "Aw",
+        "Cfb",
+        "ET",
+        "BW"
+      ],
+      "answerIndex": 0,
+      "explanation": "高温で雨季と乾季がはっきりするならサバナ気候（Aw）が考えられる。"
+    },
+    {
+      "id": "worldgeo_l2_011",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と農業",
+      "knowledgeId": "worldgeo_agriculture_climate",
+      "level": 2,
+      "questionType": "graph",
+      "question": "ある地域の雨温図では、夏の降水量が少なく冬に多い。そこで盛んな農業として最も適切なものはどれか。",
+      "choices": [
+        "オリーブやぶどうの栽培",
+        "水田の三期作のみ",
+        "トナカイの飼育",
+        "焼畑だけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "夏乾燥・冬多雨の地中海性気候ではオリーブやぶどうなどが盛ん。"
+    },
+    {
+      "id": "worldgeo_l2_012",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と農業",
+      "knowledgeId": "worldgeo_agriculture_climate",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "一年中高温で雨季が明瞭な地域で、米や熱帯作物の生産が盛んである。考えられる気候はどれか。",
+      "choices": [
+        "Aw",
+        "Cfb",
+        "Cs",
+        "Df"
+      ],
+      "answerIndex": 0,
+      "explanation": "高温で雨季と乾季が明瞭なAwでは、地域により稲作などが発達する。"
+    },
+    {
+      "id": "worldgeo_l2_013",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "農業形態",
+      "knowledgeId": "worldgeo_mixed_farming",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "家畜を飼育し、その排せつ物を肥料として利用するなど、作物栽培と畜産を結び付ける農業の利点として適切なものはどれか。",
+      "choices": [
+        "土地の養分循環を利用しやすい",
+        "必ず乾燥地でしかできない",
+        "家畜を飼わなくても成立する",
+        "米だけを生産する"
+      ],
+      "answerIndex": 0,
+      "explanation": "混合農業では耕種と畜産を組み合わせ、資源を循環させやすい。"
+    },
+    {
+      "id": "worldgeo_l2_014",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "農業と地域",
+      "knowledgeId": "worldgeo_agriculture_region",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "乾燥地域で灌漑を利用して農業を行う場合、特に注意する必要がある問題はどれか。",
+      "choices": [
+        "塩害などの土壌への影響",
+        "冬の大雪だけ",
+        "海流の停止",
+        "時差の拡大"
+      ],
+      "answerIndex": 0,
+      "explanation": "乾燥地域の灌漑では水分の蒸発によって塩分が土壌に残る塩害が生じることがある。"
+    },
+    {
+      "id": "worldgeo_l2_015",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "農業と市場",
+      "knowledgeId": "worldgeo_agriculture_trade",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "ある国では輸出向けの一種類の農産物への依存度が高い。国際価格が下落したとき、何が起こりやすいか。",
+      "choices": [
+        "輸出収入が減少しやすい",
+        "必ず人口が増える",
+        "輸入が不要になる",
+        "天候の影響を受けなくなる"
+      ],
+      "answerIndex": 0,
+      "explanation": "単一作物への依存度が高いと、その国際価格の変化が輸出収入に大きく影響する。"
+    },
+    {
+      "id": "worldgeo_l2_016",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "農業と自然環境",
+      "knowledgeId": "worldgeo_agriculture_environment",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "熱帯林を大量に伐採して農地を広げることによって生じうる問題として適切なものはどれか。",
+      "choices": [
+        "森林減少や生物多様性の低下",
+        "氷河の増加",
+        "高緯度化",
+        "時差の拡大"
+      ],
+      "answerIndex": 0,
+      "explanation": "熱帯林の減少は生物多様性や炭素循環などに影響する。"
+    },
+    {
+      "id": "worldgeo_l2_017",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "資源分布",
+      "knowledgeId": "worldgeo_oil_resource",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "資料である国の輸出品目の上位を原油と石油製品が占めている。この国の産業構造について考えられることはどれか。",
+      "choices": [
+        "石油資源への依存が比較的大きい可能性がある",
+        "必ず農業国である",
+        "工業が存在しない",
+        "輸入が全くない"
+      ],
+      "answerIndex": 0,
+      "explanation": "輸出上位を原油・石油製品が占めることは石油資源への経済依存を示す手掛かりになる。"
+    },
+    {
+      "id": "worldgeo_l2_018",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "工業立地",
+      "knowledgeId": "worldgeo_industry_location",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "海沿いに大規模な工業地域が発達する理由として最も適切なものはどれか。",
+      "choices": [
+        "原料の輸入や製品の輸出に港湾を利用しやすい",
+        "必ず気温が低い",
+        "人口が存在しない",
+        "山地がないからだけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "工業地域では原料や製品を大量に輸送するため、港湾が利用できる臨海部が有利な場合がある。"
+    },
+    {
+      "id": "worldgeo_l2_019",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "工業化",
+      "knowledgeId": "worldgeo_industry_structure",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "ある国で農産物中心だった輸出が電子機器や機械類中心に変化した。この変化から考えられることはどれか。",
+      "choices": [
+        "工業化が進んだ可能性がある",
+        "必ず人口が減った",
+        "農業が完全になくなった",
+        "気候が熱帯になった"
+      ],
+      "answerIndex": 0,
+      "explanation": "工業製品の輸出比率が高まることは工業化・産業構造の変化を示す手掛かりになる。"
+    },
+    {
+      "id": "worldgeo_l2_020",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "資源と環境",
+      "knowledgeId": "worldgeo_resource_environment",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "化石燃料の大量利用に伴って問題となる環境問題として最も適切なものはどれか。",
+      "choices": [
+        "温室効果ガスの排出増加",
+        "赤道の移動",
+        "地軸の短縮",
+        "時差の消失"
+      ],
+      "answerIndex": 0,
+      "explanation": "化石燃料の燃焼は二酸化炭素などの温室効果ガスを排出し、地球温暖化と関係する。"
+    },
+    {
+      "id": "worldgeo_l2_021",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "人口統計",
+      "knowledgeId": "worldgeo_population_density",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "A国の人口は2000万人、面積は10万km²、B国の人口は1000万人、面積は1万km²である。人口密度が高いのはどちらか。",
+      "choices": [
+        "A国",
+        "B国",
+        "同じ",
+        "この資料だけでは計算できない"
+      ],
+      "answerIndex": 1,
+      "explanation": "A国は200人/km²、B国は1000人/km²なのでB国の人口密度が高い。"
+    },
+    {
+      "id": "worldgeo_l2_022",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "人口移動",
+      "knowledgeId": "worldgeo_population_migration",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "高所得国へ労働者が移動する理由として考えられるものはどれか。",
+      "choices": [
+        "より高い賃金や雇用機会を求める",
+        "必ず気温が高いから",
+        "宗教が同じだからだけ",
+        "時差が小さいから"
+      ],
+      "answerIndex": 0,
+      "explanation": "所得や雇用機会の違いは国際的な労働移動の要因の一つである。"
+    },
+    {
+      "id": "worldgeo_l2_023",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "都市化",
+      "knowledgeId": "worldgeo_urbanization",
+      "level": 2,
+      "questionType": "graph",
+      "question": "都市人口の割合が25%から55%へ上昇した。ここから読み取れることとして最も適切なものはどれか。",
+      "choices": [
+        "都市化が進んだ",
+        "必ず総人口が増えた",
+        "農村人口が0になった",
+        "人口密度が必ず低下した"
+      ],
+      "answerIndex": 0,
+      "explanation": "都市人口割合の上昇は都市化の進行を示す。総人口の増減まではこの資料だけでは断定できない。"
+    },
+    {
+      "id": "worldgeo_l2_024",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "人口構成",
+      "knowledgeId": "worldgeo_population_structure",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "出生率が低下し高齢者の割合が上昇している国がある。この国が抱えやすい課題はどれか。",
+      "choices": [
+        "社会保障を支える負担の増大",
+        "乳児死亡率の急増が必ず起こる",
+        "人口が必ず急増する",
+        "農地が必ず増える"
+      ],
+      "answerIndex": 0,
+      "explanation": "少子高齢化は年金や医療など社会保障の負担と関係する。"
+    },
+    {
+      "id": "worldgeo_l2_025",
+      "major": "大問1",
+      "theme": "宗教・文化",
+      "subtheme": "宗教分布",
+      "knowledgeId": "worldgeo_religion_distribution",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "A地域ではイスラム教徒の割合が高い。生活文化について考える際、最も適切な見方はどれか。",
+      "choices": [
+        "宗教上の規範が食生活などに影響する場合がある",
+        "A地域の全住民が必ず同じ生活をしている",
+        "宗教は生活と関係しない",
+        "宗教から気候が決まる"
+      ],
+      "answerIndex": 0,
+      "explanation": "宗教は食生活や服装などの生活文化に影響することがあるが、地域内に多様性もある。"
+    },
+    {
+      "id": "worldgeo_l2_026",
+      "major": "大問1",
+      "theme": "宗教・文化",
+      "subtheme": "宗教分布",
+      "knowledgeId": "worldgeo_religion_distribution",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "インド周辺で、ヒンドゥー教徒の割合が高い国とイスラム教徒の割合が高い国がある。このことから適切に言えることはどれか。",
+      "choices": [
+        "南アジア内部でも宗教分布には地域差がある",
+        "南アジアは全て同じ宗教である",
+        "宗教分布は国境と無関係である",
+        "宗教分布から人口を正確に求められる"
+      ],
+      "answerIndex": 0,
+      "explanation": "南アジアでは国によって宗教構成が異なる。"
+    },
+    {
+      "id": "worldgeo_l2_027",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "貿易統計",
+      "knowledgeId": "worldgeo_trade_structure",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "A国の輸出上位が自動車・機械、B国の輸出上位が原油・天然ガスである。B国について最も適切な判断はどれか。",
+      "choices": [
+        "資源輸出への依存が比較的大きい可能性がある",
+        "工業製品輸出国と断定できる",
+        "農業国と断定できる",
+        "貿易をしていない"
+      ],
+      "answerIndex": 0,
+      "explanation": "輸出品目上位から、B国は資源輸出への依存が比較的大きいと考えられる。"
+    },
+    {
+      "id": "worldgeo_l2_028",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "地域統合",
+      "knowledgeId": "worldgeo_eu",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "EU加盟国の間で人・モノなどの移動が活発になることの背景として最も適切なものはどれか。",
+      "choices": [
+        "域内の経済的な結び付きを強める仕組みがある",
+        "加盟国間の貿易をすべて禁止している",
+        "各国が完全に自給自足している",
+        "国境がすべてなくなった"
+      ],
+      "answerIndex": 0,
+      "explanation": "EUでは域内の経済的結び付きを強める取り組みが進められている。"
+    },
+    {
+      "id": "worldgeo_l2_029",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "地域統合",
+      "knowledgeId": "worldgeo_asean",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "ASEANについて、最も適切な説明はどれか。",
+      "choices": [
+        "東南アジア諸国が協力する地域組織",
+        "ヨーロッパ諸国だけの軍事同盟",
+        "中東産油国だけの組織",
+        "南米諸国だけの通貨同盟"
+      ],
+      "answerIndex": 0,
+      "explanation": "ASEANは東南アジア諸国連合で、地域協力を進めている。"
+    },
+    {
+      "id": "worldgeo_l2_030",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "国際分業",
+      "knowledgeId": "worldgeo_international_division",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "A国が資源を輸出し、B国がその資源を加工した製品を輸出している。このような関係について最も適切なものはどれか。",
+      "choices": [
+        "国際分業の一例と考えられる",
+        "自給自足の一例である",
+        "貿易がないことを示す",
+        "人口移動だけを示す"
+      ],
+      "answerIndex": 0,
+      "explanation": "国・地域ごとの得意分野を分担し、貿易で結び付く関係は国際分業の一例である。"
+    },
+    {
+      "id": "worldgeo_l2_031",
+      "major": "大問1",
+      "theme": "統計・資料",
+      "subtheme": "GDP",
+      "knowledgeId": "worldgeo_gdp_per_capita",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "A国のGDPは大きいが人口も非常に多い。B国はGDPは小さいが人口も少ない。国民1人あたりの経済規模を比べる指標として適切なのはどれか。",
+      "choices": [
+        "一人あたりGDP",
+        "総輸出額だけ",
+        "国土面積",
+        "人口総数"
+      ],
+      "answerIndex": 0,
+      "explanation": "一人あたりGDPはGDPを人口で割った指標で、総GDPとは異なる。"
+    },
+    {
+      "id": "worldgeo_l2_032",
+      "major": "大問1",
+      "theme": "統計・資料",
+      "subtheme": "統計の読み方",
+      "knowledgeId": "worldgeo_statistics",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "ある国の人口が1000万人から1200万人になった。この資料から正しく言えることはどれか。",
+      "choices": [
+        "人口は200万人増加した",
+        "人口は200%増加した",
+        "人口密度が必ず2倍になった",
+        "出生率が20%になった"
+      ],
+      "answerIndex": 0,
+      "explanation": "1000万人から1200万人なので200万人増加した。増加率は20%である。"
+    },
+    {
+      "id": "worldgeo_l2_033",
+      "major": "大問1",
+      "theme": "統計・資料",
+      "subtheme": "統計の読み方",
+      "knowledgeId": "worldgeo_statistics",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "ある国の輸出額のうち、原油が40%、機械類が30%、その他が30%を占める。この資料から最も適切に判断できることはどれか。",
+      "choices": [
+        "原油が輸出額の最大の品目である",
+        "機械類が必ず生産額の最大である",
+        "原油が40万トン輸出された",
+        "輸入も必ず同じ構成になる"
+      ],
+      "answerIndex": 0,
+      "explanation": "資料から、輸出額の構成では原油が最も大きいことが分かる。"
+    },
+    {
+      "id": "worldgeo_l2_034",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と位置",
+      "knowledgeId": "worldgeo_climate_region",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "北緯37度付近、夏に乾燥し冬に降水が多い地域がある。この地域として考えやすいのはどこか。",
+      "choices": [
+        "地中海沿岸",
+        "赤道直下のアマゾン",
+        "北極海沿岸",
+        "南極大陸"
+      ],
+      "answerIndex": 0,
+      "explanation": "北緯30～40度付近の地中海沿岸には地中海性気候が分布する。"
+    },
+    {
+      "id": "worldgeo_l2_035",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と農業",
+      "knowledgeId": "worldgeo_agriculture_climate",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "年間を通じて比較的降水があり、冷涼な気候の西ヨーロッパで酪農が発達しやすい理由として適切なものはどれか。",
+      "choices": [
+        "牧草を利用しやすいから",
+        "砂漠が広いから",
+        "一年中高温だから",
+        "稲を三期作できるから"
+      ],
+      "answerIndex": 0,
+      "explanation": "西ヨーロッパでは比較的冷涼で降水もあり、牧草を利用した酪農が行われる。"
+    },
+    {
+      "id": "worldgeo_l2_036",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と生活",
+      "knowledgeId": "worldgeo_climate_life",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "乾燥した地域で暮らす人々が水を得るために河川や地下水を利用している。このことから最も適切に考えられるのはどれか。",
+      "choices": [
+        "自然環境が生活に影響している",
+        "生活は自然環境と無関係である",
+        "乾燥地域では必ず農業ができない",
+        "人口は必ず0になる"
+      ],
+      "answerIndex": 0,
+      "explanation": "自然環境の違いは水利用や農業など生活に影響を与える。"
+    },
+    {
+      "id": "worldgeo_l2_037",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "資源と貿易",
+      "knowledgeId": "worldgeo_resource_trade",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "ある資源国で原油価格が急落した場合、原油輸出への依存度が高い国ほど受けやすい影響はどれか。",
+      "choices": [
+        "輸出収入の減少",
+        "必ず人口の増加",
+        "農業生産の急増",
+        "輸入の完全な停止"
+      ],
+      "answerIndex": 0,
+      "explanation": "資源輸出依存度が高いほど、国際価格の変化が輸出収入に影響しやすい。"
+    },
+    {
+      "id": "worldgeo_l2_038",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "人口と産業",
+      "knowledgeId": "worldgeo_population_industry",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "工業化が進んだ都市に人口が集中している。人口移動の背景として考えられるものはどれか。",
+      "choices": [
+        "雇用機会を求めた移動",
+        "地球の自転速度の変化",
+        "宗教だけで決まる移動",
+        "時差がなくなること"
+      ],
+      "answerIndex": 0,
+      "explanation": "工業化した都市では雇用機会が増え、人口集中につながることがある。"
+    },
+    {
+      "id": "worldgeo_l2_039",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "位置と産業",
+      "knowledgeId": "worldgeo_location_industry",
+      "level": 2,
+      "questionType": "knowledge",
+      "question": "北緯35度付近の東アジア沿岸に位置する都市がある。港湾を利用した工業が発達している場合、どの組合せが自然か。",
+      "choices": [
+        "沿岸立地＋輸出入のための港湾",
+        "内陸立地＋海上輸送が不要",
+        "高緯度寒帯＋稲作だけ",
+        "砂漠中心＋漁業だけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "沿岸の工業都市では港湾を利用して原料輸入や製品輸出を行うことがある。"
+    },
+    {
+      "id": "worldgeo_l2_040",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境",
+      "knowledgeId": "worldgeo_terrain",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "海岸近くの山地に湿った季節風が吹き込む地域で、山地の風上側に降水が多い。降水の分布に関係する要因はどれか。",
+      "choices": [
+        "地形と季節風",
+        "緯度だけ",
+        "時差だけ",
+        "宗教だけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "湿った季節風と山地の上昇気流が組み合わさって降水をもたらす。"
+    },
+    {
+      "id": "worldgeo_l3_001",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "位置・気候・農業の判定",
+      "knowledgeId": "worldgeo_location_climate_agriculture",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "資料1はA～D国のおよその緯度、資料2は各国の気候の特徴、資料3は主な農産物を示している。北緯35度前後、夏に乾燥し冬に降水が多く、オリーブやぶどうの栽培が盛んな国はどれか。\n[[表｜国｜緯度｜気候｜農産物｜A国｜北緯37度｜夏乾燥・冬多雨｜オリーブ・ぶどう｜B国｜北緯52度｜年中降水｜酪農｜C国｜北緯60度｜寒冷｜林業｜D国｜赤道付近｜高温多雨｜カカオ]]",
+      "choices": [
+        "A国",
+        "B国",
+        "C国",
+        "D国"
+      ],
+      "answerIndex": 0,
+      "explanation": "緯度、気候、農業の3つの条件が一致するのはA国。"
+    },
+    {
+      "id": "worldgeo_l3_002",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "自然環境と生活",
+      "knowledgeId": "worldgeo_monsoon_terrain",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "ある東南アジア地域では、夏に海から湿った季節風が吹き、山地の風上側で降水量が多い。さらに平野では稲作が盛んである。資料から判断できる組合せとして正しいものはどれか。",
+      "choices": [
+        "季節風＋山地＋稲作",
+        "寒流＋砂漠＋放牧",
+        "偏西風＋氷床＋酪農",
+        "乾燥帯＋氷河＋小麦のみ"
+      ],
+      "answerIndex": 0,
+      "explanation": "季節風、地形による降水、平野での稲作が互いに関連している。"
+    },
+    {
+      "id": "worldgeo_l3_003",
+      "major": "大問1",
+      "theme": "位置・地図・自然環境",
+      "subtheme": "位置と資源",
+      "knowledgeId": "worldgeo_location_resource",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "A～D国の地図上の位置と輸出品目を示す。西アジアのペルシア湾沿岸に位置し、原油輸出が上位を占める国はどれか。\n[[表｜国｜地域｜主な輸出品｜A国｜西アジア・ペルシア湾沿岸｜原油・石油製品｜B国｜西ヨーロッパ｜自動車・機械｜C国｜南アジア｜米・衣類｜D国｜南アメリカ｜大豆・鉄鉱石]]",
+      "choices": [
+        "A国",
+        "B国",
+        "C国",
+        "D国"
+      ],
+      "answerIndex": 0,
+      "explanation": "位置と輸出品の両方からA国を判定できる。"
+    },
+    {
+      "id": "worldgeo_l3_004",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "雨温図と農業",
+      "knowledgeId": "worldgeo_rain_agriculture",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "雨温図は夏に降水が少なく冬に多く、気温は温帯の範囲にある。さらに農産物統計でオリーブとぶどうの生産が多い地域が示されている。この地域として最も適切なのはどれか。",
+      "choices": [
+        "地中海沿岸",
+        "北極海沿岸",
+        "アマゾン低地",
+        "シベリア内陸部"
+      ],
+      "answerIndex": 0,
+      "explanation": "雨温図と農産物の両方が地中海性気候・地中海式農業の特徴に合う。"
+    },
+    {
+      "id": "worldgeo_l3_005",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候の比較",
+      "knowledgeId": "worldgeo_climate_compare",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "A～Cの雨温図について、Aは夏乾燥・冬多雨、Bは年間を通じて降水が比較的均等、Cは雨季と乾季が明瞭な高温地域である。A～Cの組合せとして正しいものはどれか。",
+      "choices": [
+        "A=Cs、B=Cfb、C=Aw",
+        "A=Cfb、B=Cs、C=ET",
+        "A=Aw、B=BW、C=Cfa",
+        "A=BW、B=Df、C=Cs"
+      ],
+      "answerIndex": 0,
+      "explanation": "AはCs、BはCfb、CはAwの特徴である。"
+    },
+    {
+      "id": "worldgeo_l3_006",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と地域判定",
+      "knowledgeId": "worldgeo_climate_region",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "地図上のX～Z地域について、Xは北緯35度付近の地中海沿岸、Yは北緯50度付近の西ヨーロッパ、Zは赤道付近の東南アジアである。X～Zの気候と農業の組合せとして正しいものはどれか。",
+      "choices": [
+        "X=Cs・オリーブ、Y=Cfb・酪農、Z=Aw/Am・稲作",
+        "X=Cfb・稲作、Y=Cs・カカオ、Z=ET・酪農",
+        "X=BW・放牧、Y=EF・林業、Z=Cfa・小麦だけ",
+        "X=Aw・酪農、Y=BW・稲作、Z=Cs・ぶどう"
+      ],
+      "answerIndex": 0,
+      "explanation": "位置から各地域の気候を考え、対応する農業を組み合わせる問題。"
+    },
+    {
+      "id": "worldgeo_l3_007",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と農業統計",
+      "knowledgeId": "worldgeo_agriculture_statistics",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "A～C国の資料では、Aは米の輸出が多く一年を通して高温、Bはオリーブとぶどう、Cは酪農と小麦が多い。気候との組合せとして最も適切なものはどれか。",
+      "choices": [
+        "A=高温多雨・季節的な多雨、B=Cs、C=Cfb",
+        "A=Cfb、B=Aw、C=BW",
+        "A=ET、B=Cfa、C=Aw",
+        "A=BW、B=Df、C=EF"
+      ],
+      "answerIndex": 0,
+      "explanation": "Aは熱帯の多雨地域、Bは地中海性気候、Cは西ヨーロッパに多いCfbと結び付けられる。"
+    },
+    {
+      "id": "worldgeo_l3_008",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と原因",
+      "knowledgeId": "worldgeo_climate_cause",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "ヨーロッパ西岸の都市Pでは北緯50度前後にもかかわらず冬が比較的温暖で、年間を通じて降水がある。資料から、この気候の形成に関係するものを選びなさい。",
+      "choices": [
+        "北大西洋海流と偏西風",
+        "親潮と季節風",
+        "ペルシア湾の油田",
+        "赤道低圧帯だけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "暖流と偏西風がヨーロッパ西岸の温和な気候形成に関係する。"
+    },
+    {
+      "id": "worldgeo_l3_009",
+      "major": "大問1",
+      "theme": "気候・農業",
+      "subtheme": "気候と生活",
+      "knowledgeId": "worldgeo_climate_life",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "A地域は夏に著しく乾燥し、B地域は一年を通じて降水が比較的均等である。両地域の生活・農業を比較した記述として最も適切なものはどれか。",
+      "choices": [
+        "Aでは乾燥に適した農作物が発達しやすく、Bでは牧草を利用した農業が発達しやすい",
+        "AとBの農業は気候に関係しない",
+        "Aでは必ず稲作が三期作、Bでは砂漠農業が中心",
+        "Bでは降水がないため農業が不可能"
+      ],
+      "answerIndex": 0,
+      "explanation": "気候の違いが農業形態や作物に影響する。"
+    },
+    {
+      "id": "worldgeo_l3_010",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "資源と工業",
+      "knowledgeId": "worldgeo_resource_industry",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "A国は石油輸出、B国は自動車・機械輸出、C国はカカオ輸出が中心である。A～Cの産業構造について最も適切な説明はどれか。",
+      "choices": [
+        "Aは資源依存型、Bは工業製品型、Cは農産物依存型と考える手掛かりになる",
+        "3国とも同じ産業構造である",
+        "Bは必ず資源国である",
+        "Cは工業製品中心と断定できる"
+      ],
+      "answerIndex": 0,
+      "explanation": "輸出品目は産業構造を判断する手掛かりになる。"
+    },
+    {
+      "id": "worldgeo_l3_011",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "産業の多角化",
+      "knowledgeId": "worldgeo_resource_diversification",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "石油価格の変動で歳入が大きく変化するA国が、観光業や金融業を育成している。この政策の目的として最も適切なものはどれか。",
+      "choices": [
+        "産業を多角化し、単一資源への依存を弱める",
+        "農業を完全に廃止する",
+        "輸入をすべて禁止する",
+        "人口を減少させる"
+      ],
+      "answerIndex": 0,
+      "explanation": "単一資源依存のリスクを減らすため産業を多角化する。"
+    },
+    {
+      "id": "worldgeo_l3_012",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "工業立地と貿易",
+      "knowledgeId": "worldgeo_industry_location",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "港湾都市Pでは自動車工業が発達し、海外から部品を輸入して完成品を輸出している。工業立地の理由として最も適切なものはどれか。",
+      "choices": [
+        "港湾を利用して大量の部品・製品を輸送できる",
+        "港湾では海上輸送ができない",
+        "山地が工業に必ず有利だから",
+        "人口が少ないほど工業が発達するから"
+      ],
+      "answerIndex": 0,
+      "explanation": "臨海工業地域では原料や部品の輸入、製品輸出に港湾を利用できる。"
+    },
+    {
+      "id": "worldgeo_l3_013",
+      "major": "大問1",
+      "theme": "資源・工業・産業",
+      "subtheme": "資源と環境",
+      "knowledgeId": "worldgeo_resource_environment",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "石油・石炭・天然ガスの使用量削減を進め、再生可能エネルギーを増やそうとしている国がある。その背景として最も適切なものはどれか。",
+      "choices": [
+        "温室効果ガス排出削減などの環境対策",
+        "時差解消",
+        "人口密度の均一化だけ",
+        "国境の消滅"
+      ],
+      "answerIndex": 0,
+      "explanation": "化石燃料の燃焼による温室効果ガス排出を削減することは環境政策の重要な目的である。"
+    },
+    {
+      "id": "worldgeo_l3_014",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "人口密度と産業",
+      "knowledgeId": "worldgeo_population_density_industry",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "A地域は平野と港湾を持ち、工業都市が形成されている。B地域は高山地域で交通が難しい。人口密度がA地域で高くなりやすい理由として適切なものはどれか。",
+      "choices": [
+        "地形・交通・産業の条件が人口集中を促すため",
+        "高山では必ず人口が多いから",
+        "人口密度は地形と関係がないから",
+        "港湾は人口に影響しないから"
+      ],
+      "answerIndex": 0,
+      "explanation": "平野・交通・産業など複数の条件が人口集中につながる。"
+    },
+    {
+      "id": "worldgeo_l3_015",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "都市化と統計",
+      "knowledgeId": "worldgeo_urbanization",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "ある国の都市人口割合が1990年25%、2005年40%、2020年60%となった。これについて最も適切な判断はどれか。",
+      "choices": [
+        "都市化が進んでいる",
+        "総人口が同じ割合で増えたと断定できる",
+        "農村人口が必ず0になった",
+        "人口密度が必ず低下した"
+      ],
+      "answerIndex": 0,
+      "explanation": "都市人口割合が上昇しているので都市化が進んでいる。総人口の増減までは分からない。"
+    },
+    {
+      "id": "worldgeo_l3_016",
+      "major": "大問1",
+      "theme": "人口・都市",
+      "subtheme": "人口移動と格差",
+      "knowledgeId": "worldgeo_population_migration",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "A地域の一人あたりGDPが3000ドル、B地域が40000ドルで、AからBへ労働者の移動が多い。資料から考えられる背景として最も適切なものはどれか。",
+      "choices": [
+        "所得や雇用機会の差",
+        "A地域の方が必ず都市化しているから",
+        "宗教が同じだからだけ",
+        "緯度が同じだから"
+      ],
+      "answerIndex": 0,
+      "explanation": "大きな所得差は国際的な労働移動を促す要因の一つになる。"
+    },
+    {
+      "id": "worldgeo_l3_017",
+      "major": "大問1",
+      "theme": "宗教・文化",
+      "subtheme": "宗教と地域",
+      "knowledgeId": "worldgeo_religion_region",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "A地域は西アジア、B地域は南アジア、C地域はヨーロッパに位置する。イスラム教徒の割合が特に高い地域として考えやすいものはどれか。",
+      "choices": [
+        "A地域",
+        "B地域のみ",
+        "C地域のみ",
+        "すべて同じ"
+      ],
+      "answerIndex": 0,
+      "explanation": "西アジアはイスラム教の主要な分布地域である。ただし他地域にもイスラム教徒は多くいる。"
+    },
+    {
+      "id": "worldgeo_l3_018",
+      "major": "大問1",
+      "theme": "宗教・文化",
+      "subtheme": "宗教と生活",
+      "knowledgeId": "worldgeo_religion_life",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "イスラム教徒の割合が高いA地域と、ヒンドゥー教徒の割合が高いB地域を比較する資料がある。生活文化について最も適切な記述はどれか。",
+      "choices": [
+        "宗教上の規範が食生活などに影響することがある",
+        "宗教が違っても生活文化は必ず完全に同じである",
+        "宗教から経度を求められる",
+        "宗教は文化と無関係である"
+      ],
+      "answerIndex": 0,
+      "explanation": "宗教は食生活などの生活文化に影響する場合がある。"
+    },
+    {
+      "id": "worldgeo_l3_019",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "EUと統計",
+      "knowledgeId": "worldgeo_eu_trade",
+      "level": 3,
+      "questionType": "multi_source",
+      "question": "EU域内の貿易額が増加している資料がある。この変化から考えられることとして最も適切なものはどれか。",
+      "choices": [
+        "加盟国間の経済的な結び付きが強まっている可能性がある",
+        "加盟国間の貿易が禁止された",
+        "加盟国がすべて自給自足になった",
+        "EUが解体した"
+      ],
+      "answerIndex": 0,
+      "explanation": "域内貿易の増加は経済的な結び付きの強まりを示す手掛かりになる。"
+    },
+    {
+      "id": "worldgeo_l3_020",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "地域統合と移動",
+      "knowledgeId": "worldgeo_eu_mobility",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "EUのある加盟国で働く他国出身者が増えている。EUの制度との関連で最も適切な説明はどれか。",
+      "choices": [
+        "域内で人の移動が活発になる仕組みがある",
+        "加盟国間の人の移動は禁止されている",
+        "EUは農業だけの組織である",
+        "移動は必ず宗教だけで決まる"
+      ],
+      "answerIndex": 0,
+      "explanation": "EUでは域内の人の移動が活発になる仕組みが整えられている。"
+    },
+    {
+      "id": "worldgeo_l3_021",
+      "major": "大問1",
+      "theme": "貿易・国際関係",
+      "subtheme": "資源貿易",
+      "knowledgeId": "worldgeo_resource_trade",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "A国は原油を輸出し、B国はその原油を輸入して石油製品を生産・輸出している。両国の関係として最も適切なものはどれか。",
+      "choices": [
+        "国際分業と貿易によって結び付いている",
+        "両国は貿易していない",
+        "A国は必ず工業国である",
+        "B国は資源国と断定できる"
+      ],
+      "answerIndex": 0,
+      "explanation": "資源の輸出国と加工・製品輸出国の関係は国際分業の一例である。"
+    },
+    {
+      "id": "worldgeo_l3_022",
+      "major": "大問1",
+      "theme": "統計・資料",
+      "subtheme": "複数統計",
+      "knowledgeId": "worldgeo_statistics_multi",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "A国はGDP500兆円・人口5億人、B国はGDP100兆円・人口500万人である。GDP総額と一人あたりGDPの関係について正しいものはどれか。",
+      "choices": [
+        "A国のGDP総額は大きいが、一人あたりではB国が大きくなる",
+        "A国は両方で必ず大きい",
+        "B国はGDP総額も大きい",
+        "資料だけでは一人あたりGDPを計算できない"
+      ],
+      "answerIndex": 0,
+      "explanation": "Aは100万円/人、Bは2000万円/人なので、一人あたりではBが大きい。"
+    },
+    {
+      "id": "worldgeo_l3_023",
+      "major": "大問1",
+      "theme": "統計・資料",
+      "subtheme": "農業統計",
+      "knowledgeId": "worldgeo_agriculture_statistics",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "A国の農業統計で、米の生産量が多く、気候資料では高温で雨季の降水量が多い。B国はオリーブとぶどうが多く、夏に乾燥する。A・Bの組合せとして正しいものはどれか。",
+      "choices": [
+        "A=熱帯・季節的多雨、B=地中海性気候",
+        "A=Cfb、B=ET",
+        "A=BW、B=Aw",
+        "A=EF、B=Dw"
+      ],
+      "answerIndex": 0,
+      "explanation": "農業統計と気候資料を組み合わせて判断する。"
+    },
+    {
+      "id": "worldgeo_l3_024",
+      "major": "大問1",
+      "theme": "総合・資料",
+      "subtheme": "総合判定",
+      "knowledgeId": "worldgeo_integrated_region",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "資料1は「北緯50度前後、年中降水量が比較的均等」、資料2は「酪農と小麦」、資料3は「ヨーロッパ西部」を示す。この地域について最も適切なのはどれか。",
+      "choices": [
+        "西ヨーロッパのCfb地域",
+        "西アジアのBW地域",
+        "赤道付近のAf地域",
+        "北極圏のEF地域"
+      ],
+      "answerIndex": 0,
+      "explanation": "位置、気候、農業の3資料から西ヨーロッパのCfb地域と判断できる。"
+    },
+    {
+      "id": "worldgeo_l3_025",
+      "major": "大問1",
+      "theme": "総合・資料",
+      "subtheme": "国判定",
+      "knowledgeId": "worldgeo_integrated_country",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "資料1は「北緯35度前後・地中海沿岸」、資料2は「夏に乾燥し冬に多雨」、資料3は「オリーブ・ぶどうが盛ん」。この国・地域を判断する際に最も重視すべき組合せはどれか。",
+      "choices": [
+        "位置＋気候＋農業",
+        "宗教だけ",
+        "人口だけ",
+        "輸出額だけ"
+      ],
+      "answerIndex": 0,
+      "explanation": "複数資料を組み合わせて地域を判定する必要がある。"
+    },
+    {
+      "id": "worldgeo_l3_026",
+      "major": "大問1",
+      "theme": "総合・資料",
+      "subtheme": "比較判断",
+      "knowledgeId": "worldgeo_integrated_compare",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "A国は石油輸出が中心で人口も少ない。B国は自動車輸出が中心で人口密度が高い。C国はカカオ輸出が中心である。各国の特色として最も適切なものはどれか。",
+      "choices": [
+        "A=資源輸出依存、B=工業化、C=農産物依存の手掛かり",
+        "A=工業、B=資源、C=自給自足",
+        "3国とも同じ産業構造",
+        "資料から産業構造は全く考えられない"
+      ],
+      "answerIndex": 0,
+      "explanation": "輸出品と人口などを組み合わせると、各国の産業構造の違いを推測できる。"
+    },
+    {
+      "id": "worldgeo_l3_027",
+      "major": "大問1",
+      "theme": "総合・資料",
+      "subtheme": "人口・気候・産業",
+      "knowledgeId": "worldgeo_integrated_population",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "A地域は高温多雨で人口密度が高く、B地域は乾燥して人口密度が低い。Aでは稲作、Bでは灌漑農業が行われている。これについて最も適切な説明はどれか。",
+      "choices": [
+        "自然環境が人口分布や農業に影響している",
+        "人口分布は自然環境と無関係である",
+        "乾燥地域では農業は絶対にできない",
+        "高温多雨地域では人口が必ず少ない"
+      ],
+      "answerIndex": 0,
+      "explanation": "気候・水条件が農業や人口分布に影響することを示している。"
+    },
+    {
+      "id": "worldgeo_l3_028",
+      "major": "大問1",
+      "theme": "総合・資料",
+      "subtheme": "正誤組合せ",
+      "knowledgeId": "worldgeo_integrated_truefalse",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "世界の気候について、X「地中海性気候では夏に乾燥し冬に降水が多い。」Y「西岸海洋性気候では年間を通じて降水が比較的ある。」の正誤の組合せとして正しいものはどれか。",
+      "choices": [
+        "X正・Y正",
+        "X正・Y誤",
+        "X誤・Y正",
+        "X誤・Y誤"
+      ],
+      "answerIndex": 0,
+      "explanation": "XもYも正しい。"
+    },
+    {
+      "id": "worldgeo_l3_030",
+      "major": "大問1",
+      "theme": "総合・資料",
+      "subtheme": "自然環境・気候・農業の総合判定",
+      "knowledgeId": "worldgeo_integrated_final",
+      "level": 3,
+      "questionType": "exam_style",
+      "question": "次の資料はA〜D地域について、位置・気候・主な農業をまとめたものである。地中海性気候が見られ、オリーブやぶどうの栽培が盛んな地域を選びなさい。\n[[表｜地域｜位置｜気候｜農業｜A地域｜北緯37度・地中海沿岸｜夏乾燥・冬多雨｜オリーブ・ぶどう｜B地域｜北緯52度・西ヨーロッパ｜年中降水｜酪農｜C地域｜赤道付近｜高温多雨｜カカオ｜D地域｜高緯度内陸｜寒冷｜林業]]",
+      "choices": [
+        "A地域",
+        "B地域",
+        "C地域",
+        "D地域"
+      ],
+      "answerIndex": 0,
+      "explanation": "位置・気候・農業の三つの資料が一致するのはA地域。"
+    }
+  ]
+}
