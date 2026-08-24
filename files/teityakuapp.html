@@ -392,7 +392,10 @@ var STORAGE_KEY_STATS = "drill_stats_v1";
 var STORAGE_KEY_SET   = "drill_settings_v1";
 
 /* 間隔反復の日数テーブル（レベル0〜7） */
-var INTERVALS = [0,1,3,7,14,30,60,120];
+var INTERVALS = [0, 1, 3, 7, 14, 30, 60, 120];
+var HALF_LIFE = [1, 2, 4, 8, 14, 28, 56, 112]; // レベル別忘却半減期
+var MASTERY_STREAK = 3; 
+var LEVEL_THRESHOLD = 70; // 前レベル定着度70%で次解放
 
 var ACHIEVEMENTS = [
   { id:"first",    title:"はじめの一歩", desc:"最初の1問に回答した",         check:function(s){ return s.totalAnswered>=1; } },
@@ -406,13 +409,6 @@ var ACHIEVEMENTS = [
   { id:"perfect",  title:"パーフェクト", desc:"1セットで全問正解した",       check:function(s,ctx){ return !!(ctx&&ctx.perfect); } },
   { id:"days30",   title:"コツコツ型",   desc:"のべ30日学習した",           check:function(s){ return (s.studyDays||[]).length>=30; } }
 ];
-
-/* 理解度モデル：3回連続正解で「完全に覚えた（100%）」とみなす。
-   一度合っただけでは暗記完了とは言えないため、連続正解数(streak)に応じて
-   到達できる上限(cap)を段階的に上げる。また、時間が経つほど忘却曲線的に
-   減衰させる（レベルが高いほど記憶の定着が強く、減衰は緩やか）。 */
-var MASTERY_STREAK = 3;
-var HALF_LIFE = [1,2,3,5,8,14,25,45]; // レベル(0〜7)ごとの理解度半減期（日）
 
 /* ============================================================
    ユーティリティ
@@ -762,12 +758,18 @@ function normalizeQuestion(raw, subject, unit, idx){
   }
   var id = raw.id ? String(raw.id) : (subject+"__"+unit+"__"+idx+"__"+hashStr(qtext));
   return {
-    id:id,
-    question:String(qtext),
+    id: id,
+    question: String(qtext),
     image: raw.image || raw.imageUrl || null,
     choices: choices.map(function(c){ return String(c); }),
     answerIndex: ansIdx,
-    explanation: raw.explanation || raw.note || ""
+    explanation: raw.explanation || raw.note || "",
+    level: typeof raw.level === "number" ? raw.level : (parseInt(raw.level, 10) || 1),
+    major: raw.major != null ? String(raw.major) : null,
+    theme: raw.theme != null ? String(raw.theme) : null,
+    subtheme: raw.subtheme != null ? String(raw.subtheme) : null,
+    knowledgeId: raw.knowledgeId != null ? String(raw.knowledgeId) : null,
+    questionType: raw.questionType != null ? String(raw.questionType) : null
   };
 }
 
@@ -950,6 +952,28 @@ function buildCustomQueue(subjects, units, size){
 }
 
 /* ============================================================
+   自動タスク生成
+   ============================================================ */
+function buildAutoTask(size){
+  var pool = [];
+  var today = todayStr();
+  library.decks.forEach(function(deck){
+    deck.questions.forEach(function(q){
+      var lvl = getQuestionLevel(q);
+      if(!isLevelAvailable(deck, lvl)) return; // レベル未解放なら出さない
+      var p = progress[q.id];
+      var ret = computeRetention(q.id);
+      var weight = 1.0;
+      if(!p) weight = 2.0; // 未学習優先
+      else if(p.nextDue <= today) weight = 5.0; // 復習期限最優先
+      else if(ret.percent < 50) weight = 3.0; // 忘れそうなもの優先
+      pool.push({ item:{deck:deck, q:q}, weight: weight * (Math.random() + 0.5) });
+    });
+  });
+  return pool.sort(function(a,b){ return b.weight - a.weight; }).slice(0, size).map(function(c){ return c.item; });
+}
+
+/* ============================================================
    進捗更新（間隔反復）
    ============================================================ */
 function recordAnswer(qid, correct){
@@ -969,21 +993,26 @@ function recordAnswer(qid, correct){
   persistProg();
 }
 
-/* 問題1問ぶんの理解度（0〜100%）を算出する。
-   - 連続正解が3回未満なら、たとえ直近が正解でも上限は100%未満に抑える
-   - 連続3回正解した瞬間だけ100%になる
-   - そこから日数が経つほど指数関数的に下がる（半減期はレベルに応じる） */
+function getQuestionLevel(q){ return q.level || 1; }
+
 function computeRetention(qid){
   var p = progress[qid];
-  if(!p) return { percent:0, mastered:false, streak:0 };
+  if(!p) return { percent:0, mastered:false };
   var streak = p.streak || 0;
-  var cap = streak>=MASTERY_STREAK ? 100 : Math.round(streak/MASTERY_STREAK*100);
-  var elapsed = daysBetween(p.lastSeen || todayStr(), todayStr());
-  var hl = HALF_LIFE[Math.min(p.level, HALF_LIFE.length-1)] || 1;
-  var percent = Math.round(cap * Math.pow(0.5, elapsed/hl));
-  if(percent<0) percent = 0;
-  if(percent>100) percent = 100;
-  return { percent:percent, mastered: streak>=MASTERY_STREAK, streak:streak };
+  var cap = streak >= MASTERY_STREAK ? 100 : Math.round(streak/MASTERY_STREAK * 100);
+  var diff = Math.max(0, (new Date(todayStr()) - new Date(p.lastSeen || todayStr())) / 86400000);
+  var hl = HALF_LIFE[Math.min(p.level||0, 7)] || 1;
+  return { percent: Math.round(cap * Math.pow(0.5, diff/hl)), mastered: streak >= MASTERY_STREAK };
+}
+
+function isLevelAvailable(deck, level){
+  if(level <= 1) return true;
+  var prevLevel = level - 1;
+  var sum = 0, count = 0;
+  deck.questions.forEach(function(q){
+    if(getQuestionLevel(q) === prevLevel){ sum += computeRetention(q.id).percent; count++; }
+  });
+  return (count === 0) ? true : (sum / count) >= LEVEL_THRESHOLD;
 }
 function computeUnitRetention(deck){
   if(!deck || !deck.questions.length) return 0;
@@ -1111,14 +1140,14 @@ function renderChrome(){
 /* ============================================================
    レンダリング：ホーム
    ============================================================ */
-function renderHome(){
-  var html = "";
-  html += '<div class="streakbar" style="margin-top:14px;">'
-    + '<div class="sb-cell"><div class="sb-num">'+stats.streak+'</div><div class="sb-lab">連続日数</div></div>'
+function renderStreakBar(){
+  return '<div class="sb-cell"><div class="sb-num">'+stats.streak+'</div><div class="sb-lab">連続日数</div></div>'
     + '<div class="sb-cell"><div class="sb-num">'+stats.totalAnswered+'</div><div class="sb-lab">累計回答数</div></div>'
-    + '<div class="sb-cell"><div class="sb-num">'+(stats.totalAnswered? Math.round(stats.totalCorrect/stats.totalAnswered*100):0)+'<span style="font-size:12px;">%</span></div><div class="sb-lab">正答率</div></div>'
-    + '</div>';
+    + '<div class="sb-cell"><div class="sb-num">'+(stats.totalAnswered? Math.round(stats.totalCorrect/stats.totalAnswered*100):0)+'<span style="font-size:12px;">%</span></div><div class="sb-lab">正答率</div></div>';
+}
 
+function renderDeckList(){
+  var html = "";
   var subjectsAvail = allSubjects();
 
   html += '<div class="section-row">'
@@ -1165,6 +1194,24 @@ function renderHome(){
       html += '</div>';
     }
   }
+  return html;
+}
+
+function renderHome(){
+  var html = "";
+  // 戦略タスクボタン
+  html += '<div class="task-card" data-action="startAutoTask" style="background:#000; color:#fff; padding:24px; margin:16px; border-radius:12px; cursor:pointer;">'
+    + '<div style="font-size:20px; font-weight:900;">🚀 今日のTaskを開始</div>'
+    + '<div style="font-size:13px; opacity:0.8;">現在の定着度に基づき、今解くべき問題を自動抽出。</div></div>';
+
+  // 既存の統計表示 (元のコードの統計部分)
+  html += '<div class="streakbar">' + (typeof renderStreakBar === 'function' ? renderStreakBar() : "") + '</div>';
+
+  // 既存の単元リスト (ここも元のコードを維持)
+  if (typeof renderDeckList === 'function') {
+    html += renderDeckList();
+  }
+  
   return html;
 }
 function todayLabel(){
@@ -1532,6 +1579,12 @@ function handleAction(btn, e){
   if(!action) return;
 
   switch(action){
+    case "startAutoTask": {
+      var q = buildAutoTask(settings.defaultSetSize);
+      if(q.length > 0) startSession(q);
+      else alert("学習可能な問題がありません。");
+      break;
+    }
     case "nav":
       goto(btn.getAttribute("data-screen"));
       break;
