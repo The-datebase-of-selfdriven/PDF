@@ -1,0 +1,2162 @@
+[
+  {
+    "id": "econ_001",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "需要",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_demand_supply",
+    "question": "ある商品の価格が下がったとき、一般にその商品の需要量はどうなるか。",
+    "choices": [
+      "増える",
+      "減る",
+      "必ず変わらない",
+      "必ずゼロになる"
+    ],
+    "answerIndex": 0,
+    "explanation": "他の条件が同じなら、価格が下がると購入しようとする量である需要量は一般に増える。"
+  },
+  {
+    "id": "econ_002",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "供給",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_demand_supply",
+    "question": "企業が商品を市場に売ろうとする量を何というか。",
+    "choices": [
+      "需要量",
+      "供給量",
+      "消費支出",
+      "貯蓄額"
+    ],
+    "answerIndex": 1,
+    "explanation": "企業などが市場に売ろうとする商品の量を供給量という。"
+  },
+  {
+    "id": "econ_003",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "市場価格",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_demand_supply",
+    "question": "需要と供給が一致するところで成立する価格を何というか。",
+    "choices": [
+      "公定価格",
+      "均衡価格",
+      "最低賃金",
+      "基準価格"
+    ],
+    "answerIndex": 1,
+    "explanation": "需要量と供給量が一致する点で成立する価格を均衡価格という。"
+  },
+  {
+    "id": "econ_004",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "需要変化",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_demand_supply",
+    "question": "ある商品の人気が高まり、同じ価格でも買いたい人が増えた。このとき、他の条件が同じなら市場ではどのような変化が起こりやすいか。",
+    "choices": [
+      "価格が上がり、取引量も増える",
+      "価格が下がり、取引量も減る",
+      "価格だけが必ず下がる",
+      "供給量が必ずゼロになる"
+    ],
+    "answerIndex": 0,
+    "explanation": "需要が増加すると需要曲線が右方向へ移動し、供給が一定なら均衡価格と均衡取引量はともに上昇する。"
+  },
+  {
+    "id": "econ_005",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "供給変化",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_demand_supply",
+    "question": "天候不順で農作物の収穫量が減少した。需要が変わらない場合、その農作物の市場価格は一般にどうなるか。",
+    "choices": [
+      "上がる",
+      "下がる",
+      "必ず変わらない",
+      "必ず半分になる"
+    ],
+    "answerIndex": 0,
+    "explanation": "供給が減少すると、需要が一定なら市場での希少性が高まり、均衡価格は上昇しやすい。"
+  },
+  {
+    "id": "econ_006",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "供給増加",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_demand_supply",
+    "question": "新しい生産技術によって、企業が以前より低い費用で商品を生産できるようになった。需要が変わらない場合、一般に市場価格はどうなりやすいか。",
+    "choices": [
+      "上がる",
+      "下がる",
+      "必ず変化しない",
+      "必ずゼロになる"
+    ],
+    "answerIndex": 1,
+    "explanation": "生産しやすくなることで供給が増加すると、需要が一定なら均衡価格は下がりやすい。"
+  },
+  {
+    "id": "econ_007",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "需要供給グラフ",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_demand_supply",
+    "question": "需要曲線と供給曲線の交点が示すものとして最も適切なものはどれか。",
+    "choices": [
+      "企業の最大利益",
+      "均衡価格と均衡取引量",
+      "政府の税収",
+      "家計の貯蓄額"
+    ],
+    "answerIndex": 1,
+    "explanation": "需要曲線と供給曲線が交わる点では、需要量と供給量が一致し、均衡価格と均衡取引量が決まる。"
+  },
+  {
+    "id": "econ_008",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "競争",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_market_competition",
+    "question": "同じような商品を売る企業が多数存在し、企業どうしが価格や品質などを競い合うことを何というか。",
+    "choices": [
+      "競争",
+      "独占",
+      "財政",
+      "社会保障"
+    ],
+    "answerIndex": 0,
+    "explanation": "企業が価格や品質などをめぐって競い合うことを競争という。"
+  },
+  {
+    "id": "econ_009",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "独占",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_market_competition",
+    "question": "ある市場を一つの企業が支配している状態を何というか。",
+    "choices": [
+      "競争",
+      "独占",
+      "均衡",
+      "分業"
+    ],
+    "answerIndex": 1,
+    "explanation": "一つの企業が市場を支配している状態を独占という。"
+  },
+  {
+    "id": "econ_010",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "消費者と企業",
+    "level": 2,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_market_competition",
+    "question": "企業間の競争が活発になることで期待される変化として最も適切なものはどれか。",
+    "choices": [
+      "品質改善や価格の引き下げにつながることがある",
+      "すべての商品が無料になる",
+      "消費者が市場からいなくなる",
+      "企業が必ず一社だけになる"
+    ],
+    "answerIndex": 0,
+    "explanation": "競争は企業に価格や品質などを改善する動機を与え、消費者に利益をもたらす場合がある。"
+  },
+  {
+    "id": "econ_011",
+    "major": "大問5",
+    "theme": "市場・需要・供給・価格",
+    "subtheme": "需要供給グラフ",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_demand_supply",
+    "question": "次のメモを読んで、正しい組合せを選べ。『A：人気商品のため買いたい人が増えた。B：原材料費が下がり生産しやすくなった。』需要が増えた場合と供給が増えた場合の市場価格の変化として正しいものはどれか。",
+    "choices": [
+      "Aは上昇しやすく、Bは低下しやすい",
+      "Aは低下しやすく、Bは上昇しやすい",
+      "AもBも上昇しやすい",
+      "AもBも必ず変化しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "需要増加は価格を上げる方向、供給増加は価格を下げる方向に働く。"
+  },
+  {
+    "id": "econ_012",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "所得と消費",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_household",
+    "question": "家計が得る給料などの収入をまとめて何というか。",
+    "choices": [
+      "所得",
+      "供給",
+      "歳出",
+      "輸入"
+    ],
+    "answerIndex": 0,
+    "explanation": "家計が得る給料や事業収入などを所得という。"
+  },
+  {
+    "id": "econ_013",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "消費と貯蓄",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_household",
+    "question": "所得から消費支出を差し引いた部分を、一般に何に回すことができるか。",
+    "choices": [
+      "貯蓄",
+      "輸入だけ",
+      "税収だけ",
+      "供給だけ"
+    ],
+    "answerIndex": 0,
+    "explanation": "所得のうち消費に使わなかった部分は貯蓄に回すことができる。"
+  },
+  {
+    "id": "econ_014",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "家計と景気",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_household",
+    "question": "景気が悪化し、家計が将来の収入に不安を感じるようになった。このとき一般に起こりやすい行動はどれか。",
+    "choices": [
+      "不要不急の消費を控える",
+      "必ず消費を大幅に増やす",
+      "すべての所得を使い切る",
+      "企業への投資を政府に命じる"
+    ],
+    "answerIndex": 0,
+    "explanation": "将来への不安が強まると、家計が支出を抑え貯蓄を増やそうとする場合がある。"
+  },
+  {
+    "id": "econ_015",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "株式会社",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_company",
+    "question": "株式会社が資金を集めるために発行するものは何か。",
+    "choices": [
+      "株式",
+      "国債",
+      "紙幣",
+      "社会保険証"
+    ],
+    "answerIndex": 0,
+    "explanation": "株式会社は株式を発行して多くの人や機関から資金を集めることができる。"
+  },
+  {
+    "id": "econ_016",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "企業の利益",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_company",
+    "question": "企業が商品やサービスを販売して得た収入から、費用などを差し引いた結果として生じるものを何というか。",
+    "choices": [
+      "利益",
+      "需要",
+      "歳出",
+      "為替"
+    ],
+    "answerIndex": 0,
+    "explanation": "企業は収入から費用などを差し引いた結果として利益を得る。"
+  },
+  {
+    "id": "econ_017",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "企業の社会的役割",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_company",
+    "question": "企業が利益を追求するだけでなく、環境への配慮や地域社会への貢献などにも取り組むことについて、最も適切な説明はどれか。",
+    "choices": [
+      "企業には社会の一員として果たす役割もある",
+      "企業は利益を得てはいけない",
+      "企業は政府と同じ仕事だけをする",
+      "企業活動では消費者を考慮しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "企業は利益を追求しながら、環境や地域社会などへの責任を果たすことも求められる。"
+  },
+  {
+    "id": "econ_018",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "労働基準法",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_labor_rights",
+    "question": "労働条件の最低基準を定め、労働者を保護する法律はどれか。",
+    "choices": [
+      "労働基準法",
+      "独占禁止法",
+      "地方自治法",
+      "民法だけ"
+    ],
+    "answerIndex": 0,
+    "explanation": "労働基準法は労働時間、休憩、休日など労働条件の最低基準を定めている。"
+  },
+  {
+    "id": "econ_019",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "最低賃金",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_labor_rights",
+    "question": "地域別最低賃金などによって定められる最低賃金の役割として最も適切なものはどれか。",
+    "choices": [
+      "賃金について一定の最低水準を保障する",
+      "すべての労働者の賃金を同額にする",
+      "企業の利益を必ず一定にする",
+      "物価を政府がすべて固定する"
+    ],
+    "answerIndex": 0,
+    "explanation": "最低賃金は使用者が労働者に支払わなければならない賃金の最低額を定める制度である。"
+  },
+  {
+    "id": "econ_020",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "労働基本権",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_labor_rights",
+    "question": "労働者の権利として日本国憲法が保障しているものはどれか。",
+    "choices": [
+      "団結権・団体交渉権・団体行動権",
+      "納税義務・教育義務・勤労義務",
+      "財産権・請願権・選挙権だけ",
+      "営業権・輸入権・通貨発行権"
+    ],
+    "answerIndex": 0,
+    "explanation": "日本国憲法は労働者の団結権、団体交渉権、団体行動権を保障している。"
+  },
+  {
+    "id": "econ_021",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "労働組合",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_labor_rights",
+    "question": "同じ企業で働く労働者が、賃金や労働時間などの改善を求めて組織をつくった。この組織は何か。",
+    "choices": [
+      "労働組合",
+      "株式会社",
+      "中央銀行",
+      "地方議会"
+    ],
+    "answerIndex": 0,
+    "explanation": "労働者が労働条件の改善などを目的に組織する団体を労働組合という。"
+  },
+  {
+    "id": "econ_022",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "正規・非正規雇用",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_labor",
+    "question": "雇用形態が異なる労働者の待遇を考えるとき、重要な視点として適切なものはどれか。",
+    "choices": [
+      "雇用形態だけでなく労働条件や仕事内容などを考える",
+      "非正規雇用者には労働法が一切適用されない",
+      "正規雇用者は必ず高所得である",
+      "雇用形態と賃金には絶対に関係がない"
+    ],
+    "answerIndex": 0,
+    "explanation": "労働条件を考える際には雇用形態だけでなく、仕事内容や責任、労働時間などを含めて考える必要がある。"
+  },
+  {
+    "id": "econ_023",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "育児・介護休業",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_labor",
+    "question": "子育てや介護と仕事を両立しやすくする制度について考えるとき、最も関係が深いものはどれか。",
+    "choices": [
+      "育児・介護休業制度",
+      "公開市場操作",
+      "関税政策",
+      "国債発行"
+    ],
+    "answerIndex": 0,
+    "explanation": "育児・介護休業制度は、育児や介護を行う労働者が仕事と家庭生活を両立するための制度である。"
+  },
+  {
+    "id": "econ_024",
+    "major": "大問5",
+    "theme": "家計・企業・労働",
+    "subtheme": "労働と企業",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_labor",
+    "question": "企業が長時間労働の削減、休暇取得の促進、育児や介護との両立支援を進めている。これらの取り組みと最も関係が深い考え方はどれか。",
+    "choices": [
+      "仕事と生活の調和を図ること",
+      "市場を独占すること",
+      "国債を発行すること",
+      "輸入を禁止すること"
+    ],
+    "answerIndex": 0,
+    "explanation": "仕事と生活の調和を図ることは、働き方と家庭生活などを両立させる考え方である。"
+  },
+  {
+    "id": "econ_025",
+    "major": "大問5",
+    "theme": "金融・日本銀行",
+    "subtheme": "貨幣",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_money",
+    "question": "商品やサービスの代金を支払う手段として一般に用いられるものは何か。",
+    "choices": [
+      "貨幣",
+      "株式だけ",
+      "国債だけ",
+      "税収"
+    ],
+    "answerIndex": 0,
+    "explanation": "貨幣は商品の交換や代金の支払いに使われる。"
+  },
+  {
+    "id": "econ_026",
+    "major": "大問5",
+    "theme": "金融・日本銀行",
+    "subtheme": "銀行",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_banking",
+    "question": "銀行の基本的な役割として適切なものはどれか。",
+    "choices": [
+      "預金を受け入れ、企業や個人などに資金を貸し出す",
+      "税金をすべて決める",
+      "法律を制定する",
+      "国会議員を選ぶ"
+    ],
+    "answerIndex": 0,
+    "explanation": "銀行は預金を受け入れ、その資金を企業や個人などへの貸し出しに活用する。"
+  },
+  {
+    "id": "econ_027",
+    "major": "大問5",
+    "theme": "金融・日本銀行",
+    "subtheme": "利子",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_money",
+    "question": "銀行からお金を借りた人が、元本とは別に支払う金額を何というか。",
+    "choices": [
+      "利子",
+      "税収",
+      "配当",
+      "輸出"
+    ],
+    "answerIndex": 0,
+    "explanation": "借りたお金に対して支払う対価を利子という。"
+  },
+  {
+    "id": "econ_028",
+    "major": "大問5",
+    "theme": "金融・日本銀行",
+    "subtheme": "日本銀行",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_boj",
+    "question": "日本銀行が担っている役割として適切なものはどれか。",
+    "choices": [
+      "日本の中央銀行として金融政策を行う",
+      "国会で法律を制定する",
+      "すべての企業を経営する",
+      "地方税を直接徴収する"
+    ],
+    "answerIndex": 0,
+    "explanation": "日本銀行は日本の中央銀行であり、金融政策などを行っている。"
+  },
+  {
+    "id": "econ_029",
+    "major": "大問5",
+    "theme": "金融・日本銀行",
+    "subtheme": "中央銀行",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_boj",
+    "question": "日本銀行が「銀行の銀行」と呼ばれる理由として適切なものはどれか。",
+    "choices": [
+      "民間銀行などとの間で資金決済や資金供給などの役割を担うため",
+      "一般家庭の商品をすべて販売するため",
+      "企業の株式をすべて所有するため",
+      "地方自治体を直接運営するため"
+    ],
+    "answerIndex": 0,
+    "explanation": "日本銀行は民間銀行などとの間で資金決済や資金供給などを行うため「銀行の銀行」と呼ばれる。"
+  },
+  {
+    "id": "econ_030",
+    "major": "大問5",
+    "theme": "金融・日本銀行",
+    "subtheme": "金融政策",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_boj",
+    "question": "景気が低迷し、企業の投資や家計の消費が弱まっている。景気を支えるための金融政策について考えるとき、一般に資金を借りやすくする方向の政策はどれか。",
+    "choices": [
+      "金利を低下させる方向の政策",
+      "金利を必ず上昇させる政策",
+      "銀行の貸し出しをすべて禁止する政策",
+      "通貨をすべて廃止する政策"
+    ],
+    "answerIndex": 0,
+    "explanation": "金利を低下させる方向の金融政策は、企業や家計が資金を借りやすくし、投資や消費を促す方向に働く。"
+  },
+  {
+    "id": "econ_031",
+    "major": "大問5",
+    "theme": "金融・日本銀行",
+    "subtheme": "公開市場操作",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_boj",
+    "question": "日本銀行が国債などを売買して市場の資金量に影響を与える金融政策の手段を何というか。",
+    "choices": [
+      "公開市場操作",
+      "累進課税",
+      "社会保険",
+      "国際分業"
+    ],
+    "answerIndex": 0,
+    "explanation": "日本銀行が国債などを売買して市場の資金量に影響を与えることを公開市場操作という。"
+  },
+  {
+    "id": "econ_032",
+    "major": "大問5",
+    "theme": "金融・日本銀行",
+    "subtheme": "金融政策と景気",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_boj",
+    "question": "景気低迷→企業の投資減少→生産活動の弱まり、という状況が続いている。景気を支える金融政策と、その影響の組合せとして適切なものはどれか。",
+    "choices": [
+      "資金を供給しやすくする→企業などが資金を調達しやすくなる",
+      "資金を供給しやすくする→必ず消費税が上がる",
+      "金融政策を行う→政府の歳出が必ずゼロになる",
+      "金融政策を行う→輸入がすべて禁止される"
+    ],
+    "answerIndex": 0,
+    "explanation": "景気低迷時には資金を供給しやすくする金融政策が、企業や家計の資金調達を通じて経済活動を支える方向に働く。"
+  },
+  {
+    "id": "econ_033",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "好況",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_business_cycle",
+    "question": "経済活動が活発になり、生産や雇用などが伸びている状態を何というか。",
+    "choices": [
+      "好況",
+      "不況",
+      "財政赤字",
+      "貿易赤字"
+    ],
+    "answerIndex": 0,
+    "explanation": "経済活動が活発になっている状態を好況という。"
+  },
+  {
+    "id": "econ_034",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "不況",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_business_cycle",
+    "question": "消費や投資、生産などが落ち込み、経済活動が停滞している状態を何というか。",
+    "choices": [
+      "不況",
+      "好況",
+      "均衡",
+      "成長"
+    ],
+    "answerIndex": 0,
+    "explanation": "経済活動が停滞している状態を不況という。"
+  },
+  {
+    "id": "econ_035",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "経済循環",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_business_cycle",
+    "question": "消費が落ち込んだ場合に起こりうる経済の流れとして適切なものはどれか。",
+    "choices": [
+      "企業の売上減少→生産減少→雇用が悪化する可能性",
+      "消費減少→必ず企業利益が増加→雇用増加",
+      "消費減少→必ず輸出だけが増加",
+      "消費減少→政府の税収が必ず増加"
+    ],
+    "answerIndex": 0,
+    "explanation": "消費の減少は企業の売上を減らし、生産や雇用に悪影響を及ぼす可能性がある。"
+  },
+  {
+    "id": "econ_036",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "投資",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_business_cycle",
+    "question": "企業が工場や設備を新しくするために支出することは、景気との関係では何に当たるか。",
+    "choices": [
+      "投資",
+      "消費税",
+      "社会保障給付",
+      "輸入関税"
+    ],
+    "answerIndex": 0,
+    "explanation": "企業が設備などのために行う支出は投資に当たり、景気を左右する重要な要素である。"
+  },
+  {
+    "id": "econ_037",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "景気と雇用",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_business_cycle",
+    "question": "景気が悪化して企業の生産活動が縮小した場合、雇用にはどのような影響が出る可能性があるか。",
+    "choices": [
+      "雇用が減少する可能性がある",
+      "雇用が必ず増加する",
+      "雇用とは無関係なので変化しない",
+      "すべての労働者の賃金が必ず同額になる"
+    ],
+    "answerIndex": 0,
+    "explanation": "生産活動が縮小すると企業が必要とする労働力が減り、雇用が悪化する可能性がある。"
+  },
+  {
+    "id": "econ_038",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "GDP",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_gdp",
+    "question": "国内で一定期間に新たに生み出された財・サービスの付加価値の合計を何というか。",
+    "choices": [
+      "GDP",
+      "最低賃金",
+      "税率",
+      "為替レート"
+    ],
+    "answerIndex": 0,
+    "explanation": "GDPは国内総生産で、国内で一定期間に新たに生み出された付加価値の合計である。"
+  },
+  {
+    "id": "econ_039",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "GDP成長率",
+    "level": 2,
+    "questionType": "statistics",
+    "knowledgeId": "economics_gdp",
+    "question": "ある国の実質GDPが前年の500兆円から今年は510兆円になった。前年からの増加率は何％か。",
+    "choices": [
+      "1％",
+      "2％",
+      "5％",
+      "10％"
+    ],
+    "answerIndex": 1,
+    "explanation": "増加額は10兆円なので、10÷500×100＝2％である。"
+  },
+  {
+    "id": "econ_040",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "GDPと生活",
+    "level": 2,
+    "questionType": "statistics",
+    "knowledgeId": "economics_gdp",
+    "question": "GDPの増加が確認されたとしても、それだけで国民一人ひとりの生活が必ず豊かになったと判断できない理由として適切なものはどれか。",
+    "choices": [
+      "人口や所得分配など他の要素も関係するため",
+      "GDPは経済活動と無関係だから",
+      "GDPが増えると人口が必ず減るため",
+      "GDPは政府の税収だけを表すため"
+    ],
+    "answerIndex": 0,
+    "explanation": "経済全体の規模を示すGDPだけでは、一人あたりの状況や所得分配などを十分に判断できない。"
+  },
+  {
+    "id": "econ_041",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "景気統計",
+    "level": 3,
+    "questionType": "statistics",
+    "knowledgeId": "economics_business_cycle",
+    "question": "ある年度について、消費が減少し、企業の設備投資も減少し、生産指数も低下した。この資料から読み取れる景気の状況として最も適切なものはどれか。",
+    "choices": [
+      "経済活動が弱まっている可能性が高い",
+      "必ず好況である",
+      "税収が必ず過去最高になっている",
+      "輸出入が必ず停止している"
+    ],
+    "answerIndex": 0,
+    "explanation": "消費、投資、生産がそろって弱まっていることから、経済活動が低迷している可能性が高い。"
+  },
+  {
+    "id": "econ_042",
+    "major": "大問5",
+    "theme": "景気・経済循環",
+    "subtheme": "経済循環",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_business_cycle",
+    "question": "次のA～Cを、景気悪化の流れとして適切な順序に並べたものを選べ。A：企業の売上が減少する。B：家計の消費が減少する。C：企業が生産を縮小する。",
+    "choices": [
+      "B→A→C",
+      "A→B→C",
+      "C→A→B",
+      "B→C→A"
+    ],
+    "answerIndex": 0,
+    "explanation": "家計の消費が減少すると企業の売上が減少し、それを受けて企業が生産を縮小する流れが考えられる。"
+  },
+  {
+    "id": "econ_043",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "所得税",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_tax",
+    "question": "個人の所得に対して課される国税を何というか。",
+    "choices": [
+      "所得税",
+      "法人税",
+      "消費税",
+      "関税だけ"
+    ],
+    "answerIndex": 0,
+    "explanation": "個人の所得に対して課される代表的な国税が所得税である。"
+  },
+  {
+    "id": "econ_044",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "法人税",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_tax",
+    "question": "企業などの法人の所得に対して課される税を何というか。",
+    "choices": [
+      "法人税",
+      "所得税",
+      "消費税",
+      "固定資産税"
+    ],
+    "answerIndex": 0,
+    "explanation": "法人の所得に対して課される税を法人税という。"
+  },
+  {
+    "id": "econ_045",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "消費税",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_tax",
+    "question": "商品やサービスの消費に対して広く課される税は何か。",
+    "choices": [
+      "消費税",
+      "所得税",
+      "法人税",
+      "相続税だけ"
+    ],
+    "answerIndex": 0,
+    "explanation": "消費税は商品やサービスの消費に対して課される間接税である。"
+  },
+  {
+    "id": "econ_046",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "直接税・間接税",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_tax",
+    "question": "納税義務者と実際の税負担者が一致する税を何というか。",
+    "choices": [
+      "直接税",
+      "間接税",
+      "地方税だけ",
+      "目的税"
+    ],
+    "answerIndex": 0,
+    "explanation": "納税義務者と実際に税を負担する者が一致する税を直接税という。"
+  },
+  {
+    "id": "econ_047",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "間接税",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_tax",
+    "question": "納税義務者と実際の税負担者が異なる税を何というか。",
+    "choices": [
+      "間接税",
+      "直接税",
+      "国債",
+      "社会保険"
+    ],
+    "answerIndex": 0,
+    "explanation": "納税義務者と実際の負担者が異なる税を間接税という。消費税が代表例である。"
+  },
+  {
+    "id": "econ_048",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "累進課税",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_progressive_tax",
+    "question": "所得が高くなるほど、所得に対する税率が高くなる仕組みを何というか。",
+    "choices": [
+      "累進課税",
+      "比例課税",
+      "間接税",
+      "関税"
+    ],
+    "answerIndex": 0,
+    "explanation": "所得が高くなるほど高い税率を適用する仕組みを累進課税という。"
+  },
+  {
+    "id": "econ_049",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "国税・地方税",
+    "level": 2,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_tax",
+    "question": "都道府県や市町村など地方公共団体の財源となる税を何というか。",
+    "choices": [
+      "地方税",
+      "国税",
+      "国債",
+      "外国税"
+    ],
+    "answerIndex": 0,
+    "explanation": "地方公共団体が課税し、その財源となる税を地方税という。"
+  },
+  {
+    "id": "econ_050",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "税の役割",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_tax",
+    "question": "税金が道路整備、教育、社会保障などの公共サービスに使われている。このことから分かる税の役割として適切なものはどれか。",
+    "choices": [
+      "公共サービスを支える財源となる",
+      "企業の利益を必ず保証する",
+      "すべての商品の価格を固定する",
+      "貿易を必ず増加させる"
+    ],
+    "answerIndex": 0,
+    "explanation": "税は政府や地方公共団体の活動を支える重要な財源である。"
+  },
+  {
+    "id": "econ_051",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "財政",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_fiscal_policy",
+    "question": "政府が税金などで収入を得て、公共サービスなどのために支出する活動を何というか。",
+    "choices": [
+      "財政",
+      "金融",
+      "貿易",
+      "市場競争"
+    ],
+    "answerIndex": 0,
+    "explanation": "政府の収入と支出に関する活動を財政という。"
+  },
+  {
+    "id": "econ_052",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "歳入",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_fiscal_policy",
+    "question": "国や地方公共団体の会計における収入を何というか。",
+    "choices": [
+      "歳入",
+      "歳出",
+      "利益",
+      "輸出"
+    ],
+    "answerIndex": 0,
+    "explanation": "国や地方公共団体の会計上の収入を歳入という。"
+  },
+  {
+    "id": "econ_053",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "歳出",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_fiscal_policy",
+    "question": "国や地方公共団体の会計における支出を何というか。",
+    "choices": [
+      "歳出",
+      "歳入",
+      "所得",
+      "供給"
+    ],
+    "answerIndex": 0,
+    "explanation": "国や地方公共団体の会計上の支出を歳出という。"
+  },
+  {
+    "id": "econ_054",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "国債",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_national_bonds",
+    "question": "政府が資金を調達するために発行する債券を何というか。",
+    "choices": [
+      "国債",
+      "株式",
+      "紙幣",
+      "商品券"
+    ],
+    "answerIndex": 0,
+    "explanation": "政府が資金を調達するために発行する債券を国債という。"
+  },
+  {
+    "id": "econ_055",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "財政赤字",
+    "level": 2,
+    "questionType": "table",
+    "knowledgeId": "economics_national_bonds",
+    "question": "ある年度の一般会計で、歳出が100兆円、税収が60兆円だった。この差について正しい説明はどれか。",
+    "choices": [
+      "税収だけでは歳出をまかなえていない",
+      "税収が歳出を40兆円上回っている",
+      "歳出は税収の半分である",
+      "国債は必ず不要である"
+    ],
+    "answerIndex": 0,
+    "explanation": "歳出100兆円に対して税収は60兆円なので、税収だけでは40兆円分不足している。"
+  },
+  {
+    "id": "econ_056",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "国債と将来世代",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_national_bonds",
+    "question": "国債の発行額が増えることについて、将来世代との関係から考える必要がある理由はどれか。",
+    "choices": [
+      "将来、元本の返済や利子の支払いなどが必要になるため",
+      "国債は必ず返済不要だから",
+      "国債を発行すると税金が必ずゼロになるため",
+      "国債は外国の商品だから"
+    ],
+    "answerIndex": 0,
+    "explanation": "国債には返済や利子の支払いが必要であり、将来の財政負担につながる可能性がある。"
+  },
+  {
+    "id": "econ_057",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "景気と財政",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_fiscal_policy",
+    "question": "景気が悪化しているとき、政府が公共事業などへの支出を増やす政策を行う目的として適切なものはどれか。",
+    "choices": [
+      "需要を支え、経済活動を刺激する",
+      "企業の活動をすべて停止させる",
+      "消費を必ず禁止する",
+      "輸入をすべてなくす"
+    ],
+    "answerIndex": 0,
+    "explanation": "政府支出を増やすことは需要を支え、景気を刺激する方向に働くことがある。"
+  },
+  {
+    "id": "econ_058",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "減税",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_fiscal_policy",
+    "question": "景気対策として減税を行った場合、家計に起こりうる変化として適切なものはどれか。",
+    "choices": [
+      "税負担が軽くなり、消費に回せる所得が増える可能性がある",
+      "必ず所得が減少する",
+      "必ず貯蓄がゼロになる",
+      "企業の生産が法律で禁止される"
+    ],
+    "answerIndex": 0,
+    "explanation": "減税によって家計の可処分所得が増えれば、消費を増やす方向に働く可能性がある。"
+  },
+  {
+    "id": "econ_059",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "税収統計",
+    "level": 2,
+    "questionType": "table",
+    "knowledgeId": "economics_tax",
+    "question": "次の表を読む。A年度の税収は50兆円、B年度は55兆円、C年度は52兆円だった。正しい記述はどれか。",
+    "choices": [
+      "B年度の税収が最も多い",
+      "C年度がA年度より10兆円多い",
+      "A年度からC年度まで毎年増加した",
+      "B年度からC年度に3兆円増加した"
+    ],
+    "answerIndex": 0,
+    "explanation": "50兆円、55兆円、52兆円なので、最も多いのはB年度である。"
+  },
+  {
+    "id": "econ_060",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "複数資料",
+    "level": 3,
+    "questionType": "multi_source",
+    "knowledgeId": "economics_tax",
+    "question": "資料A：税収（兆円）＝2021年度60、2022年度58、2023年度55。資料B：社会保障関係歳出（兆円）＝2021年度30、2022年度32、2023年度35。この2つの資料から財政について考えるとき、最も適切な判断はどれか。",
+    "choices": [
+      "歳入と歳出の両面から財政状況を考える必要がある",
+      "税収が減れば社会保障費も必ず減る",
+      "歳出だけ見れば財政状況を完全に判断できる",
+      "社会保障費は財政と無関係である"
+    ],
+    "answerIndex": 0,
+    "explanation": "資料Aでは税収が60兆円から55兆円へ減少し、資料Bでは社会保障関係歳出が30兆円から35兆円へ増加している。財政を考える際には歳入と歳出の両面を見る必要がある。"
+  },
+  {
+    "id": "econ_061",
+    "major": "大問5",
+    "theme": "税・財政・国債",
+    "subtheme": "学習課題",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_tax",
+    "question": "学習課題「税は私たちの暮らしとどのように関係するか」について、税→公共サービス→家計という関係を正しく説明しているものはどれか。",
+    "choices": [
+      "税は公共サービスなどの財源となり、家計の生活を支える",
+      "税はすべて企業の利益になる",
+      "税は市場価格をすべて直接決める",
+      "税は社会保障と関係しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "税は公共サービスや社会保障などを支える財源となり、家計の生活にも関係している。"
+  },
+  {
+    "id": "econ_062",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "社会保障",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_social_security",
+    "question": "病気、けが、老後、失業などに備え、人々の生活を支える制度をまとめて何というか。",
+    "choices": [
+      "社会保障",
+      "市場競争",
+      "国際分業",
+      "金融政策"
+    ],
+    "answerIndex": 0,
+    "explanation": "病気や老後などの生活上のリスクに対して人々を支える仕組みを社会保障という。"
+  },
+  {
+    "id": "econ_063",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "社会保険",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_social_security",
+    "question": "医療保険や年金など、保険料を基本として支える社会保障の仕組みを何というか。",
+    "choices": [
+      "社会保険",
+      "公的扶助",
+      "財政投融資",
+      "市場価格"
+    ],
+    "answerIndex": 0,
+    "explanation": "医療保険や年金などを含む社会保険は、保険料を基本として社会生活上のリスクに備える仕組みである。"
+  },
+  {
+    "id": "econ_064",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "公的扶助",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_social_security",
+    "question": "生活に困窮する人に対して、最低限度の生活を保障し、自立を助ける制度は何か。",
+    "choices": [
+      "公的扶助",
+      "金融政策",
+      "国際分業",
+      "株式"
+    ],
+    "answerIndex": 0,
+    "explanation": "公的扶助は、生活に困窮する人に対して最低限度の生活を保障する仕組みである。"
+  },
+  {
+    "id": "econ_065",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "年金",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_social_security",
+    "question": "高齢者などの生活を支える社会保障制度の一つはどれか。",
+    "choices": [
+      "年金",
+      "関税",
+      "公開市場操作",
+      "法人税"
+    ],
+    "answerIndex": 0,
+    "explanation": "年金は高齢者などの生活を支える社会保障制度の一つである。"
+  },
+  {
+    "id": "econ_066",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "少子高齢化",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_social_security",
+    "question": "少子高齢化が進むと、社会保障についてどのような課題が生じやすいか。",
+    "choices": [
+      "支える側の人口が減り、社会保障の財源確保が課題となる",
+      "社会保障費が必ずゼロになる",
+      "高齢者人口が必ず減少する",
+      "医療や介護の必要性がなくなる"
+    ],
+    "answerIndex": 0,
+    "explanation": "少子高齢化では現役世代が減少する一方、高齢者向けの社会保障需要が大きくなり、財源確保が課題となる。"
+  },
+  {
+    "id": "econ_067",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "医療",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_social_security",
+    "question": "病気やけがの際の医療費負担を支える制度として最も関係が深いものはどれか。",
+    "choices": [
+      "医療保険",
+      "国債",
+      "輸出",
+      "株式市場"
+    ],
+    "answerIndex": 0,
+    "explanation": "医療保険は病気やけがなどに備え、医療費の負担を支える社会保険制度である。"
+  },
+  {
+    "id": "econ_068",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "介護",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_social_security",
+    "question": "高齢者などが介護を必要とする場合に、社会全体で支える仕組みとして関係が深いものはどれか。",
+    "choices": [
+      "介護保険",
+      "所得税",
+      "為替政策",
+      "関税"
+    ],
+    "answerIndex": 0,
+    "explanation": "介護保険は介護が必要になった場合のサービスを社会全体で支える制度である。"
+  },
+  {
+    "id": "econ_069",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "世代間負担",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_social_security",
+    "question": "少子高齢化が進む社会で、年金などの社会保障を考える際に重要な視点はどれか。",
+    "choices": [
+      "世代間で負担と給付の関係を考える",
+      "高齢者だけで費用をすべて負担する",
+      "現役世代の人口を考慮しない",
+      "社会保障をすべて廃止する"
+    ],
+    "answerIndex": 0,
+    "explanation": "社会保障制度の持続可能性を考えるには、各世代の負担と給付の関係を考えることが重要である。"
+  },
+  {
+    "id": "econ_070",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "人口構成",
+    "level": 3,
+    "questionType": "statistics",
+    "knowledgeId": "economics_social_security",
+    "question": "ある地域で、65歳以上の人口割合が20％から28％へ上昇し、15歳未満の人口割合が15％から10％へ低下した。この資料から考えられる課題として適切なものはどれか。",
+    "choices": [
+      "高齢化に伴う社会保障の負担をどう支えるか",
+      "子どもの人口が増えたことによる学校不足",
+      "高齢者人口が大幅に減ったことへの対応",
+      "社会保障の必要性が低下したことへの対応"
+    ],
+    "answerIndex": 0,
+    "explanation": "高齢者割合の上昇と年少人口割合の低下は、少子高齢化と社会保障の支え手の減少につながる課題を示している。"
+  },
+  {
+    "id": "econ_071",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "社会保障費と財源",
+    "level": 3,
+    "questionType": "table",
+    "knowledgeId": "economics_social_security",
+    "question": "社会保障費が増加する一方で、働く世代の人口が減少している。この2つの情報を組み合わせた判断として適切なものはどれか。",
+    "choices": [
+      "社会保障を支える財源を安定的に確保することが課題になる",
+      "社会保障費は必ず減少する",
+      "働く世代の減少は社会保障と無関係である",
+      "社会保障費が増えると税収は必ず同額増える"
+    ],
+    "answerIndex": 0,
+    "explanation": "給付に必要な費用が増える一方で支え手が減るため、財源をどう確保するかが課題となる。"
+  },
+  {
+    "id": "econ_072",
+    "major": "大問5",
+    "theme": "社会保障",
+    "subtheme": "総合資料",
+    "level": 3,
+    "questionType": "multi_source",
+    "knowledgeId": "economics_social_security",
+    "question": "資料A：65歳以上人口（万人）＝2020年3600、2030年3800、2040年3900。資料B：医療・介護関係支出（兆円）＝2020年20、2030年24、2040年28。両資料から読み取れることとして適切なものはどれか。",
+    "choices": [
+      "人口構成の変化が社会保障支出と関係する可能性がある",
+      "高齢者人口が増えると医療・介護の必要性は必ずなくなる",
+      "医療・介護支出は人口と無関係である",
+      "社会保障支出は企業の売上だけで決まる"
+    ],
+    "answerIndex": 0,
+    "explanation": "高齢者人口の増加と医療・介護関係支出の増加が同時に示されており、人口構成の変化と社会保障支出の関係を考えることができる。"
+  },
+  {
+    "id": "econ_073",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "構成比",
+    "level": 2,
+    "questionType": "statistics",
+    "knowledgeId": "economics_statistics",
+    "question": "ある支出の総額が200億円で、そのうち50億円が社会保障費だった。社会保障費の構成比を計算し、その結果から正しく判断できるものはどれか。",
+    "choices": [
+      "25％で、支出全体の4分の1に当たる",
+      "10％で、支出全体の10分の1に当たる",
+      "20％で、支出全体の5分の1に当たる",
+      "40％で、支出全体の半分に近い"
+    ],
+    "answerIndex": 0,
+    "explanation": "50÷200×100＝25％である。したがって社会保障費は支出全体の4分の1に当たる。"
+  },
+  {
+    "id": "econ_074",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "増減",
+    "level": 2,
+    "questionType": "statistics",
+    "knowledgeId": "economics_statistics",
+    "question": "ある年の消費支出が80万円、翌年が88万円だった。増加額を求め、その結果について正しく述べたものはどれか。",
+    "choices": [
+      "8万円増加している",
+      "4万円増加している",
+      "10万円増加している",
+      "16万円増加している"
+    ],
+    "answerIndex": 0,
+    "explanation": "88万円−80万円＝8万円なので、消費支出は8万円増加している。"
+  },
+  {
+    "id": "econ_075",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "増加率",
+    "level": 2,
+    "questionType": "statistics",
+    "knowledgeId": "economics_statistics",
+    "question": "生産額が200億円から220億円に増えた。増加率を求め、その結果について正しく述べたものはどれか。",
+    "choices": [
+      "10％増加しており、元の生産額の10分の1に当たる増加である",
+      "5％増加している",
+      "20％増加している",
+      "110％増加している"
+    ],
+    "answerIndex": 0,
+    "explanation": "増加額は20億円なので、20÷200×100＝10％。生産額は10％増加している。"
+  },
+  {
+    "id": "econ_076",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "差",
+    "level": 1,
+    "questionType": "statistics",
+    "knowledgeId": "economics_statistics",
+    "question": "A県の税収が70億円、B県が55億円だった。A県はB県より何億円多いか。",
+    "choices": [
+      "10億円",
+      "15億円",
+      "20億円",
+      "25億円"
+    ],
+    "answerIndex": 1,
+    "explanation": "70億円−55億円＝15億円である。"
+  },
+  {
+    "id": "econ_077",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "一人あたりGDP",
+    "level": 2,
+    "questionType": "statistics",
+    "knowledgeId": "economics_gdp",
+    "question": "国全体のGDPを人口で割った指標として適切なものはどれか。",
+    "choices": [
+      "一人あたりGDP",
+      "税収構成比",
+      "失業率",
+      "為替レート"
+    ],
+    "answerIndex": 0,
+    "explanation": "GDPを人口で割ったものが一人あたりGDPであり、経済規模を人口一人あたりで見る際に用いられる。"
+  },
+  {
+    "id": "econ_078",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "産業構造",
+    "level": 2,
+    "questionType": "statistics",
+    "knowledgeId": "economics_industry",
+    "question": "ある国で第一次産業の就業者割合が低下し、第三次産業の割合が上昇している。この変化から考えられることとして適切なものはどれか。",
+    "choices": [
+      "産業構造が変化している",
+      "すべての産業の規模が必ず縮小している",
+      "第一次産業が存在しなくなった",
+      "第三次産業が政府だけになった"
+    ],
+    "answerIndex": 0,
+    "explanation": "産業別の就業者割合が変化していることから、経済の産業構造が変化していると考えられる。"
+  },
+  {
+    "id": "econ_079",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "表の読み取り",
+    "level": 3,
+    "questionType": "table",
+    "knowledgeId": "economics_statistics",
+    "question": "次の表を読む。A年度は税収60、歳出90、B年度は税収70、歳出95、C年度は税収75、歳出100（単位：兆円）だった。税収と歳出の差が最も大きい年度はどれか。",
+    "choices": [
+      "A年度",
+      "B年度",
+      "C年度",
+      "3年度とも同じ"
+    ],
+    "answerIndex": 0,
+    "explanation": "歳出との差はAが30兆円、Bが25兆円、Cが25兆円なので、A年度が最も大きい。"
+  },
+  {
+    "id": "econ_080",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "逆転",
+    "level": 3,
+    "questionType": "statistics",
+    "knowledgeId": "economics_statistics",
+    "question": "A産業の就業者割合が2010年は30％、2020年は25％、B産業は2010年20％、2020年28％だった。この資料から正しく判断できるものはどれか。",
+    "choices": [
+      "2020年にはB産業の割合がA産業を上回った",
+      "2010年からA産業の割合は増加した",
+      "2020年にはA産業がB産業を3％上回った",
+      "両産業の割合は変化しなかった"
+    ],
+    "answerIndex": 0,
+    "explanation": "2010年はAが30％でBが20％だが、2020年はAが25％、Bが28％なのでBがAを上回る。"
+  },
+  {
+    "id": "econ_081",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "複数文正誤",
+    "level": 3,
+    "questionType": "true_false",
+    "knowledgeId": "economics_statistics",
+    "question": "表を読み、次の文A・Bについて正誤を判断せよ。表：X年の消費100、投資50。Y年の消費90、投資60（単位：億円）。A：消費は10億円減少した。B：投資は10億円増加した。",
+    "choices": [
+      "A正・B正",
+      "A正・B誤",
+      "A誤・B正",
+      "A誤・B誤"
+    ],
+    "answerIndex": 0,
+    "explanation": "消費は100から90へ10億円減少し、投資は50から60へ10億円増加しているため、A・Bともに正しい。"
+  },
+  {
+    "id": "econ_082",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "複数文正誤",
+    "level": 3,
+    "questionType": "true_false",
+    "knowledgeId": "economics_statistics",
+    "question": "表：A年のGDP500、人口50。B年のGDP540、人口60（単位：兆円・百万人）。A：GDPは40兆円増えた。B：一人あたりGDPはA年よりB年の方が高い。",
+    "choices": [
+      "A正・B正",
+      "A正・B誤",
+      "A誤・B正",
+      "A誤・B誤"
+    ],
+    "answerIndex": 1,
+    "explanation": "GDPは40兆円増加している。一方、一人あたりGDPはA年が10、B年が9なので、B年の方が低い。"
+  },
+  {
+    "id": "econ_083",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "複数空欄",
+    "level": 2,
+    "questionType": "combination",
+    "knowledgeId": "economics_statistics",
+    "question": "「税収は政府の（X）であり、公共サービスなどへの支出は（Y）である。」XとYの組合せとして正しいものはどれか。",
+    "choices": [
+      "X＝歳入、Y＝歳出",
+      "X＝歳出、Y＝歳入",
+      "X＝利益、Y＝需要",
+      "X＝供給、Y＝貯蓄"
+    ],
+    "answerIndex": 0,
+    "explanation": "政府の収入は歳入、支出は歳出である。"
+  },
+  {
+    "id": "econ_084",
+    "major": "大問5",
+    "theme": "経済統計・グラフ・計算",
+    "subtheme": "構成比比較",
+    "level": 3,
+    "questionType": "table",
+    "knowledgeId": "economics_statistics",
+    "question": "A市の歳出200億円のうち教育費40億円、B市の歳出100億円のうち教育費25億円だった。教育費の構成比について正しいものはどれか。",
+    "choices": [
+      "A市20％、B市25％で、B市の方が高い",
+      "A市25％、B市20％で、A市の方が高い",
+      "両市とも20％",
+      "両市とも25％"
+    ],
+    "answerIndex": 0,
+    "explanation": "A市は40÷200＝20％、B市は25÷100＝25％なので、B市の方が高い。"
+  },
+  {
+    "id": "econ_085",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "家計と企業",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_circular_flow",
+    "question": "家計が企業の商品を購入し、その代金が企業の収入となる。この関係について正しいものはどれか。",
+    "choices": [
+      "家計の消費と企業の売上は経済活動を通じて結びついている",
+      "家計と企業は経済的に無関係である",
+      "企業の売上は家計の所得になり得ない",
+      "消費は企業の生産に影響しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "家計の消費は企業の売上となり、企業の活動は家計の所得や雇用にも関係する。"
+  },
+  {
+    "id": "econ_086",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "企業と市場",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_circular_flow",
+    "question": "企業が消費者の需要に合わせて商品の品質を改善した。この企業行動と市場の関係について適切なものはどれか。",
+    "choices": [
+      "消費者の需要が企業の生産や商品開発に影響を与える",
+      "企業は消費者の需要を考慮しない",
+      "市場では企業の行動だけが決まる",
+      "需要が変化しても企業活動には影響しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "市場では消費者の需要が企業の生産や商品開発に影響を与える。"
+  },
+  {
+    "id": "econ_087",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "金融と企業",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_circular_flow",
+    "question": "企業が銀行から資金を借りて新しい設備を導入した。この事例で金融が企業活動に果たす役割として適切なものはどれか。",
+    "choices": [
+      "企業の投資に必要な資金を提供する",
+      "企業の商品の需要を直接決める",
+      "税率を決定する",
+      "企業の株式をすべて消滅させる"
+    ],
+    "answerIndex": 0,
+    "explanation": "銀行からの借り入れは企業が設備投資などを行うための資金調達手段となる。"
+  },
+  {
+    "id": "econ_088",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "金融と家計",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_circular_flow",
+    "question": "家計が銀行に預金し、銀行がその資金を企業への貸し出しに活用する。この流れから分かることはどれか。",
+    "choices": [
+      "家計の貯蓄が企業の資金調達につながることがある",
+      "家計の預金は企業活動と無関係である",
+      "銀行は預金をすべて廃棄する",
+      "企業は銀行から資金を借りられない"
+    ],
+    "answerIndex": 0,
+    "explanation": "銀行は預金を受け入れ、その資金を企業などへの貸し出しに活用するため、家計の貯蓄が企業活動を支えることがある。"
+  },
+  {
+    "id": "econ_089",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "政府と家計",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_circular_flow",
+    "question": "家計が税を納め、その税を財源として政府が教育や社会保障などを行っている。この関係について適切なものはどれか。",
+    "choices": [
+      "家計の税負担と政府の公共サービスは財政を通じて結びついている",
+      "税は家計と政府の関係に影響しない",
+      "公共サービスはすべて企業だけが提供する",
+      "政府の歳出は税収と無関係である"
+    ],
+    "answerIndex": 0,
+    "explanation": "税は政府の歳入となり、公共サービスや社会保障などの財源となる。"
+  },
+  {
+    "id": "econ_090",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "政府と企業",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_circular_flow",
+    "question": "政府が公共施設の建設を企業に発注した。この支出が企業活動に与える影響として考えられるものはどれか。",
+    "choices": [
+      "企業の受注や生産活動を増やす可能性がある",
+      "企業の売上を必ずゼロにする",
+      "企業の労働需要とは無関係である",
+      "家計の所得に影響する可能性は一切ない"
+    ],
+    "answerIndex": 0,
+    "explanation": "政府支出による企業への発注は、企業の受注や生産、雇用などに影響する可能性がある。"
+  },
+  {
+    "id": "econ_091",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "税と社会保障",
+    "level": 2,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_circular_flow",
+    "question": "会話：『税を負担するのは大変だけれど、医療や教育などの公共サービスも必要だね。』この会話から考えられる経済上の関係として適切なものはどれか。",
+    "choices": [
+      "税による負担と公共サービスの提供を社会全体の財政として考える",
+      "税は公共サービスとは無関係である",
+      "公共サービスは税を一切必要としない",
+      "税を増やせばすべてのサービスが自動的に無料になる"
+    ],
+    "answerIndex": 0,
+    "explanation": "税は公共サービスなどを支える財源であり、負担とサービスの関係を考えることが重要である。"
+  },
+  {
+    "id": "econ_092",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "家計・企業・政府",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_circular_flow",
+    "question": "次の流れについて考える。『家計が消費を増やす→企業の売上が増える→企業が生産を増やす→雇用が改善する』。この流れを説明する知識として最も適切なものはどれか。",
+    "choices": [
+      "家計と企業の活動が相互に影響する経済循環",
+      "税の累進性だけを示す仕組み",
+      "国際分業だけを示す仕組み",
+      "中央銀行の役割だけを示す仕組み"
+    ],
+    "answerIndex": 0,
+    "explanation": "家計の消費が企業の売上や生産、雇用に影響するという相互関係を示している。"
+  },
+  {
+    "id": "econ_093",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "貿易",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_international_trade",
+    "question": "国と国との間で商品やサービスを売買することを何というか。",
+    "choices": [
+      "貿易",
+      "財政",
+      "金融",
+      "社会保障"
+    ],
+    "answerIndex": 0,
+    "explanation": "国境を越えて商品やサービスを売買することを貿易という。"
+  },
+  {
+    "id": "econ_094",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "輸出",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_international_trade",
+    "question": "日本から外国へ商品を販売することを何というか。",
+    "choices": [
+      "輸出",
+      "輸入",
+      "消費",
+      "貯蓄"
+    ],
+    "answerIndex": 0,
+    "explanation": "自国から外国へ商品やサービスを販売することを輸出という。"
+  },
+  {
+    "id": "econ_095",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "輸入",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_international_trade",
+    "question": "外国から日本へ商品を購入して持ち込むことを何というか。",
+    "choices": [
+      "輸入",
+      "輸出",
+      "投資",
+      "貯蓄"
+    ],
+    "answerIndex": 0,
+    "explanation": "外国から商品やサービスを購入することを輸入という。"
+  },
+  {
+    "id": "econ_096",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "国際分業",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_globalization",
+    "question": "国ごとに得意な製品や工程を分担し、互いに貿易することを何というか。",
+    "choices": [
+      "国際分業",
+      "累進課税",
+      "社会保障",
+      "財政赤字"
+    ],
+    "answerIndex": 0,
+    "explanation": "国ごとに得意な分野を分担することを国際分業という。"
+  },
+  {
+    "id": "econ_097",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "グローバル化",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_globalization",
+    "question": "企業活動や人、商品、資金などの国境を越えた結びつきが強まることを何というか。",
+    "choices": [
+      "グローバル化",
+      "独占",
+      "財政",
+      "公的扶助"
+    ],
+    "answerIndex": 0,
+    "explanation": "世界の国や地域の経済的な結びつきが強まることをグローバル化という。"
+  },
+  {
+    "id": "econ_098",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "多国籍企業",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_globalization",
+    "question": "複数の国や地域で生産・販売などの事業を行う企業を何というか。",
+    "choices": [
+      "多国籍企業",
+      "地方公共団体",
+      "労働組合",
+      "中央銀行"
+    ],
+    "answerIndex": 0,
+    "explanation": "複数の国や地域に活動を広げる企業を多国籍企業という。"
+  },
+  {
+    "id": "econ_099",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "為替",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_exchange_rate",
+    "question": "日本企業が外国から原材料を輸入している。円安になった場合、他の条件が同じなら日本企業の輸入価格にはどのような影響が出やすいか。",
+    "choices": [
+      "円で支払う輸入価格が上昇しやすい",
+      "必ず低下する",
+      "必ずゼロになる",
+      "為替とは無関係なので変化しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "円の価値が外国通貨に対して下がると、外国の商品を購入するために必要な円が増え、輸入価格が上昇しやすい。"
+  },
+  {
+    "id": "econ_100",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "為替と輸出",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_exchange_rate",
+    "question": "日本企業が外国へ商品を輸出している。円安になった場合、日本の商品は外国の通貨で見てどうなりやすいか。",
+    "choices": [
+      "安くなり、輸出しやすくなる方向に働く",
+      "高くなり、必ず輸出できなくなる",
+      "価格は必ず変化しない",
+      "外国では販売できなくなる"
+    ],
+    "answerIndex": 0,
+    "explanation": "円安になると、日本の商品は外国通貨で見て相対的に安くなり、輸出を増やす方向に働く場合がある。"
+  },
+  {
+    "id": "econ_101",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "貿易自由化",
+    "level": 1,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_trade_liberalization",
+    "question": "国や地域の間で関税などの貿易障壁を減らし、貿易を活発にしようとすることを何というか。",
+    "choices": [
+      "貿易自由化",
+      "累進課税",
+      "金融引き締め",
+      "公的扶助"
+    ],
+    "answerIndex": 0,
+    "explanation": "関税などの貿易障壁を減らし、国際的な取引を活発にすることを貿易自由化という。"
+  },
+  {
+    "id": "econ_102",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "地域貿易協定",
+    "level": 2,
+    "questionType": "knowledge",
+    "knowledgeId": "economics_trade_liberalization",
+    "question": "TPPなどの地域的な貿易協定に参加することについて、日本企業にとって期待される効果として適切なものはどれか。",
+    "choices": [
+      "海外市場へのアクセスが広がる可能性がある",
+      "すべての輸入が禁止される",
+      "国内市場が必ず消滅する",
+      "日本企業の輸出が法律で禁止される"
+    ],
+    "answerIndex": 0,
+    "explanation": "貿易障壁が下がれば、日本企業が海外市場へ商品を販売しやすくなる可能性がある。"
+  },
+  {
+    "id": "econ_103",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "日本企業と家計",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_international_trade",
+    "question": "海外から安価な原材料を輸入できるようになった場合、日本企業と家計に起こりうる影響として適切なものはどれか。",
+    "choices": [
+      "企業の生産費用が下がり、商品価格の低下につながる可能性がある",
+      "必ず企業の費用が上昇する",
+      "家計の消費が法律で禁止される",
+      "輸入が増えると企業の生産は必ず停止する"
+    ],
+    "answerIndex": 0,
+    "explanation": "安価な原材料の輸入は企業の生産費用を下げ、結果として商品価格の低下につながる可能性がある。"
+  },
+  {
+    "id": "econ_104",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "グローバル化と企業",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_globalization",
+    "question": "日本企業が海外に工場を設け、現地で生産した商品を日本にも輸入するようになった。この事例から読み取れるグローバル化の特徴として適切なものはどれか。",
+    "choices": [
+      "企業の生産活動が国境を越えて行われる",
+      "企業活動は国内だけで完結する",
+      "海外生産は国際経済と無関係である",
+      "輸入と企業活動には関係がない"
+    ],
+    "answerIndex": 0,
+    "explanation": "海外に生産拠点を設けることは、企業活動が国境を越えて展開されるグローバル化の一例である。"
+  },
+  {
+    "id": "econ_105",
+    "major": "大問5",
+    "theme": "国際経済・グローバル化",
+    "subtheme": "為替と家計",
+    "level": 3,
+    "questionType": "multi_source",
+    "knowledgeId": "economics_exchange_rate",
+    "question": "資料A：1ドル＝120円から140円へ円安。資料B：日本が輸入するエネルギー価格が1単位100ドルから110ドルへ上昇。この2つの情報を家計との関係で考えた場合、最も適切な判断はどれか。",
+    "choices": [
+      "輸入価格の上昇を通じて家計の生活費が増える可能性がある",
+      "円安になると輸入品は必ず無料になる",
+      "エネルギー価格は家計支出と無関係である",
+      "円安は輸入品価格に必ず影響しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "円安になると同じドル価格の商品を購入するために必要な円が増える。さらにエネルギー価格も上昇しているため、輸入価格を通じて家計の生活費が増える可能性がある。"
+  },
+  {
+    "id": "econ_106",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "学習課題・景気と金融",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_boj",
+    "question": "学習課題「景気の低迷に金融政策はどのように関係するか」について、会話『企業が投資を控えている』を踏まえた説明として適切なものはどれか。",
+    "choices": [
+      "資金を調達しやすくする政策によって投資を促す方向が考えられる",
+      "金融政策によって企業の投資を法律で禁止する",
+      "景気低迷時には必ず金利を上げる",
+      "金融政策は企業活動と無関係である"
+    ],
+    "answerIndex": 0,
+    "explanation": "景気低迷時には、資金を調達しやすくすることで企業の投資を促す方向の金融政策が考えられる。"
+  },
+  {
+    "id": "econ_107",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "労働と企業",
+    "level": 2,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_labor",
+    "question": "企業が人手不足への対応として賃金を引き上げ、働きやすい環境を整えた。この企業行動について正しく説明しているものはどれか。",
+    "choices": [
+      "労働者を確保し、家計の所得や消費にも影響する可能性がある",
+      "企業の人件費は家計と無関係である",
+      "賃金上昇は必ず企業の売上をゼロにする",
+      "働きやすさは雇用とは無関係である"
+    ],
+    "answerIndex": 0,
+    "explanation": "賃金や労働環境は労働者の雇用選択に影響し、賃金が家計所得や消費を通じて経済全体に影響することもある。"
+  },
+  {
+    "id": "econ_108",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "消費と企業",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_circular_flow",
+    "question": "メモ：『物価上昇により家計が購入量を減らした。企業では売上が伸び悩んでいる。』この状況から考えられる関係として適切なものはどれか。",
+    "choices": [
+      "家計の消費行動の変化が企業の売上に影響する",
+      "家計の消費と企業の売上は常に無関係である",
+      "物価が上がると企業の売上は必ず増える",
+      "企業の売上は家計の行動だけで完全に決まる"
+    ],
+    "answerIndex": 0,
+    "explanation": "家計の購入量が減れば企業の売上が伸び悩む可能性があり、家計と企業は相互に関係している。"
+  },
+  {
+    "id": "econ_109",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "税・国債・社会保障",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_national_bonds",
+    "question": "学習課題『税は暮らしとどのように関係するか』について、税収が不足する一方で社会保障費が増えている状況を考える。この場合の課題として適切なものはどれか。",
+    "choices": [
+      "社会保障を支える財源をどのように確保するか",
+      "社会保障費を考えずに税収だけを減らすこと",
+      "国債には返済が必要ないと考えること",
+      "税と社会保障を別々の問題として扱うこと"
+    ],
+    "answerIndex": 0,
+    "explanation": "税収が不足し社会保障費が増える場合、税などの財源や国債を含め、持続的な財政をどう実現するかが課題となる。"
+  },
+  {
+    "id": "econ_110",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "家計・金融・景気",
+    "level": 3,
+    "questionType": "multi_source",
+    "knowledgeId": "economics_circular_flow",
+    "question": "資料A：家計の貯蓄＝2024年120兆円、2025年130兆円。資料B：企業の設備投資＝2024年80兆円、2025年75兆円。資料C：銀行の貸出残高＝2024年500兆円、2025年495兆円。この3資料から考えられる関係として最も適切なものはどれか。",
+    "choices": [
+      "家計の資金、銀行の貸し出し、企業投資は金融を通じて関係している",
+      "家計の貯蓄は金融機関と無関係である",
+      "企業投資は資金調達と無関係である",
+      "銀行の貸し出しは景気と必ず無関係である"
+    ],
+    "answerIndex": 0,
+    "explanation": "家計の貯蓄、銀行による資金仲介、企業の設備投資は金融を通じて関係している。資料は貯蓄が増える一方で貸出と設備投資が減少していることも示しており、資金が実際の投資につながる過程を考える必要がある。"
+  },
+  {
+    "id": "econ_111",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "需要供給と家計",
+    "level": 2,
+    "questionType": "document",
+    "knowledgeId": "economics_demand_supply",
+    "question": "ある商品の需要が増加した結果、価格が上昇した。このとき家計の購入行動について考える説明として適切なものはどれか。",
+    "choices": [
+      "価格上昇によって、購入量を減らしたり代替商品を選んだりする可能性がある",
+      "価格が上昇するとすべての家計が必ず購入量を増やす",
+      "価格上昇は需要量と無関係である",
+      "価格が上昇すると供給も必ずゼロになる"
+    ],
+    "answerIndex": 0,
+    "explanation": "価格が上昇すると、家計は購入量を減らしたり、より安い代替商品を選んだりすることがある。"
+  },
+  {
+    "id": "econ_112",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "需要供給と企業",
+    "level": 3,
+    "questionType": "document",
+    "knowledgeId": "economics_demand_supply",
+    "question": "商品の需要が増えて市場価格が上昇した。企業がこの変化を受けて生産量を増やした場合、需要と供給の関係として適切なものはどれか。",
+    "choices": [
+      "需要の増加が価格上昇を通じて企業の供給行動に影響した",
+      "需要の変化は企業の供給行動に影響しない",
+      "企業の供給増加は需要を必ずゼロにする",
+      "価格と供給には関係がない"
+    ],
+    "answerIndex": 0,
+    "explanation": "需要増加による価格上昇は、企業が生産を増やす誘因となる場合がある。"
+  },
+  {
+    "id": "econ_113",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "経済成長と産業構造",
+    "level": 3,
+    "questionType": "statistics",
+    "knowledgeId": "economics_industry",
+    "question": "資料ではGDPが増加する一方、第一次産業の就業者割合が低下し、第三次産業の割合が上昇している。この資料を総合して判断する場合、適切なものはどれか。",
+    "choices": [
+      "経済規模の拡大と産業構造の変化が同時に起きている可能性がある",
+      "GDPが増加すると産業構造は必ず変化しない",
+      "第一次産業の割合低下は経済成長と両立しない",
+      "第三次産業の増加はGDPと無関係である"
+    ],
+    "answerIndex": 0,
+    "explanation": "GDPの増加と産業別就業者割合の変化は同時に起こり得るため、経済成長と産業構造の変化を別々に確認する必要がある。"
+  },
+  {
+    "id": "econ_114",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "国際経済と企業",
+    "level": 3,
+    "questionType": "multi_source",
+    "knowledgeId": "economics_globalization",
+    "question": "資料A：日本企業の海外売上高＝2020年20兆円、2025年30兆円。資料B：海外からの原材料輸入額＝2020年8兆円、2025年12兆円。この2資料から、日本企業について適切に判断できるものはどれか。",
+    "choices": [
+      "日本企業の生産・販売活動が国際経済と結びついている",
+      "輸出と輸入は企業活動と無関係である",
+      "海外売上が増えると輸入は必ずゼロになる",
+      "原材料輸入は企業の生産活動と関係しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "海外売上高と原材料輸入額の双方が増えており、日本企業の生産・販売活動が海外市場や国際的な供給網と結びついていることが分かる。"
+  },
+  {
+    "id": "econ_115",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "人口と社会保障",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_social_security",
+    "question": "会話：『高齢者が増えている一方、働く世代は減っているね。』この状況から社会保障について考えるとき、最も重要な論点はどれか。",
+    "choices": [
+      "社会保障の給付と、それを支える財源や負担のバランス",
+      "高齢者人口を考えずに制度を決めること",
+      "働く世代が減るほど財源が必ず増えること",
+      "社会保障と人口構成は無関係である"
+    ],
+    "answerIndex": 0,
+    "explanation": "人口構成が変化すると、社会保障の給付と負担をどのように持続させるかが重要な課題になる。"
+  },
+  {
+    "id": "econ_116",
+    "major": "大問5",
+    "theme": "経済循環・総合",
+    "subtheme": "財政と景気",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_fiscal_policy",
+    "question": "不況時に政府が公共事業を増やし、家計への給付も行った。この政策を経済循環の観点から説明したものとして適切なのはどれか。",
+    "choices": [
+      "政府支出を通じて需要を支え、企業や家計の経済活動を刺激する",
+      "政府支出によって家計の所得を必ずゼロにする",
+      "公共事業は企業の売上と無関係である",
+      "財政政策は景気に影響を与えない"
+    ],
+    "answerIndex": 0,
+    "explanation": "政府支出は企業への発注や家計への所得移転などを通じて需要を支え、景気を刺激する方向に働くことがある。"
+  },
+  {
+    "id": "econ_117",
+    "major": "大問5",
+    "theme": "総合・資料",
+    "subtheme": "学習課題・メモ・表",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_tax",
+    "question": "学習課題『税は暮らしとどのように関係するか』について、メモには『税収60兆円、歳出90兆円、社会保障費35兆円』とある。この資料から正しく判断できるものはどれか。",
+    "choices": [
+      "税収だけでは歳出全体をまかなえておらず、社会保障費も歳出の一部である",
+      "税収が歳出を30兆円上回っている",
+      "社会保障費は歳出の半分を超えている",
+      "税収と歳出は同額である"
+    ],
+    "answerIndex": 0,
+    "explanation": "歳出90兆円に対して税収は60兆円なので30兆円不足している。また社会保障費35兆円は歳出の一部である。"
+  },
+  {
+    "id": "econ_118",
+    "major": "大問5",
+    "theme": "総合・資料",
+    "subtheme": "会話・需要供給・景気",
+    "level": 3,
+    "questionType": "exam_style",
+    "knowledgeId": "economics_demand_supply",
+    "question": "会話：『原材料が不足して商品を作れる企業が減った。ところが、その商品を欲しがる人は増えている。』この状況で起こりやすい市場価格の変化はどれか。",
+    "choices": [
+      "需要増加と供給減少の両方が価格を上げる方向に働く",
+      "需要増加と供給減少の両方が価格を下げる",
+      "需要増加は必ず価格を下げ、供給減少は価格を下げる",
+      "需要と供給は価格に影響しない"
+    ],
+    "answerIndex": 0,
+    "explanation": "需要の増加と供給の減少はいずれも価格を上昇させる方向に働く。"
+  },
+  {
+    "id": "econ_119",
+    "major": "大問5",
+    "theme": "総合・資料",
+    "subtheme": "表・正誤組合せ",
+    "level": 3,
+    "questionType": "true_false",
+    "knowledgeId": "economics_fiscal_policy",
+    "question": "表：A年度は税収50、歳出80。B年度は税収65、歳出85（単位：兆円）。A：A年度の税収と歳出の差は30兆円である。B：B年度の差は20兆円である。",
+    "choices": [
+      "A正・B正",
+      "A正・B誤",
+      "A誤・B正",
+      "A誤・B誤"
+    ],
+    "answerIndex": 0,
+    "explanation": "A年度は80−50＝30兆円、B年度は85−65＝20兆円なので、A・Bともに正しい。"
+  },
+  {
+    "id": "econ_120",
+    "major": "大問5",
+    "theme": "総合・資料",
+    "subtheme": "経済全体の相互関係",
+    "level": 3,
+    "questionType": "multi_source",
+    "knowledgeId": "economics_circular_flow",
+    "question": "資料A：家計の消費支出＝前年比5％減。資料B：企業の売上高＝前年比4％減、生産指数＝前年比3％減。資料C：完全失業率＝2.5％から3.1％へ上昇。資料D：政府が景気対策として公共事業を増額。この一連の資料を最も適切に説明しているものはどれか。",
+    "choices": [
+      "家計・企業・労働・政府の活動が相互に関係し、景気の変化が経済全体に波及している",
+      "家計の消費は企業や雇用と無関係である",
+      "政府の景気対策は企業や家計に影響しない",
+      "雇用の変化は景気とは無関係である"
+    ],
+    "answerIndex": 0,
+    "explanation": "消費の減少が企業の売上・生産の弱まりと結びつき、雇用にも影響が及んでいる。一方、政府は公共事業を増やして需要を支える政策を行っている。家計・企業・労働・政府の活動が相互に関係している。"
+  }
+]
