@@ -239,22 +239,25 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 #quizscreen{ height:100%; display:flex; flex-direction:column; }
 .qz-progress-track{ height:5px; background:var(--g-200); flex:0 0 auto; }
 .qz-progress-fill{ height:100%; background:var(--ink); transition:width .25s ease; }
-.qz-meta{ display:flex; justify-content:space-between; align-items:center; padding:10px 16px 0; flex:0 0 auto; }
+.qz-meta{ display:flex; justify-content:space-between; align-items:center; padding:8px 16px 0; flex:0 0 auto; }
 .qz-meta .qm-tag{ font-size:11.5px; font-weight:800; color:var(--g-500); }
 .qz-meta .qm-count{ font-size:13px; font-weight:900; font-variant-numeric:tabular-nums; }
 .qz-body{ flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-.qz-question{ padding:18px 18px 8px; }
-.qz-question .qtxt{ font-size:20px; font-weight:800; line-height:1.7; white-space:pre-wrap; user-select:text; }
-.qz-question img{ margin-top:14px; border:2px solid var(--ink); }
-.qz-choices{ display:flex; flex-direction:column; margin:18px 0 0; border-top:2px solid var(--ink); }
+.qz-question{ padding:12px 16px 4px; }
+.qz-question .qtxt{ font-size:18px; font-weight:800; line-height:1.6; white-space:pre-wrap; user-select:text; }
+.qz-question .qtxt.qlen-md{ font-size:15.5px; line-height:1.5; }
+.qz-question .qtxt.qlen-lg{ font-size:13.8px; line-height:1.45; }
+.qz-question .qtxt.qlen-xl{ font-size:12.5px; line-height:1.4; }
+.qz-question img{ margin-top:10px; border:2px solid var(--ink); }
+.qz-choices{ display:flex; flex-direction:column; margin:10px 0 0; border-top:2px solid var(--ink); }
 .choice-btn{
   display:flex; align-items:center; width:100%; text-align:left;
-  min-height:58px; padding:14px 16px; font-size:16.5px; font-weight:700; line-height:1.5;
+  min-height:48px; padding:10px 14px; font-size:15px; font-weight:700; line-height:1.45;
   background:#fff; color:var(--ink);
   border:2px solid var(--ink); border-top:none;
-  gap:12px;
+  gap:10px;
 }
-.choice-btn .cb-mark{ flex:0 0 auto; width:26px; height:26px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; }
+.choice-btn .cb-mark{ flex:0 0 auto; width:24px; height:24px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; }
 .choice-btn .cb-txt{ flex:1 1 auto; }
 .choice-btn:active{ background:var(--g-100); }
 .choice-btn[data-locked="1"]:active{ background:#fff; }
@@ -263,6 +266,10 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .choice-btn.sel-wrong{ background:#fff; color:var(--g-400); text-decoration:line-through; }
 .choice-btn.sel-wrong .cb-mark{ background:var(--g-400); border-color:var(--g-400); color:#fff; }
 .choice-btn.reveal-correct-unselected{ border-color:var(--ink); box-shadow:inset 0 0 0 2px var(--ink); }
+
+/* 長文・多選択肢時のコンパクト表示 */
+.qz-choices.choices-compact .choice-btn{ min-height:40px; padding:7px 12px; font-size:13.2px; line-height:1.35; gap:8px; }
+.qz-choices.choices-compact .choice-btn .cb-mark{ width:21px; height:21px; font-size:11.5px; }
 
 /* 選択肢が全て図（雨温図など）のときは2列グリッドで並べる */
 .qz-choices.qz-choices-grid{ display:grid; grid-template-columns:1fr 1fr; border-top:2px solid var(--ink); border-left:2px solid var(--ink); }
@@ -275,10 +282,10 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .choice-btn-grid .cb-txt{ width:100%; }
 .choice-btn-grid .rt-block{ margin:2px 0 0; }
 
-.qz-explain{ margin:0; padding:16px 18px; background:var(--g-50); border-top:2px solid var(--ink); font-size:13.5px; line-height:1.75; font-weight:600; color:var(--g-800); }
-.qz-explain .el{ font-weight:900; font-size:11.5px; color:var(--g-500); letter-spacing:.06em; display:block; margin-bottom:5px; }
-.qz-footer{ flex:0 0 auto; padding:12px 16px calc(12px + var(--safe-b)); border-top:2px solid var(--ink); }
-.autoadv-track{ height:3px; background:var(--g-200); margin-top:8px; overflow:hidden; }
+.qz-explain{ margin:0; padding:14px 16px; background:var(--g-50); border-top:2px solid var(--ink); font-size:13px; line-height:1.65; font-weight:600; color:var(--g-800); }
+.qz-explain .el{ font-weight:900; font-size:11.5px; color:var(--g-500); letter-spacing:.06em; display:block; margin-bottom:4px; }
+.qz-footer{ flex:0 0 auto; padding:10px 16px calc(10px + var(--safe-b)); border-top:2px solid var(--ink); }
+.autoadv-track{ height:3px; background:var(--g-200); margin-top:6px; overflow:hidden; }
 .autoadv-fill{ height:100%; background:var(--ink); width:0%; animation:autoadv .8s linear forwards; }
 @keyframes autoadv{ from{ width:0%; } to{ width:100%; } }
 
@@ -774,9 +781,9 @@ function normalizeQuestion(raw, subject, unit, idx){
   };
 }
 
-function normalizeDeck(raw){
+function normalizeDeck(raw, fallbackSubject){
   if(!raw || typeof raw!=="object") return null;
-  var subject = String(raw.subject || raw.教科 || "未分類");
+  var subject = String(raw.subject || raw.教科 || fallbackSubject || "未分類");
   var unit = String(raw.unit || raw.単元 || "未分類単元");
   var tags = raw.tags || raw.タグ || [];
   if(!Array.isArray(tags)) tags = [String(tags)];
@@ -784,8 +791,10 @@ function normalizeDeck(raw){
   if(!Array.isArray(srcQ)) return null;
   var qs = [];
   for(var i=0;i<srcQ.length;i++){
-    var nq = normalizeQuestion(srcQ[i], subject, unit, i);
-    if(nq) qs.push(nq);
+    try {
+      var nq = normalizeQuestion(srcQ[i], subject, unit, i);
+      if(nq) qs.push(nq);
+    } catch(err){}
   }
   if(qs.length===0) return null;
   return { subject:subject, unit:unit, tags:tags.map(String), questions:qs };
@@ -794,13 +803,26 @@ function normalizeDeck(raw){
 function extractDecks(parsed){
   var decks = [];
   if(Array.isArray(parsed)){
-    parsed.forEach(function(item){ var d=normalizeDeck(item); if(d) decks.push(d); });
+    parsed.forEach(function(item){
+      try {
+        var d = normalizeDeck(item);
+        if(d) decks.push(d);
+      } catch(err){}
+    });
   } else if(parsed && typeof parsed==="object"){
+    var parentSubject = parsed.subject || parsed.教科 || null;
     if(Array.isArray(parsed.decks)){
-      parsed.decks.forEach(function(item){ var d=normalizeDeck(item); if(d) decks.push(d); });
+      parsed.decks.forEach(function(item){
+        try {
+          var d = normalizeDeck(item, parentSubject);
+          if(d) decks.push(d);
+        } catch(err){}
+      });
     } else if(parsed.questions){
-      var d = normalizeDeck(parsed);
-      if(d) decks.push(d);
+      try {
+        var d = normalizeDeck(parsed);
+        if(d) decks.push(d);
+      } catch(err){}
     }
   }
   return decks;
@@ -1513,11 +1535,22 @@ function renderQuiz(){
   var answered = session.answers[idx] != null;
   var pct = Math.round((idx/total)*100);
 
+  var qText = q.question || "";
+  var qLen = qText.length;
+  var qLenCls = "";
+  if(qLen > 140) qLenCls = " qlen-xl";
+  else if(qLen > 80) qLenCls = " qlen-lg";
+  else if(qLen > 40) qLenCls = " qlen-md";
+
+  var maxChoiceLen = 0;
+  q.choices.forEach(function(c){ if((c||"").length > maxChoiceLen) maxChoiceLen = (c||"").length; });
+  var choiceCompact = (maxChoiceLen > 24 || q.choices.length > 4 || qLen > 75) ? " choices-compact" : "";
+
   var html = '<div id="quizscreen">';
   html += '<div class="qz-progress-track"><div class="qz-progress-fill" style="width:'+pct+'%;"></div></div>';
   html += '<div class="qz-meta"><div class="qm-tag">'+esc(deck.subject)+' ／ '+esc(deck.unit)+'</div><div class="qm-count">'+(idx+1)+' / '+total+'</div></div>';
   html += '<div class="qz-body">';
-  html += '<div class="qz-question"><div class="qtxt">'+renderRichText(q.question)+'</div>';
+  html += '<div class="qz-question"><div class="qtxt'+qLenCls+'">'+renderRichText(qText)+'</div>';
   if(q.image){ html += '<img src="'+esc(q.image)+'" alt="">'; }
   html += '</div>';
 
@@ -1528,7 +1561,7 @@ function renderQuiz(){
      従う。正誤判定は常に元のインデックス(origIdx)で行うため、JSON側の
      並び順やshuffleの有無に関係なく採点は正しく動く。 */
   var order = cur.order || q.choices.map(function(_,i){ return i; });
-  html += '<div class="qz-choices'+(choicesAreGraphs?" qz-choices-grid":"")+'">';
+  html += '<div class="qz-choices'+choiceCompact+(choicesAreGraphs?" qz-choices-grid":"")+'">';
   order.forEach(function(origIdx, ci){
     var c = q.choices[origIdx];
     var cls = "choice-btn"+(choicesAreGraphs?" choice-btn-grid":"");
@@ -1885,7 +1918,7 @@ $("#fileInput").addEventListener("change", function(e){
   var files = Array.prototype.slice.call(e.target.files || []);
   if(files.length===0) return;
   var pending = files.length;
-  var addedDecks = 0, failedFiles = 0;
+  var addedDecks = 0, addedQuestions = 0, failedFiles = 0;
   files.forEach(function(file){
     var reader = new FileReader();
     reader.onload = function(){
@@ -1893,11 +1926,15 @@ $("#fileInput").addEventListener("change", function(e){
         var parsed = JSON.parse(reader.result);
         var decks = extractDecks(parsed);
         if(decks.length===0){ failedFiles++; }
-        else { importDecks(decks); addedDecks += decks.length; }
+        else {
+          importDecks(decks);
+          addedDecks += decks.length;
+          decks.forEach(function(d){ addedQuestions += d.questions.length; });
+        }
       }catch(err){ failedFiles++; }
       pending--;
       if(pending===0){
-        var msg = addedDecks>0 ? (addedDecks+"個のデータを追加しました") : "追加できるデータがありませんでした";
+        var msg = addedDecks>0 ? (addedDecks+"個の単元（計 "+addedQuestions+"問）を追加しました") : "追加できるデータがありませんでした";
         if(failedFiles>0) msg += "（"+failedFiles+"件は形式エラーでスキップ）";
         toast(msg);
         e.target.value = "";
