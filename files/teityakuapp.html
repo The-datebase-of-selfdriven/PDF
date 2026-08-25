@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ja"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -11,18 +12,31 @@
    RESET / BASE — アプリらしい挙動にするための土台
    ============================================================ */
 *, *::before, *::after{ box-sizing:border-box; margin:0; padding:0; }
-html{ height:100%; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+html{
+  height:100%;
+  /* iOS Safari の動的ビューポート高さ対応 */
+  height: -webkit-fill-available;
+  -webkit-text-size-adjust:100%; text-size-adjust:100%;
+}
 body{
   height:100%;
-  overflow:hidden;               /* 本体はスクロールさせない。中の要素だけスクロール */
-  overscroll-behavior:none;      /* iOSのバウンス/引っ張り更新を抑止 */
-  position:fixed; inset:0;
+  height: -webkit-fill-available;
+  /* dvh が使える環境では動的ビューポート高さを使う */
+  height: 100dvh;
+  /* JSが window.innerHeight / visualViewport を元に --app-height(px) を
+     設定する。対応環境ではこちらが最終的に優先され、iOSのアドレスバー
+     開閉・PWAフルスクリーン時のレイアウトずれを防ぐ。 */
+  height: var(--app-height, 100dvh);
+  overflow:hidden;
+  overscroll-behavior:none;
+  /* position:fixed だと iOS で bottom が動くことがある。min-height で補完 */
+  position:fixed; inset:0; width:100%;
   background:#fff;
   color:#141414;
   font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","YuGothic","Meiryo",Roboto,Arial,sans-serif;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
-  touch-action:manipulation;             /* ダブルタップズームを無効化 */
+  touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
   -webkit-touch-callout:none;
   user-select:none;
@@ -59,7 +73,19 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 /* ============================================================
    レイアウト骨格
    ============================================================ */
-#app{ height:100%; display:flex; flex-direction:column; }
+#app{
+  /* iOS Safari の -webkit-fill-available / dvh による高さ確定 */
+  height: 100%;
+  height: -webkit-fill-available;
+  height: 100dvh;
+  height: var(--app-height, 100dvh);
+  display:flex; flex-direction:column;
+  /* 余白ずれを防ぐため max-height も設定 */
+  max-height: 100%;
+  max-height: -webkit-fill-available;
+  max-height: 100dvh;
+  max-height: var(--app-height, 100dvh);
+}
 
 #topbar{
   flex:0 0 auto;
@@ -76,8 +102,11 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 #topbar button.tb-btn{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:22px; line-height:1; }
 #topbar button.tb-btn:active{ background:var(--g-100); }
 
+/* クイズ画面では #screens 自体はスクロール不要 — quizscreen が内部で管理する */
 #screens{ flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-y:contain; padding-bottom:calc(64px + var(--safe-b)); }
 #screens.no-tab{ padding-bottom:16px; }
+/* クイズ画面時はスクロール禁止にして内部 flex が画面を埋める */
+#screens.quiz-active{ overflow:hidden; padding-bottom:0; }
 
 #tabbar{
   flex:0 0 auto;
@@ -234,31 +263,68 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .filter-summary{ margin:14px 16px; padding:12px 14px; border:1.5px dashed var(--g-400); font-size:12.5px; font-weight:600; color:var(--g-600); line-height:1.6; }
 
 /* ============================================================
-   クイズ画面
+   クイズ画面 — スクロールなし全画面 flex
    ============================================================ */
-#quizscreen{ height:100%; display:flex; flex-direction:column; }
-.qz-progress-track{ height:5px; background:var(--g-200); flex:0 0 auto; }
+/* #screens.quiz-active 内で quizscreen が画面全体を埋める */
+#quizscreen{
+  height:100%;
+  display:flex; flex-direction:column;
+  overflow:hidden; /* 内部コンテンツは flex で管理。外スクロール禁止 */
+}
+.qz-progress-track{ height:5px; background:var(--g-200); flex:0 0 5px; }
 .qz-progress-fill{ height:100%; background:var(--ink); transition:width .25s ease; }
-.qz-meta{ display:flex; justify-content:space-between; align-items:center; padding:8px 16px 0; flex:0 0 auto; }
-.qz-meta .qm-tag{ font-size:11.5px; font-weight:800; color:var(--g-500); }
-.qz-meta .qm-count{ font-size:13px; font-weight:900; font-variant-numeric:tabular-nums; }
-.qz-body{ flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-.qz-question{ padding:12px 16px 4px; }
-.qz-question .qtxt{ font-size:18px; font-weight:800; line-height:1.6; white-space:pre-wrap; user-select:text; }
-.qz-question .qtxt.qlen-md{ font-size:15.5px; line-height:1.5; }
-.qz-question .qtxt.qlen-lg{ font-size:13.8px; line-height:1.45; }
-.qz-question .qtxt.qlen-xl{ font-size:12.5px; line-height:1.4; }
-.qz-question img{ margin-top:10px; border:2px solid var(--ink); }
-.qz-choices{ display:flex; flex-direction:column; margin:10px 0 0; border-top:2px solid var(--ink); }
+.qz-meta{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 16px 0; flex:0 0 auto;
+}
+.qz-meta .qm-tag{ font-size:11px; font-weight:800; color:var(--g-500); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:66%; }
+.qz-meta .qm-count{ font-size:12px; font-weight:900; font-variant-numeric:tabular-nums; flex:0 0 auto; }
+
+/* 問題文エリア：縮小可能 */
+.qz-question{ padding:8px 16px 2px; flex:0 0 auto; }
+.qz-question .qtxt{
+  font-size:17px; font-weight:800; line-height:1.55;
+  white-space:pre-wrap; user-select:text;
+}
+/* 文字数による自動段階縮小 */
+.qz-question .qtxt.qlen-sm { font-size:17px; line-height:1.55; }
+.qz-question .qtxt.qlen-md { font-size:14.5px; line-height:1.45; }
+.qz-question .qtxt.qlen-lg { font-size:12.8px; line-height:1.4; }
+.qz-question .qtxt.qlen-xl { font-size:11.5px; line-height:1.35; }
+.qz-question .qtxt.qlen-2xl{ font-size:10.5px; line-height:1.3; }
+.qz-question img{ margin-top:8px; border:2px solid var(--ink); }
+
+/* 選択肢エリア：flex-shrink で縮む */
+.qz-choices{
+  display:flex; flex-direction:column;
+  flex:1 1 0; min-height:0;
+  border-top:2px solid var(--ink);
+  overflow:hidden; /* 選択肢自体もスクロールさせない */
+}
 .choice-btn{
   display:flex; align-items:center; width:100%; text-align:left;
-  min-height:48px; padding:10px 14px; font-size:15px; font-weight:700; line-height:1.45;
+  flex:1 1 0; min-height:0; /* 均等分割で画面を埋める */
+  padding:6px 12px; font-size:14.5px; font-weight:700; line-height:1.35;
   background:#fff; color:var(--ink);
   border:2px solid var(--ink); border-top:none;
-  gap:10px;
+  gap:9px; overflow:hidden;
 }
-.choice-btn .cb-mark{ flex:0 0 auto; width:24px; height:24px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; }
-.choice-btn .cb-txt{ flex:1 1 auto; }
+.choice-btn .cb-mark{
+  flex:0 0 auto; width:22px; height:22px;
+  border:2px solid var(--ink); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:900;
+}
+.choice-btn .cb-txt{
+  flex:1 1 auto; overflow:hidden;
+  /* 選択肢テキストも長さで縮む */
+  font-size:inherit;
+}
+/* 選択肢テキストの長さによる自動縮小 */
+.choice-btn.clen-md .cb-txt{ font-size:13px; line-height:1.3; }
+.choice-btn.clen-lg .cb-txt{ font-size:11.8px; line-height:1.25; }
+.choice-btn.clen-xl .cb-txt{ font-size:10.8px; line-height:1.2; }
+
 .choice-btn:active{ background:var(--g-100); }
 .choice-btn[data-locked="1"]:active{ background:#fff; }
 .choice-btn.sel-correct{ background:var(--ink); color:#fff; }
@@ -267,27 +333,42 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .choice-btn.sel-wrong .cb-mark{ background:var(--g-400); border-color:var(--g-400); color:#fff; }
 .choice-btn.reveal-correct-unselected{ border-color:var(--ink); box-shadow:inset 0 0 0 2px var(--ink); }
 
-/* 長文・多選択肢時のコンパクト表示 */
-.qz-choices.choices-compact .choice-btn{ min-height:40px; padding:7px 12px; font-size:13.2px; line-height:1.35; gap:8px; }
-.qz-choices.choices-compact .choice-btn .cb-mark{ width:21px; height:21px; font-size:11.5px; }
+/* compact モード（問題文が長い、または選択肢が多い場合） */
+.qz-choices.choices-compact .choice-btn{ font-size:12.5px; padding:4px 10px; gap:7px; }
+.qz-choices.choices-compact .choice-btn .cb-mark{ width:19px; height:19px; font-size:10.5px; }
+.qz-choices.choices-compact .choice-btn.clen-md .cb-txt{ font-size:11.5px; }
+.qz-choices.choices-compact .choice-btn.clen-lg .cb-txt{ font-size:10.5px; }
+.qz-choices.choices-compact .choice-btn.clen-xl .cb-txt{ font-size:9.5px; }
 
 /* 選択肢が全て図（雨温図など）のときは2列グリッドで並べる */
 .qz-choices.qz-choices-grid{ display:grid; grid-template-columns:1fr 1fr; border-top:2px solid var(--ink); border-left:2px solid var(--ink); }
 .qz-choices.qz-choices-grid .choice-btn-grid{
   flex-direction:column; align-items:center; text-align:center;
   border-top:none; border-left:none; border-right:2px solid var(--ink); border-bottom:2px solid var(--ink);
-  min-height:0; padding:10px 8px 12px; gap:6px;
+  min-height:0; padding:8px 6px 10px; gap:5px;
 }
-.choice-btn-grid .cb-mark{ width:22px; height:22px; font-size:12px; }
+.choice-btn-grid .cb-mark{ width:20px; height:20px; font-size:11px; }
 .choice-btn-grid .cb-txt{ width:100%; }
 .choice-btn-grid .rt-block{ margin:2px 0 0; }
 
-.qz-explain{ margin:0; padding:14px 16px; background:var(--g-50); border-top:2px solid var(--ink); font-size:13px; line-height:1.65; font-weight:600; color:var(--g-800); }
-.qz-explain .el{ font-weight:900; font-size:11.5px; color:var(--g-500); letter-spacing:.06em; display:block; margin-bottom:4px; }
-.qz-footer{ flex:0 0 auto; padding:10px 16px calc(10px + var(--safe-b)); border-top:2px solid var(--ink); }
-.autoadv-track{ height:3px; background:var(--g-200); margin-top:6px; overflow:hidden; }
+/* 解説：コンパクトに */
+.qz-explain{
+  flex:0 0 auto;
+  margin:0; padding:8px 14px;
+  background:var(--g-50); border-top:2px solid var(--ink);
+  font-size:12px; line-height:1.55; font-weight:600; color:var(--g-800);
+  max-height:30%; overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+.qz-explain .el{ font-weight:900; font-size:11px; color:var(--g-500); letter-spacing:.06em; display:block; margin-bottom:3px; }
+
+/* フッター：常に最下部に固定 */
+.qz-footer{ flex:0 0 auto; padding:8px 16px calc(8px + var(--safe-b)); border-top:2px solid var(--ink); background:#fff; }
+.autoadv-track{ height:3px; background:var(--g-200); margin-top:5px; overflow:hidden; }
 .autoadv-fill{ height:100%; background:var(--ink); width:0%; animation:autoadv .8s linear forwards; }
 @keyframes autoadv{ from{ width:0%; } to{ width:100%; } }
+
+/* qz-body は使わないが互換性のため残す */
+.qz-body{ display:contents; }
 
 /* 理解度バー（単元・教科の記憶定着度） */
 .mbar-track{ height:5px; background:var(--g-200); margin-top:8px; }
@@ -1535,36 +1616,57 @@ function renderQuiz(){
   var answered = session.answers[idx] != null;
   var pct = Math.round((idx/total)*100);
 
+  /* 問題文の長さによるクラス */
   var qText = q.question || "";
   var qLen = qText.length;
-  var qLenCls = "";
-  if(qLen > 140) qLenCls = " qlen-xl";
-  else if(qLen > 80) qLenCls = " qlen-lg";
-  else if(qLen > 40) qLenCls = " qlen-md";
+  var qLenCls = " qlen-sm";
+  if(qLen > 180)      qLenCls = " qlen-2xl";
+  else if(qLen > 110) qLenCls = " qlen-xl";
+  else if(qLen > 65)  qLenCls = " qlen-lg";
+  else if(qLen > 35)  qLenCls = " qlen-md";
 
+  /* 選択肢の最大文字数 */
   var maxChoiceLen = 0;
-  q.choices.forEach(function(c){ if((c||"").length > maxChoiceLen) maxChoiceLen = (c||"").length; });
-  var choiceCompact = (maxChoiceLen > 24 || q.choices.length > 4 || qLen > 75) ? " choices-compact" : "";
+  q.choices.forEach(function(c){ var l=(c||"").length; if(l>maxChoiceLen) maxChoiceLen=l; });
 
-  var html = '<div id="quizscreen">';
-  html += '<div class="qz-progress-track"><div class="qz-progress-fill" style="width:'+pct+'%;"></div></div>';
-  html += '<div class="qz-meta"><div class="qm-tag">'+esc(deck.subject)+' ／ '+esc(deck.unit)+'</div><div class="qm-count">'+(idx+1)+' / '+total+'</div></div>';
-  html += '<div class="qz-body">';
-  html += '<div class="qz-question"><div class="qtxt'+qLenCls+'">'+renderRichText(qText)+'</div>';
-  if(q.image){ html += '<img src="'+esc(q.image)+'" alt="">'; }
-  html += '</div>';
+  /* compact モード判定 */
+  var needCompact = (qLen > 65 || q.choices.length >= 5 || maxChoiceLen > 20);
+  var choiceCompact = needCompact ? " choices-compact" : "";
+
+  /* 選択肢ごとの文字数クラス */
+  function clenCls(txt){
+    var l = (txt||"").length;
+    if(needCompact){
+      if(l > 20) return " clen-xl";
+      if(l > 12) return " clen-lg";
+      if(l > 7)  return " clen-md";
+    } else {
+      if(l > 30) return " clen-xl";
+      if(l > 18) return " clen-lg";
+      if(l > 10) return " clen-md";
+    }
+    return "";
+  }
 
   var choicesAreGraphs = q.choices.every(function(c){
     return RT_BLOCK_TYPES.some(function(t){ return String(c).trim().indexOf(t+"｜")===0; });
   });
-  /* 表示順は session 開始時に決めた item.order（元のインデックスの並び）に
-     従う。正誤判定は常に元のインデックス(origIdx)で行うため、JSON側の
-     並び順やshuffleの有無に関係なく採点は正しく動く。 */
   var order = cur.order || q.choices.map(function(_,i){ return i; });
+
+  var html = '<div id="quizscreen">';
+  html += '<div class="qz-progress-track"><div class="qz-progress-fill" style="width:'+pct+'%;"></div></div>';
+  html += '<div class="qz-meta"><div class="qm-tag">'+esc(deck.subject)+' ／ '+esc(deck.unit)+'</div><div class="qm-count">'+(idx+1)+' / '+total+'</div></div>';
+
+  /* 問題文 */
+  html += '<div class="qz-question"><div class="qtxt'+qLenCls+'">'+renderRichText(qText)+'</div>';
+  if(q.image){ html += '<img src="'+esc(q.image)+'" alt="">'; }
+  html += '</div>';
+
+  /* 選択肢エリア（flex:1 1 0 で残り高さを均等分割） */
   html += '<div class="qz-choices'+choiceCompact+(choicesAreGraphs?" qz-choices-grid":"")+'">';
   order.forEach(function(origIdx, ci){
     var c = q.choices[origIdx];
-    var cls = "choice-btn"+(choicesAreGraphs?" choice-btn-grid":"");
+    var cls = "choice-btn"+(choicesAreGraphs?" choice-btn-grid":"")+clenCls(c);
     var mark = "";
     if(answered){
       var picked = session.answers[idx];
@@ -1578,11 +1680,12 @@ function renderQuiz(){
   });
   html += '</div>';
 
+  /* 解説（回答後のみ） */
   if(answered && q.explanation){
     html += '<div class="qz-explain"><span class="el">解説</span>'+renderRichText(q.explanation)+'</div>';
   }
-  html += '</div>'; // qz-body
 
+  /* フッター */
   html += '<div class="qz-footer">';
   if(answered){
     var wasCorrect = session.answers[idx] === q.answerIndex;
