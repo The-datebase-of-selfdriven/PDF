@@ -1822,6 +1822,129 @@ function retryMistakes(){
 }
 
 /* ============================================================
+   アクション処理
+   ------------------------------------------------------------
+   v3で欠落していたhandleActionを復元。
+   すべてのdata-actionをここで処理する。
+   タップ座標の補正・elementFromPoint()は一切行わない。
+   ============================================================ */
+function handleAction(el, e){
+  if(!el) return;
+  var action = el.getAttribute("data-action");
+  if(!action) return;
+
+  if(action === "nav"){
+    goto(el.getAttribute("data-screen"));
+    return;
+  }
+
+  if(action === "startUnit"){
+    var subject = el.getAttribute("data-subject") || "";
+    var unit = el.getAttribute("data-unit") || "";
+    var deck = library.decks.filter(function(d){
+      return d.subject === subject && d.unit === unit;
+    })[0];
+    if(!deck){ toast("単元が見つかりません"); return; }
+    var queue = buildWeightedQueue(deck, settings.defaultSetSize || 10);
+    startSession(queue);
+    return;
+  }
+
+  if(action === "startAutoTask"){
+    var queue = buildAutoTask(settings.defaultSetSize || 10, library.decks);
+    startSession(queue);
+    return;
+  }
+
+  if(action === "answer"){
+    var idx = parseInt(el.getAttribute("data-idx"), 10);
+    if(!isNaN(idx)) answerCurrent(idx);
+    return;
+  }
+
+  if(action === "nextQuestion"){
+    nextQuestion();
+    return;
+  }
+
+  if(action === "exitQuiz"){
+    clearAutoAdvance();
+    session = null;
+    goto("home");
+    return;
+  }
+
+  if(action === "backHome"){
+    clearAutoAdvance();
+    session = null;
+    goto("home");
+    return;
+  }
+
+  if(action === "historyMonth"){
+    shiftHistoryMonth(parseInt(el.getAttribute("data-v"),10) || 0);
+    render();
+    return;
+  }
+
+  if(action === "stepSetting"){
+    var key = el.getAttribute("data-k");
+    var delta = parseInt(el.getAttribute("data-v"),10) || 0;
+    if(key === "defaultSetSize"){
+      settings.defaultSetSize = Math.max(1, Math.min(50, (settings.defaultSetSize || 10) + delta));
+      persistSettings();
+      render();
+    }
+    return;
+  }
+
+  if(action === "pickFile"){
+    var fi = $("#fileInput");
+    if(fi) fi.click();
+    return;
+  }
+
+  if(action === "openLibrary"){
+    openModal(libraryModalHtml());
+    return;
+  }
+
+  if(action === "closeModal"){
+    closeModal();
+    return;
+  }
+
+  if(action === "loadSample"){
+    loadSample();
+    if($("#modalLayer").classList.contains("open")) openModal(libraryModalHtml());
+    return;
+  }
+
+  if(action === "deleteDeck"){
+    deleteDeck(el.getAttribute("data-subject") || "", el.getAttribute("data-unit") || "");
+    if($("#modalLayer").classList.contains("open")) openModal(libraryModalHtml());
+    return;
+  }
+
+  if(action === "exportBackup"){
+    exportBackup();
+    return;
+  }
+
+  if(action === "confirmReset"){
+    if(window.confirm("すべての学習データと問題データを初期化します。よろしいですか？")){
+      resetAllData();
+    }
+    return;
+  }
+
+  if(action === "setHomeSubject" || action === "setHomeSort"){
+    /* selectはchangeイベントで処理する。 */
+    return;
+  }
+}
+
+/* ============================================================
    イベント処理（委譲）
    ============================================================ */
 /* ============================================================
