@@ -281,10 +281,10 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .qz-meta .qm-count{ font-size:12px; font-weight:900; font-variant-numeric:tabular-nums; flex:0 0 auto; }
 
 /* 問題文エリア：縮小可能 */
-.qz-question{ padding:8px 16px 2px; flex:0 0 auto; }
+.qz-question{ padding:8px 16px 2px; flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-start; }
 .qz-question .qtxt{
   font-size:17px; font-weight:800; line-height:1.55;
-  white-space:pre-wrap; user-select:text;
+  white-space:pre-wrap; user-select:text; overflow:hidden;
 }
 /* 文字数による自動段階縮小 */
 .qz-question .qtxt.qlen-sm { font-size:17px; line-height:1.55; }
@@ -292,18 +292,18 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .qz-question .qtxt.qlen-lg { font-size:12.8px; line-height:1.4; }
 .qz-question .qtxt.qlen-xl { font-size:11.5px; line-height:1.35; }
 .qz-question .qtxt.qlen-2xl{ font-size:10.5px; line-height:1.3; }
-.qz-question img{ margin-top:8px; border:2px solid var(--ink); }
+.qz-question img{ margin-top:8px; border:2px solid var(--ink); max-height:28vh; width:auto; object-fit:contain; align-self:flex-start; }
 
 /* 選択肢エリア：flex-shrink で縮む */
 .qz-choices{
   display:flex; flex-direction:column;
-  flex:1 1 0; min-height:0;
+  flex:0 0 auto; min-height:0;
   border-top:2px solid var(--ink);
   overflow:hidden; /* 選択肢自体もスクロールさせない */
 }
 .choice-btn{
   display:flex; align-items:center; width:100%; text-align:left;
-  flex:1 1 0; min-height:0; /* 均等分割で画面を埋める */
+  flex:0 0 56px; height:56px; min-height:56px; max-height:56px;
   padding:6px 12px; font-size:14.5px; font-weight:700; line-height:1.35;
   background:#fff; color:var(--ink);
   border:2px solid var(--ink); border-top:none;
@@ -334,7 +334,7 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .choice-btn.reveal-correct-unselected{ border-color:var(--ink); box-shadow:inset 0 0 0 2px var(--ink); }
 
 /* compact モード（問題文が長い、または選択肢が多い場合） */
-.qz-choices.choices-compact .choice-btn{ font-size:12.5px; padding:4px 10px; gap:7px; }
+.qz-choices.choices-compact .choice-btn{ font-size:12.5px; padding:4px 10px; gap:7px; flex-basis:56px; height:56px; min-height:56px; max-height:56px; }
 .qz-choices.choices-compact .choice-btn .cb-mark{ width:19px; height:19px; font-size:10.5px; }
 .qz-choices.choices-compact .choice-btn.clen-md .cb-txt{ font-size:11.5px; }
 .qz-choices.choices-compact .choice-btn.clen-lg .cb-txt{ font-size:10.5px; }
@@ -345,7 +345,8 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .qz-choices.qz-choices-grid .choice-btn-grid{
   flex-direction:column; align-items:center; text-align:center;
   border-top:none; border-left:none; border-right:2px solid var(--ink); border-bottom:2px solid var(--ink);
-  min-height:0; padding:8px 6px 10px; gap:5px;
+  flex:0 0 112px; height:112px; min-height:112px; max-height:112px;
+  padding:8px 6px 10px; gap:5px;
 }
 .choice-btn-grid .cb-mark{ width:20px; height:20px; font-size:11px; }
 .choice-btn-grid .cb-txt{ width:100%; }
@@ -470,6 +471,29 @@ button.pressed, .choice-btn.pressed{ background:var(--g-100); }
 <script>
 (function(){
 "use strict";
+
+/* ============================================================
+   iOS WebKit / Visual Viewport 対策
+   ------------------------------------------------------------
+   Safari / ホーム画面追加時は innerHeight が初期表示時と、その後の
+   visualViewport の高さで一致しないことがある。CSSだけで 100dvh を
+   重ねると、起動直後だけ下部に余白ができたり、画面上の表示位置と
+   タッチ座標の基準がずれる原因になる。
+   実際に表示されている visualViewport.height を --app-height に同期する。
+   ============================================================ */
+function syncAppHeight(){
+  var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+  if(typeof h === "number" && h > 0){
+    document.documentElement.style.setProperty("--app-height", h + "px");
+  }
+}
+syncAppHeight();
+window.addEventListener("resize", syncAppHeight, {passive:true});
+window.addEventListener("orientationchange", function(){ setTimeout(syncAppHeight, 50); }, {passive:true});
+if(window.visualViewport){
+  window.visualViewport.addEventListener("resize", syncAppHeight, {passive:true});
+  window.visualViewport.addEventListener("scroll", syncAppHeight, {passive:true});
+}
 
 /* ============================================================
    定数
@@ -1844,117 +1868,9 @@ function retryMistakes(){
    ============================================================ */
 var pendingTapEl = null;
 
-function handleAction(btn, e){
-  var action = btn.getAttribute("data-action");
-  if(!action) return;
-
-  switch(action){
-    case "startAutoTask": {
-      var q = buildAutoTask(settings.defaultSetSize);
-      if(q.length > 0) startSession(q);
-      else alert("学習可能な問題がありません。");
-      break;
-    }
-    case "nav":
-      goto(btn.getAttribute("data-screen"));
-      break;
-    case "openSubject":
-      homeFilter.subject = btn.getAttribute("data-subject") || "";
-      goto("home");
-      break;
-    case "startUnit": {
-      var deck = library.decks.filter(function(dd){
-        return dd.subject===btn.getAttribute("data-subject") && dd.unit===btn.getAttribute("data-unit");
-      })[0];
-      if(deck){
-        var q = buildAutoTaskForDeck(deck, settings.defaultSetSize);
-        if(q.length > 0) startSession(q);
-        else alert("学習可能な問題がありません。");
-      }
-      break;
-    }
-    case "toggleSubject": toggleIn(selectState.subjects, btn.getAttribute("data-v")); selectState.units=[]; render(); break;
-    case "toggleUnit": toggleIn(selectState.units, btn.getAttribute("data-v")); render(); break;
-    case "stepSize": {
-      var d = parseInt(btn.getAttribute("data-v"),10);
-      selectState.size = Math.max(1, Math.min(200, selectState.size + d));
-      render();
-      break;
-    }
-    case "startCustom": {
-      var q = buildCustomQueue(selectState.subjects, selectState.units, selectState.size);
-      startSession(q);
-      break;
-    }
-    case "answer":
-      answerCurrent(parseInt(btn.getAttribute("data-idx"),10));
-      break;
-    case "nextQuestion": nextQuestion(); break;
-    case "exitQuiz":
-      if(confirm("学習を中断しますか？ここまでの回答は保存されます。")){
-        clearAutoAdvance();
-        session = null; goto("home");
-      }
-      break;
-    case "retryMistakes": retryMistakes(); break;
-    case "backHome": session=null; goto("home"); break;
-    case "historyMonth": shiftHistoryMonth(parseInt(btn.getAttribute("data-v"),10)); render(); break;
-
-    case "openLibrary": openModal(libraryModalHtml()); break;
-    case "closeModal": closeModal(); break;
-    case "pickFile": $("#fileInput").click(); break;
-    case "loadSample": loadSample(); closeModal(); break;
-    case "deleteDeck":
-      if(confirm("「"+btn.getAttribute("data-subject")+" ／ "+btn.getAttribute("data-unit")+"」を削除しますか？進捗も削除されます。")){
-        deleteDeck(btn.getAttribute("data-subject"), btn.getAttribute("data-unit"));
-        openModal(libraryModalHtml());
-      }
-      break;
-    case "exportBackup": exportBackup(); break;
-    case "confirmReset":
-      if(confirm("すべてのデータ（問題・進捗・実績）を削除します。よろしいですか？")){
-        if(confirm("本当に元に戻せません。実行しますか？")) resetAllData();
-      }
-      break;
-    case "stepSetting": {
-      var k = btn.getAttribute("data-k");
-      var dv = parseInt(btn.getAttribute("data-v"),10);
-      var min = 1;
-      settings[k] = Math.max(min, settings[k] + dv);
-      persistSettings();
-      render();
-      break;
-    }
-  }
-}
-
-function toggleIn(arr, v){
-  var i = arr.indexOf(v);
-  if(i>=0) arr.splice(i,1); else arr.push(v);
-}
-
-/* タップの即時フィードバック（古い端末での反応遅延対策）と、
-   ポインタ一致方式によるアクション実行を同時に行う。
-   ------------------------------------------------------------
-   【iOS(WebKit)のホーム画面追加(PWA)時などに当たり判定がずれる問題について】
-   iOSのWebKitは、タッチ由来のpointer/touchイベントに対して
-   「暗黙のポインタキャプチャ」を行う。これは、指を置いた瞬間の
-   要素(touchstart/pointerdownのtarget)を覚えておき、指が実際に
-   別の位置に動いてもpointerup/touchendの e.target を「最初の要素の
-   ままにする」という仕様（実装依存の挙動を含む）で、通常は
-   スクロール中の誤タップを防ぐのに役立つ。
-   しかし、ホーム画面に追加してスタンドアロン表示（standalone）に
-   した場合や、セーフエリア(env(safe-area-inset-*))の再計算タイミング、
-   自動採点後の再描画などで「指を置いてから離すまでの間にレイアウトが
-   わずかにシフトする」ことがある。このとき e.target は指を置いた瞬間の
-   古い要素を指したままなので、画面上は別のボタンの位置に指があるのに
-   古いボタンのアクションが実行されてしまう＝「当たり判定がずれる」
-   という現象が起きる（頻度は低いが通常のSafariでも起こり得る）。
-   対策として、指を離した瞬間の実座標(clientX/clientY)から
-   document.elementFromPoint()で「今、実際にその位置にある要素」を
-   取得し直し、pointerdown時に覚えておいた要素と一致する場合のみ
-   アクションを実行する。レイアウトがずれて別の要素が来ていた場合は
-   誤タップとして無視し、意図しない別ボタンの発火を防ぐ。 */
+/* iOS WebKit全画面では clientX/clientY + elementFromPoint() を使った
+   再判定が表示座標とのずれを拾うことがあるため、座標変換を行わない。
+   pointerdown で取得したDOM要素を pointerup でそのまま実行する。 */
 document.addEventListener("pointerdown", function(e){
   pendingTapEl = e.target.closest("[data-action]") || null;
   var t = e.target.closest("button, .choice-btn");
@@ -1966,21 +1882,11 @@ document.addEventListener("pointerup", function(e){
   if(t) t.classList.remove("pressed");
   document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
 
-  /* iOS WebKitの全画面時は clientX/clientY と
-     document.elementFromPoint() の座標系が表示位置とずれる場合があるため、
-     pointerup時の座標による再判定は行わない。
-     実際のアクションは下のclickイベントでブラウザ標準のtargetを使用する。 */
+  if(pendingTapEl){
+    handleAction(pendingTapEl, e);
+  }
   pendingTapEl = null;
 }, {passive:true});
-
-/* iOS WebKit全画面時のタップ位置ずれ対策。
-   elementFromPoint(clientX, clientY) による独自座標判定を避け、
-   ブラウザ標準のclickターゲットからdata-actionを解決する。 */
-document.addEventListener("click", function(e){
-  var btn = e.target.closest("[data-action]");
-  if(!btn) return;
-  handleAction(btn, e);
-});
 
 ["pointercancel","pointerleave"].forEach(function(ev){
   document.addEventListener(ev, function(e){
