@@ -1966,20 +1966,21 @@ document.addEventListener("pointerup", function(e){
   if(t) t.classList.remove("pressed");
   document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
 
-  if(pendingTapEl){
-    var atPoint = (typeof e.clientX==="number")
-      ? document.elementFromPoint(e.clientX, e.clientY)
-      : e.target;
-    var actualBtn = atPoint ? atPoint.closest("[data-action]") : null;
-    /* pointerdown時の要素と、指を離した実座標に今あるDOMノードが
-       一致した場合のみ実行する。単なる target 一致より厳密で、
-       レイアウトシフトによる誤爆を確実に防げる。 */
-    if(actualBtn && actualBtn === pendingTapEl){
-      handleAction(pendingTapEl, e);
-    }
-  }
+  /* iOS WebKitの全画面時は clientX/clientY と
+     document.elementFromPoint() の座標系が表示位置とずれる場合があるため、
+     pointerup時の座標による再判定は行わない。
+     実際のアクションは下のclickイベントでブラウザ標準のtargetを使用する。 */
   pendingTapEl = null;
 }, {passive:true});
+
+/* iOS WebKit全画面時のタップ位置ずれ対策。
+   elementFromPoint(clientX, clientY) による独自座標判定を避け、
+   ブラウザ標準のclickターゲットからdata-actionを解決する。 */
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-action]");
+  if(!btn) return;
+  handleAction(btn, e);
+});
 
 ["pointercancel","pointerleave"].forEach(function(ev){
   document.addEventListener(ev, function(e){
