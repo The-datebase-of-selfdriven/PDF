@@ -19,18 +19,13 @@ html{
   -webkit-text-size-adjust:100%; text-size-adjust:100%;
 }
 body{
-  height:100%;
-  height: -webkit-fill-available;
-  /* dvh が使える環境では動的ビューポート高さを使う */
-  height: 100dvh;
-  /* JSが window.innerHeight / visualViewport を元に --app-height(px) を
-     設定する。対応環境ではこちらが最終的に優先され、iOSのアドレスバー
-     開閉・PWAフルスクリーン時のレイアウトずれを防ぐ。 */
-  height: var(--app-height, 100dvh);
+  margin:0;
+  min-height:100vh;
+  height:100vh;
   overflow:hidden;
   overscroll-behavior:none;
-  /* position:fixed だと iOS で bottom が動くことがある。min-height で補完 */
-  position:fixed; inset:0; width:100%;
+  position:relative;
+  width:100%;
   background:#fff;
   color:#141414;
   font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","YuGothic","Meiryo",Roboto,Arial,sans-serif;
@@ -74,17 +69,12 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
    レイアウト骨格
    ============================================================ */
 #app{
-  /* iOS Safari の -webkit-fill-available / dvh による高さ確定 */
-  height: 100%;
-  height: -webkit-fill-available;
-  height: 100dvh;
-  height: var(--app-height, 100dvh);
-  display:flex; flex-direction:column;
-  /* 余白ずれを防ぐため max-height も設定 */
-  max-height: 100%;
-  max-height: -webkit-fill-available;
-  max-height: 100dvh;
-  max-height: var(--app-height, 100dvh);
+  width:100%;
+  height:100vh;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
 }
 
 #topbar{
@@ -472,29 +462,9 @@ button.pressed, .choice-btn.pressed{ background:var(--g-100); }
 (function(){
 "use strict";
 
-/* ============================================================
-   iOS WebKit / Visual Viewport 対策
-   ------------------------------------------------------------
-   Safari / ホーム画面追加時は innerHeight が初期表示時と、その後の
-   visualViewport の高さで一致しないことがある。CSSだけで 100dvh を
-   重ねると、起動直後だけ下部に余白ができたり、画面上の表示位置と
-   タッチ座標の基準がずれる原因になる。
-   実際に表示されている visualViewport.height を --app-height に同期する。
-   ============================================================ */
-function syncAppHeight(){
-  var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-  if(typeof h === "number" && h > 0){
-    document.documentElement.style.setProperty("--app-height", h + "px");
-  }
-}
-syncAppHeight();
-window.addEventListener("resize", syncAppHeight, {passive:true});
-window.addEventListener("orientationchange", function(){ setTimeout(syncAppHeight, 50); }, {passive:true});
-if(window.visualViewport){
-  window.visualViewport.addEventListener("resize", syncAppHeight, {passive:true});
-  window.visualViewport.addEventListener("scroll", syncAppHeight, {passive:true});
-}
-
+/* iOS WebKit viewport: layout viewportを固定し、visualViewport高さで
+   #appを動的に変形させない。iPhone全画面時の表示座標とタップ座標の
+   基準が途中で変わることを避ける。 */
 /* ============================================================
    定数
    ============================================================ */
@@ -1855,24 +1825,13 @@ function retryMistakes(){
    イベント処理（委譲）
    ============================================================ */
 /* ============================================================
-   タップ処理（ポインタ一致方式）
+   タップ処理
    ------------------------------------------------------------
-   従来は "click" イベント委譲で処理していたが、スマートフォンでは
-   タップ中（指を置いてから離すまでの間）に auto-advance などで
-   画面が再描画されると、離した瞬間の座標にあった「別の新しいボタン」
-   に click が発火してしまい、位置がずれたような誤タップが発生する。
-   そこで、指を置いた瞬間の要素（DOMノードそのもの）を覚えておき、
-   離した瞬間に「同じノードの上」であった場合だけ処理を実行する。
-   再描画で要素が入れ替わっていれば別ノード扱いになり、誤タップは
-   自動的に無効化される。
+   タップ判定はブラウザ標準のclickターゲットに任せる。
+   iOS WebKitの全画面時に clientX/clientY や elementFromPoint() を
+   再計算しない。pointer系イベントは押下表示だけに使用する。
    ============================================================ */
-var pendingTapEl = null;
-
-/* iOS WebKit全画面では clientX/clientY + elementFromPoint() を使った
-   再判定が表示座標とのずれを拾うことがあるため、座標変換を行わない。
-   pointerdown で取得したDOM要素を pointerup でそのまま実行する。 */
 document.addEventListener("pointerdown", function(e){
-  pendingTapEl = e.target.closest("[data-action]") || null;
   var t = e.target.closest("button, .choice-btn");
   if(t) t.classList.add("pressed");
 }, {passive:true});
@@ -1881,20 +1840,21 @@ document.addEventListener("pointerup", function(e){
   var t = e.target.closest("button, .choice-btn");
   if(t) t.classList.remove("pressed");
   document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
-
-  if(pendingTapEl){
-    handleAction(pendingTapEl, e);
-  }
-  pendingTapEl = null;
 }, {passive:true});
 
 ["pointercancel","pointerleave"].forEach(function(ev){
-  document.addEventListener(ev, function(e){
-    var t = e.target.closest("button, .choice-btn");
-    if(t) t.classList.remove("pressed");
+  document.addEventListener(ev, function(){
     document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
-    pendingTapEl = null;
   }, {passive:true});
+});
+
+/* 実際のクリックターゲットをそのまま使用する。
+   select等のネイティブ操作はchangeイベント側に任せる。 */
+document.addEventListener("click", function(e){
+  var el = e.target.closest("[data-action]");
+  if(!el) return;
+  if(el.tagName === "SELECT" || el.tagName === "OPTION") return;
+  handleAction(el, e);
 });
 
 /* ホームの「教科／更新順」ドロップダウン（<select>のchangeイベント） */
