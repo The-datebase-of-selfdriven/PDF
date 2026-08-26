@@ -464,6 +464,97 @@ body{ position:relative; inset:auto; height:100%; min-height:100%; }
 .qz-question{ min-height:0; overflow:hidden; }
 .qz-question .qtxt{ overflow:hidden; }
 
+
+/* ============================================================
+   ファイル制エクスプローラー
+   教科 → 問X → 単元（単元はファイル）
+   ============================================================ */
+.filetree{
+  margin:0 16px 18px;
+  border:1px solid var(--g-300);
+  border-radius:10px;
+  overflow:hidden;
+  background:#fff;
+}
+.filetree-row{
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:0 12px;
+  border-bottom:1px solid var(--g-200);
+  box-sizing:border-box;
+}
+.filetree-row:last-child{border-bottom:none;}
+.filetree-folder{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--ink);
+  text-align:left;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+  padding:0;
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.filetree-arrow{
+  width:16px;
+  flex:0 0 16px;
+  text-align:center;
+  font-size:11px;
+}
+.filetree-icon{
+  width:20px;
+  flex:0 0 20px;
+  text-align:center;
+  font-size:18px;
+}
+.filetree-name{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.filetree-count{
+  margin-left:auto;
+  flex:0 0 auto;
+  color:var(--g-500);
+  font-size:11px;
+  font-weight:700;
+}
+.filetree-children{
+  display:none;
+}
+.filetree-children.open{display:block;}
+.filetree-level1{padding-left:28px;}
+.filetree-level2{padding-left:56px;}
+.filetree-file{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--ink);
+  text-align:left;
+  font:inherit;
+  cursor:pointer;
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:0 12px 0 0;
+}
+.filetree-file:hover,.filetree-folder:hover{background:var(--g-100);}
+.filetree-file .file-icon{
+  width:20px;
+  flex:0 0 20px;
+  text-align:center;
+  font-size:17px;
+}
+.filetree-empty{padding:20px 16px;color:var(--g-500);font-size:13px;}
+
 </style>
 </head>
 <body>
@@ -815,7 +906,6 @@ function persistSettings(){ saveJSONStore(STORAGE_KEY_SET, settings); }
 var nav = { screen:"home", params:{} };
 var session = null; // 出題セッション
 var selectState = { subjects:[], units:[], size:settings.defaultSetSize };
-var homeFilter = { subject:"", sort:"mastery" };  // ホームの「教科／更新順」ドロップダウン
 var historyState = (function(){ var d=new Date(); return { year:d.getFullYear(), month:d.getMonth() }; })(); // ログイン履歴カレンダーの表示年月
 
 /* ============================================================
@@ -881,8 +971,13 @@ function normalizeQuestion(raw, subject, unit, idx){
 
 function normalizeDeck(raw, fallbackSubject){
   if(!raw || typeof raw!=="object") return null;
-  var subject = String(raw.subject || raw.教科 || fallbackSubject || "未分類");
-  var unit = String(raw.unit || raw.単元 || "未分類単元");
+  var subjectRaw = raw.subject || raw.教科 || fallbackSubject;
+  var unitRaw = raw.unit || raw.単元;
+  /* データにない「未分類」を勝手に生成しない。必要情報がなければそのデータ自体を読み込まない。 */
+  if(subjectRaw == null || String(subjectRaw).trim()==="") return null;
+  if(unitRaw == null || String(unitRaw).trim()==="") return null;
+  var subject = String(subjectRaw);
+  var unit = String(unitRaw);
   var tags = raw.tags || raw.タグ || [];
   if(!Array.isArray(tags)) tags = [String(tags)];
   var srcQ = raw.questions || raw.問題 || [];
@@ -1388,69 +1483,104 @@ function renderStreakBar(){
 
 function renderDeckList(){
   var html = "";
-  var subjectsAvail = allSubjects();
-
   html += '<div class="section-row">'
-    + '<div class="section-label">単元選択</div>'
-    + '<div class="home-filters">'
-      + '<select class="home-select" data-action="setHomeSubject" aria-label="教科で絞り込み">'
-        + '<option value=""'+(homeFilter.subject===""?" selected":"")+'>教科</option>'
-        + subjectsAvail.map(function(s){
-            return '<option value="'+esc(s)+'"'+(homeFilter.subject===s?" selected":"")+'>'+esc(s)+'</option>';
-          }).join("")
-      + '</select>'
-      + '<select class="home-select" data-action="setHomeSort" aria-label="並び替え">'
-        + '<option value="mastery"'+(homeFilter.sort==="mastery"?" selected":"")+'>定着度（低い）順</option>'
-        + '<option value="progress"'+(homeFilter.sort==="progress"?" selected":"")+'>学習進捗順</option>'
-        + '<option value="new"'+(homeFilter.sort==="new"?" selected":"")+'>新着順</option>'
-      + '</select>'
-    + '</div>'
+    + '<div class="section-label">問題データ</div>'
     + '<button class="add-btn" data-action="pickFile" aria-label="JSONを追加">＋</button>'
     + '</div>';
 
   if(library.decks.length===0){
     html += '<div class="empty"><div class="eic">＋</div><p>まだ問題データがありません。<br>右上の「＋」からJSONファイルを追加してください。</p></div>';
-  } else {
-    var decks = library.decks.slice();
-    if(homeFilter.subject) decks = decks.filter(function(d){ return d.subject===homeFilter.subject; });
-    if(homeFilter.sort==="new"){
-      decks.sort(function(a,b){ return (b.addedAt||0) - (a.addedAt||0); });
-    } else if(homeFilter.sort==="progress"){
-      decks.sort(function(a,b){ return computeUnitStats(b).progress - computeUnitStats(a).progress; });
-    } else {
-      decks.sort(function(a,b){ return computeUnitStats(a).retention - computeUnitStats(b).retention; });
+    return html;
+  }
+
+  /*
+     エクスプローラー型の3階層：
+       教科（フォルダ）
+         └ 問X（フォルダ）
+             └ 単元（ファイル）
+
+     問Xは問題JSONの question.major から取得する。
+     major がJSONに存在しないデータは、架空の問を生成せず、
+     教科直下に単元ファイルを表示する。
+  */
+  var subjects = {};
+  library.decks.forEach(function(d, di){
+    var majors = {};
+    d.questions.forEach(function(q){
+      if(q && q.major) majors[String(q.major)] = true;
+    });
+    var majorNames = Object.keys(majors);
+    if(!subjects[d.subject]) subjects[d.subject] = {direct:[], majors:{}};
+
+    if(majorNames.length===0){
+      subjects[d.subject].direct.push({deck:d, index:di});
+      return;
     }
 
-    if(decks.length===0){
-      html += '<div class="empty"><p>該当する単元がありません。</p></div>';
-    } else {
-      html += '<div class="list">';
-      decks.forEach(function(d){
-        var st = computeUnitStats(d);
-        var lvls = getDeckLevelStatus(d);
-        var lvlBadges = lvls.map(function(l){
-          var isLocked = !l.unlocked;
-          var badgeText = isLocked ? "L" + l.level + " 🔒" : "L" + l.level + (st.learned > 0 ? " 学習中" : " 解放済み");
-          var badgeStyle = isLocked ? "color:var(--g-400); border-color:var(--g-300);" : "color:var(--ink); border-color:var(--ink); font-weight:800;";
-          return '<span style="display:inline-block; font-size:10.5px; padding:1px 5px; border:1.2px solid; margin-right:4px; ' + badgeStyle + '">' + esc(badgeText) + '</span>';
-        }).join("");
+    majorNames.forEach(function(m){
+      if(!subjects[d.subject].majors[m]) subjects[d.subject].majors[m]=[];
+      subjects[d.subject].majors[m].push({deck:d,index:di});
+    });
+  });
 
-        html += '<div class="card unit-row hoverable" data-action="startUnit" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'" style="cursor:pointer;">'
-          + '<div class="ur-top"><span class="ur-title">'+esc(d.unit)+'</span>'
-          + '<span class="ur-pct" style="font-size:12px; font-weight:800;">定着度 '+st.retention+'%</span></div>'
-          + '<div class="ur-meta" style="margin-left:0; margin-top:4px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">'
-          + '<span>学習進捗 '+st.progress+'% ('+st.learned+'/'+st.total+'問)'+(homeFilter.subject?"":" ・ "+esc(d.subject))+'</span>'
-          + '<div>'+lvlBadges+'</div>'
-          + '</div>'
-          + '<div style="display:flex; gap:8px; margin-top:8px;">'
-          + '<div style="flex:1;"><div style="font-size:9.5px; color:var(--g-500); font-weight:700;">進捗 '+st.progress+'%</div><div class="mbar-track" style="margin-top:2px; height:4px;"><div class="mbar-fill" style="width:'+st.progress+'%; background:var(--g-600);"></div></div></div>'
-          + '<div style="flex:1;"><div style="font-size:9.5px; color:var(--g-500); font-weight:700;">定着度 '+(st.learned>0 ? st.retention+'%' : '未学習')+'</div><div class="mbar-track" style="margin-top:2px; height:4px;"><div class="mbar-fill" style="width:'+st.retention+'%; background:var(--ink);"></div></div></div>'
-          + '</div>'
-          + '</div>';
+  var subjectNames = Object.keys(subjects).sort(function(a,b){return a.localeCompare(b,'ja');});
+  html += '<div class="filetree" id="fileTree">';
+
+  subjectNames.forEach(function(subject, si){
+    var sg = subjects[subject];
+    var skey = 'subject:'+subject;
+    var majorNames = Object.keys(sg.majors).sort(function(a,b){
+      var na=parseInt((a.match(/\\d+/)||['999'])[0],10), nb=parseInt((b.match(/\\d+/)||['999'])[0],10);
+      return na-nb || a.localeCompare(b,'ja');
+    });
+    var subjectCount = sg.direct.length + majorNames.reduce(function(n,m){return n+sg.majors[m].length;},0);
+
+    html += '<div class="filetree-row">'
+      + '<button class="filetree-folder" type="button" data-tree-toggle="'+esc(skey)+'" aria-expanded="false">'
+      + '<span class="filetree-arrow">▶</span><span class="filetree-icon">📁</span>'
+      + '<span class="filetree-name">'+esc(subject)+'</span>'
+      + '<span class="filetree-count">'+subjectCount+'件</span>'
+      + '</button></div>';
+    html += '<div class="filetree-children" data-tree-group="'+esc(skey)+'">';
+
+    /* major が存在するもの：教科 → 問X → 単元ファイル */
+    majorNames.forEach(function(major){
+      var mkey = skey+'|major:'+major;
+      var items = sg.majors[major];
+      html += '<div class="filetree-row filetree-level1">'
+        + '<button class="filetree-folder" type="button" data-tree-toggle="'+esc(mkey)+'" aria-expanded="false">'
+        + '<span class="filetree-arrow">▶</span><span class="filetree-icon">📁</span>'
+        + '<span class="filetree-name">'+esc(major)+'</span>'
+        + '<span class="filetree-count">'+items.length+'件</span>'
+        + '</button></div>';
+      html += '<div class="filetree-children" data-tree-group="'+esc(mkey)+'">';
+      items.forEach(function(item){
+        var d=item.deck;
+        html += '<div class="filetree-row filetree-level2">'
+          + '<button class="filetree-file" type="button" data-action="startUnit" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'">'
+          + '<span class="filetree-arrow"></span><span class="file-icon">📄</span>'
+          + '<span class="filetree-name">'+esc(d.unit)+'</span>'
+          + '<span class="filetree-count">'+d.questions.length+'問</span>'
+          + '</button></div>';
       });
       html += '</div>';
-    }
-  }
+    });
+
+    /* major を持たないデータは、架空の問を作らず教科直下にファイル表示 */
+    sg.direct.forEach(function(item){
+      var d=item.deck;
+      html += '<div class="filetree-row filetree-level1">'
+        + '<button class="filetree-file" type="button" data-action="startUnit" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'">'
+        + '<span class="filetree-arrow"></span><span class="file-icon">📄</span>'
+        + '<span class="filetree-name">'+esc(d.unit)+'</span>'
+        + '<span class="filetree-count">'+d.questions.length+'問</span>'
+        + '</button></div>';
+    });
+
+    html += '</div>';
+  });
+
+  html += '</div>';
   return html;
 }
 
@@ -1875,10 +2005,6 @@ function handleAction(btn, e){
     case "nav":
       goto(btn.getAttribute("data-screen"));
       break;
-    case "openSubject":
-      homeFilter.subject = btn.getAttribute("data-subject") || "";
-      goto("home");
-      break;
     case "startUnit": {
       var deck = library.decks.filter(function(dd){
         return dd.subject===btn.getAttribute("data-subject") && dd.unit===btn.getAttribute("data-unit");
@@ -1997,6 +2123,20 @@ document.addEventListener("pointerup", function(e){
   }, {passive:true});
 });
 
+/* エクスプローラーのフォルダ開閉 */
+document.addEventListener("click", function(e){
+  var folder = e.target.closest("[data-tree-toggle]");
+  if(!folder) return;
+  e.preventDefault();
+  var key = folder.getAttribute("data-tree-toggle");
+  var group = document.querySelector('[data-tree-group="'+CSS.escape(key)+'"]');
+  if(!group) return;
+  var open = group.classList.toggle("open");
+  folder.setAttribute("aria-expanded", open ? "true" : "false");
+  var arrow = folder.querySelector(".filetree-arrow");
+  if(arrow) arrow.textContent = open ? "▼" : "▶";
+}, {passive:false});
+
 /* アクション確定は標準clickに任せる。
    elementFromPoint(clientX, clientY) はiOS全画面時のviewport差分を
    当たり判定のずれとして拾う可能性があるため使用しない。
@@ -2005,15 +2145,6 @@ document.addEventListener("click", function(e){
   var el = e.target.closest("[data-action]");
   if(!el || el.tagName === "SELECT") return;
   handleAction(el, e);
-});
-
-/* ホームの「教科／更新順」ドロップダウン（<select>のchangeイベント） */
-document.addEventListener("change", function(e){
-  var el = e.target.closest("select[data-action]");
-  if(!el) return;
-  var action = el.getAttribute("data-action");
-  if(action==="setHomeSubject"){ homeFilter.subject = el.value; render(); }
-  else if(action==="setHomeSort"){ homeFilter.sort = el.value; render(); }
 });
 
 /* PCでのキーボード操作（数字キーで選択／Enterで次へ） */
