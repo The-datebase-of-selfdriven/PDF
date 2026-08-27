@@ -3393,4 +3393,153 @@ $("#fileInput").addEventListener("change", function(e){
 goto("home");
 
 })();
-</script></body></html>
+</script>
+<style id="mobile-console-style">
+#mobileConsoleToggle{
+  position:fixed!important;
+  top:8px!important;
+  right:8px!important;
+  z-index:2147483647!important;
+  display:none;
+  padding:8px 10px!important;
+  margin:0!important;
+  min-width:0!important;
+  width:auto!important;
+  height:auto!important;
+  background:#fff!important;
+  color:#111!important;
+  border:2px solid #111!important;
+  border-radius:8px!important;
+  font:700 13px/1.2 sans-serif!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.25)!important;
+}
+@media (max-width:700px){
+  #mobileConsoleToggle{display:block!important}
+}
+#mobileConsolePanel{
+  position:fixed!important;
+  left:6px!important;
+  right:6px!important;
+  top:52px!important;
+  max-height:60vh!important;
+  overflow:auto!important;
+  z-index:2147483646!important;
+  display:none;
+  box-sizing:border-box!important;
+  padding:10px!important;
+  margin:0!important;
+  background:#fff!important;
+  color:#111!important;
+  border:2px solid #111!important;
+  border-radius:8px!important;
+  box-shadow:0 4px 18px rgba(0,0,0,.3)!important;
+  font:12px/1.45 monospace!important;
+  white-space:pre-wrap!important;
+  text-align:left!important;
+}
+#mobileConsolePanel.open{display:block!important}
+#mobileConsolePanel button{
+  position:sticky!important;
+  top:0!important;
+  width:auto!important;
+  padding:5px 8px!important;
+  margin:0 4px 8px 0!important;
+}
+</style>
+
+<button id="mobileConsoleToggle" type="button">📱 Console</button>
+<div id="mobileConsolePanel">
+  <button type="button" id="mobileConsoleClear">Clear</button>
+  <button type="button" id="mobileConsoleRefresh">状態確認</button>
+  <div id="mobileConsoleLog"></div>
+</div>
+
+<script id="mobile-console-script">
+(function(){
+  "use strict";
+  var logs=[];
+  function safe(v){
+    try{
+      if(v===undefined) return "undefined";
+      if(v===null) return "null";
+      if(typeof v==="object") return JSON.stringify(v);
+      return String(v);
+    }catch(e){ return String(v); }
+  }
+  function write(msg){
+    var line="["+new Date().toLocaleTimeString()+"] "+msg;
+    logs.push(line);
+    if(logs.length>300) logs.shift();
+    var el=document.getElementById("mobileConsoleLog");
+    if(el) el.textContent=logs.join("\n");
+  }
+  function state(){
+    var a=document.getElementById("app");
+    var s=document.getElementById("screens");
+    var t=document.getElementById("tabbar");
+    write("=== STATE ===");
+    write("viewport: "+innerWidth+" x "+innerHeight);
+    write("screen: "+(typeof nav!=="undefined" ? safe(nav.screen) : "nav UNDEFINED"));
+    write("handleAction: "+(typeof handleAction));
+    write("render: "+(typeof render));
+    write("goto: "+(typeof goto));
+    if(a){
+      var r=a.getBoundingClientRect();
+      write("#app: top="+r.top+" bottom="+r.bottom+" height="+r.height);
+    }else write("#app: NOT FOUND");
+    if(s){
+      var r2=s.getBoundingClientRect();
+      write("#screens: top="+r2.top+" bottom="+r2.bottom+" height="+r2.height+" scrollTop="+s.scrollTop);
+    }else write("#screens: NOT FOUND");
+    if(t){
+      var r3=t.getBoundingClientRect();
+      write("#tabbar: top="+r3.top+" bottom="+r3.bottom+" height="+r3.height+
+        " pointerEvents="+getComputedStyle(t).pointerEvents);
+    }else write("#tabbar: NOT FOUND");
+    write("body scrollHeight="+document.body.scrollHeight+" scrollY="+scrollY);
+    write("active="+(document.activeElement ? document.activeElement.tagName : "none"));
+  }
+  window.addEventListener("error",function(e){
+    write("ERROR: "+safe(e.message)+" @ "+safe(e.filename)+":"+safe(e.lineno)+":"+safe(e.colno));
+  });
+  window.addEventListener("unhandledrejection",function(e){
+    write("UNHANDLED: "+safe(e.reason && e.reason.message ? e.reason.message : e.reason));
+  });
+  document.addEventListener("touchstart",function(e){
+    var t=e.target, a=t && t.closest ? t.closest("[data-action]") : null;
+    write("touchstart target="+(t&&t.tagName||"null")+
+      " action="+(a?a.getAttribute("data-action"):"none"));
+  },{passive:true});
+  document.addEventListener("touchend",function(e){
+    var t=e.target, a=t && t.closest ? t.closest("[data-action]") : null;
+    write("touchend target="+(t&&t.tagName||"null")+
+      " action="+(a?a.getAttribute("data-action"):"none"));
+  },{passive:true});
+  document.addEventListener("click",function(e){
+    var t=e.target, a=t && t.closest ? t.closest("[data-action]") : null;
+    write("click target="+(t&&t.tagName||"null")+
+      " action="+(a?a.getAttribute("data-action"):"none"));
+  },{passive:true});
+
+  document.addEventListener("DOMContentLoaded",function(){
+    var b=document.getElementById("mobileConsoleToggle");
+    var p=document.getElementById("mobileConsolePanel");
+    var c=document.getElementById("mobileConsoleClear");
+    var r=document.getElementById("mobileConsoleRefresh");
+    if(!b||!p) return;
+    b.addEventListener("click",function(){
+      p.classList.toggle("open");
+      if(p.classList.contains("open")) state();
+    });
+    c.addEventListener("click",function(){
+      logs=[];
+      write("console cleared");
+    });
+    r.addEventListener("click",state);
+    write("Mobile console ready");
+    state();
+  });
+})();
+</script>
+
+</body></html>
