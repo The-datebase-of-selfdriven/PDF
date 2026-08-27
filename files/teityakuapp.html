@@ -822,10 +822,8 @@ var SAMPLE_DECKS = [
 ];
 
 /* ============================================================
-   データ正規化・コンテンツ署名・差分更新ロジック (修正版)
+   データ正規化・取り込み
    ============================================================ */
-
-// 1. 位置(idx)ベースの安定したID生成（テキストのわずかな修正でIDが変わるのを防止）
 function normalizeQuestion(raw, subject, unit, idx){
   if(!raw || typeof raw!=="object") return null;
   var qtext = raw.question || raw.q || raw.text;
@@ -840,8 +838,7 @@ function normalizeQuestion(raw, subject, unit, idx){
       ansIdx = 0;
     }
   }
-  // raw.id があれば優先、なければ subject_unit_idx で固定IDを生成
-  var id = raw.id ? String(raw.id) : (subject + "__" + unit + "__" + idx);
+  var id = raw.id ? String(raw.id) : (subject+"__"+unit+"__"+idx+"__"+hashStr(qtext));
   return {
     id: id,
     question: String(qtext),
@@ -858,107 +855,71 @@ function normalizeQuestion(raw, subject, unit, idx){
   };
 }
 
-// 2. 問題および単元のコンテントシグネチャ生成（真の差分のみ検出）
-function getQuestionSignature(q){
-  return q.id + "::" + q.question + "::" + q.choices.join("|") + "::" + q.answerIndex + "::" + q.explanation;
+function normalizeDeck(raw, fallbackSubject){
+  if(!raw || typeof raw!=="object") return null;
+  var subject = String(raw.subject || raw.教科 || fallbackSubject || "未分類");
+  var unit = String(raw.unit || raw.単元 || "未分類単元");
+  var tags = raw.tags || raw.タグ || [];
+  if(!Array.isArray(tags)) tags = [String(tags)];
+  var srcQ = raw.questions || raw.問題 || [];
+  if(!Array.isArray(srcQ)) return null;
+  var qs = [];
+  for(var i=0;i<srcQ.length;i++){
+    try {
+      var nq = normalizeQuestion(srcQ[i], subject, unit, i);
+      if(nq) qs.push(nq);
+    } catch(err){}
+  }
+  if(qs.length===0) return null;
+  return { subject:subject, unit:unit, tags:tags.map(String), questions:qs };
 }
 
-function getDeckSignature(deck){
-  var sigs = deck.questions.map(getQuestionSignature);
-  sigs.sort();
-  return deck.subject + "::" + deck.unit + "::" + sigs.join("||");
-}
-
-// 3. IDの重複率および名称に基づく柔軟なデッキマッチング
-function findMatchingDeck(newDeck, claimedSet){
-  claimedSet = claimedSet || new Set();
-  var candidates = library.decks.filter(function(d){ return !claimedSet.has(d); });
-
-  // A. 完全なID重複に基づくマッチング
-  var newIds = new Set(newDeck.questions.map(function(q){ return q.id; }));
-  var bestMatch = null;
-  var maxOverlap = 0;
-
-  for(var i = 0; i < candidates.length; i++){
-    var cand = candidates[i];
-    var overlap = 0;
-    cand.questions.forEach(function(q){
-      if(newIds.has(q.id)) overlap++;
+function extractDecks(parsed){
+  var decks = [];
+  if(Array.isArray(parsed)){
+    parsed.forEach(function(item){
+      try {
+        var d = normalizeDeck(item);
+        if(d) decks.push(d);
+      } catch(err){}
     });
-    // 30%以上のID重複があれば同一単元の変化とみなす
-    var ratio = overlap / Math.max(1, cand.questions.length);
-    if(overlap > 0 && ratio >= 0.3 && overlap > maxOverlap){
-      maxOverlap = overlap;
-      bestMatch = cand;
+  } else if(parsed && typeof parsed==="object"){
+    var parentSubject = parsed.subject || parsed.教科 || null;
+    if(Array.isArray(parsed.decks)){
+      parsed.decks.forEach(function(item){
+        try {
+          var d = normalizeDeck(item, parentSubject);
+          if(d) decks.push(d);
+        } catch(err){}
+      });
+    } else if(parsed.questions){
+      try {
+        var d = normalizeDeck(parsed);
+        if(d) decks.push(d);
+      } catch(err){}
     }
   }
-  if(bestMatch) return bestMatch;
-
-  // B. 名称(subject + unit)に基づくフォールバックマッチング
-  for(var j = 0; j < candidates.length; j++){
-    if(candidates[j].subject === newDeck.subject && candidates[j].unit === newDeck.unit){
-      return candidates[j];
-    }
-  }
-
-  return null;
+  return decks;
 }
 
-// 4. ピンポイント差分更新および影響を受ける問題のみの進捗リセット
-function mergeDeck(newDeck, claimedSet){
-  var match = findMatchingDeck(newDeck, claimedSet);
-
-  if(!match){
-    // 新規単元の追加
+function mergeDeck(newDeck){
+  var existing = library.decks.filter(function(d){ return d.subject===newDeck.subject && d.unit===newDeck.unit; })[0];
+  if(existing){
+    var byId = {};
+    existing.questions.forEach(function(q){ byId[q.id]=q; });
+    newDeck.questions.forEach(function(q){ byId[q.id]=q; });
+    existing.questions = Object.keys(byId).map(function(k){ return byId[k]; });
+    existing.tags = uniq(existing.tags.concat(newDeck.tags));
+    existing.addedAt = Date.now(); // 「更新順」ソート用：追加・更新された時刻を記録
+  } else {
     newDeck.addedAt = Date.now();
-    newDeck.contentSig = getDeckSignature(newDeck);
     library.decks.push(newDeck);
-    if(claimedSet) claimedSet.add(newDeck);
-    return { action: "added", deck: newDeck };
   }
-
-  if(claimedSet) claimedSet.add(match);
-
-  var newSig = getDeckSignature(newDeck);
-  if(match.contentSig && match.contentSig === newSig){
-    // 内容に変更がない場合は進捗を1ミリも維持・保持
-    return { action: "unchanged", deck: match };
-  }
-
-  // 削除・変更された問題のIDを特定し、その問題の進捗のみをピンポイントでクリア
-  var oldIds = new Set(match.questions.map(function(q){ return q.id; }));
-  var newIds = new Set(newDeck.questions.map(function(q){ return q.id; }));
-
-  oldIds.forEach(function(id){
-    if(!newIds.has(id)){
-      delete progress[id];
-    }
-  });
-
-  // 単元データの置き換えとシグネチャの更新
-  match.subject = newDeck.subject;
-  match.unit = newDeck.unit;
-  match.tags = uniq((match.tags || []).concat(newDeck.tags || []));
-  match.questions = newDeck.questions;
-  match.addedAt = Date.now();
-  match.contentSig = newSig;
-
-  return { action: "updated", deck: match };
 }
 
-// 5. バッチ単位での一括インポート処理
 function importDecks(decks){
-  var claimedSet = new Set();
-  var summary = { added: 0, updated: 0, unchanged: 0 };
-
-  decks.forEach(function(d){
-    var res = mergeDeck(d, claimedSet);
-    summary[res.action]++;
-  });
-
+  decks.forEach(mergeDeck);
   persistLib();
-  persistProg();
-  return summary;
 }
 
 function loadSample(){
@@ -2331,10 +2292,8 @@ var SAMPLE_DECKS = [
 ];
 
 /* ============================================================
-   データ正規化・コンテンツ署名・差分更新ロジック (修正版)
+   データ正規化・取り込み
    ============================================================ */
-
-// 1. 位置(idx)ベースの安定したID生成（テキストのわずかな修正でIDが変わるのを防止）
 function normalizeQuestion(raw, subject, unit, idx){
   if(!raw || typeof raw!=="object") return null;
   var qtext = raw.question || raw.q || raw.text;
@@ -2349,8 +2308,7 @@ function normalizeQuestion(raw, subject, unit, idx){
       ansIdx = 0;
     }
   }
-  // raw.id があれば優先、なければ subject_unit_idx で固定IDを生成
-  var id = raw.id ? String(raw.id) : (subject + "__" + unit + "__" + idx);
+  var id = raw.id ? String(raw.id) : (subject+"__"+unit+"__"+idx+"__"+hashStr(qtext));
   return {
     id: id,
     question: String(qtext),
@@ -2367,107 +2325,71 @@ function normalizeQuestion(raw, subject, unit, idx){
   };
 }
 
-// 2. 問題および単元のコンテントシグネチャ生成（真の差分のみ検出）
-function getQuestionSignature(q){
-  return q.id + "::" + q.question + "::" + q.choices.join("|") + "::" + q.answerIndex + "::" + q.explanation;
+function normalizeDeck(raw, fallbackSubject){
+  if(!raw || typeof raw!=="object") return null;
+  var subject = String(raw.subject || raw.教科 || fallbackSubject || "未分類");
+  var unit = String(raw.unit || raw.単元 || "未分類単元");
+  var tags = raw.tags || raw.タグ || [];
+  if(!Array.isArray(tags)) tags = [String(tags)];
+  var srcQ = raw.questions || raw.問題 || [];
+  if(!Array.isArray(srcQ)) return null;
+  var qs = [];
+  for(var i=0;i<srcQ.length;i++){
+    try {
+      var nq = normalizeQuestion(srcQ[i], subject, unit, i);
+      if(nq) qs.push(nq);
+    } catch(err){}
+  }
+  if(qs.length===0) return null;
+  return { subject:subject, unit:unit, tags:tags.map(String), questions:qs };
 }
 
-function getDeckSignature(deck){
-  var sigs = deck.questions.map(getQuestionSignature);
-  sigs.sort();
-  return deck.subject + "::" + deck.unit + "::" + sigs.join("||");
-}
-
-// 3. IDの重複率および名称に基づく柔軟なデッキマッチング
-function findMatchingDeck(newDeck, claimedSet){
-  claimedSet = claimedSet || new Set();
-  var candidates = library.decks.filter(function(d){ return !claimedSet.has(d); });
-
-  // A. 完全なID重複に基づくマッチング
-  var newIds = new Set(newDeck.questions.map(function(q){ return q.id; }));
-  var bestMatch = null;
-  var maxOverlap = 0;
-
-  for(var i = 0; i < candidates.length; i++){
-    var cand = candidates[i];
-    var overlap = 0;
-    cand.questions.forEach(function(q){
-      if(newIds.has(q.id)) overlap++;
+function extractDecks(parsed){
+  var decks = [];
+  if(Array.isArray(parsed)){
+    parsed.forEach(function(item){
+      try {
+        var d = normalizeDeck(item);
+        if(d) decks.push(d);
+      } catch(err){}
     });
-    // 30%以上のID重複があれば同一単元の変化とみなす
-    var ratio = overlap / Math.max(1, cand.questions.length);
-    if(overlap > 0 && ratio >= 0.3 && overlap > maxOverlap){
-      maxOverlap = overlap;
-      bestMatch = cand;
+  } else if(parsed && typeof parsed==="object"){
+    var parentSubject = parsed.subject || parsed.教科 || null;
+    if(Array.isArray(parsed.decks)){
+      parsed.decks.forEach(function(item){
+        try {
+          var d = normalizeDeck(item, parentSubject);
+          if(d) decks.push(d);
+        } catch(err){}
+      });
+    } else if(parsed.questions){
+      try {
+        var d = normalizeDeck(parsed);
+        if(d) decks.push(d);
+      } catch(err){}
     }
   }
-  if(bestMatch) return bestMatch;
-
-  // B. 名称(subject + unit)に基づくフォールバックマッチング
-  for(var j = 0; j < candidates.length; j++){
-    if(candidates[j].subject === newDeck.subject && candidates[j].unit === newDeck.unit){
-      return candidates[j];
-    }
-  }
-
-  return null;
+  return decks;
 }
 
-// 4. ピンポイント差分更新および影響を受ける問題のみの進捗リセット
-function mergeDeck(newDeck, claimedSet){
-  var match = findMatchingDeck(newDeck, claimedSet);
-
-  if(!match){
-    // 新規単元の追加
+function mergeDeck(newDeck){
+  var existing = library.decks.filter(function(d){ return d.subject===newDeck.subject && d.unit===newDeck.unit; })[0];
+  if(existing){
+    var byId = {};
+    existing.questions.forEach(function(q){ byId[q.id]=q; });
+    newDeck.questions.forEach(function(q){ byId[q.id]=q; });
+    existing.questions = Object.keys(byId).map(function(k){ return byId[k]; });
+    existing.tags = uniq(existing.tags.concat(newDeck.tags));
+    existing.addedAt = Date.now(); // 「更新順」ソート用：追加・更新された時刻を記録
+  } else {
     newDeck.addedAt = Date.now();
-    newDeck.contentSig = getDeckSignature(newDeck);
     library.decks.push(newDeck);
-    if(claimedSet) claimedSet.add(newDeck);
-    return { action: "added", deck: newDeck };
   }
-
-  if(claimedSet) claimedSet.add(match);
-
-  var newSig = getDeckSignature(newDeck);
-  if(match.contentSig && match.contentSig === newSig){
-    // 内容に変更がない場合は進捗を1ミリも維持・保持
-    return { action: "unchanged", deck: match };
-  }
-
-  // 削除・変更された問題のIDを特定し、その問題の進捗のみをピンポイントでクリア
-  var oldIds = new Set(match.questions.map(function(q){ return q.id; }));
-  var newIds = new Set(newDeck.questions.map(function(q){ return q.id; }));
-
-  oldIds.forEach(function(id){
-    if(!newIds.has(id)){
-      delete progress[id];
-    }
-  });
-
-  // 単元データの置き換えとシグネチャの更新
-  match.subject = newDeck.subject;
-  match.unit = newDeck.unit;
-  match.tags = uniq((match.tags || []).concat(newDeck.tags || []));
-  match.questions = newDeck.questions;
-  match.addedAt = Date.now();
-  match.contentSig = newSig;
-
-  return { action: "updated", deck: match };
 }
 
-// 5. バッチ単位での一括インポート処理
 function importDecks(decks){
-  var claimedSet = new Set();
-  var summary = { added: 0, updated: 0, unchanged: 0 };
-
-  decks.forEach(function(d){
-    var res = mergeDeck(d, claimedSet);
-    summary[res.action]++;
-  });
-
+  decks.forEach(mergeDeck);
   persistLib();
-  persistProg();
-  return summary;
 }
 
 function loadSample(){
