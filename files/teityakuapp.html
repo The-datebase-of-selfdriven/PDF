@@ -825,12 +825,14 @@ var SAMPLE_DECKS = [
    データ正規化・コンテンツ署名・差分更新ロジック (修正版)
    ============================================================ */
 
-// 1. 位置(idx)ベースの安定したID生成（テキストのわずかな修正でIDが変わるのを防止）
+// 1. 問題の正規化
+// raw.id がある場合はそれを最優先。ない場合だけ位置ベースのIDを使用する。
 function normalizeQuestion(raw, subject, unit, idx){
   if(!raw || typeof raw!=="object") return null;
   var qtext = raw.question || raw.q || raw.text;
   var choices = raw.choices || raw.options;
   if(!qtext || !Array.isArray(choices) || choices.length<2) return null;
+
   var ansIdx = raw.answerIndex;
   if(typeof ansIdx !== "number" || ansIdx<0 || ansIdx>=choices.length){
     if(typeof raw.answer === "string"){
@@ -840,7 +842,7 @@ function normalizeQuestion(raw, subject, unit, idx){
       ansIdx = 0;
     }
   }
-  // raw.id があれば優先、なければ subject_unit_idx で固定IDを生成
+
   var id = raw.id ? String(raw.id) : (subject + "__" + unit + "__" + idx);
   return {
     id: id,
@@ -858,9 +860,71 @@ function normalizeQuestion(raw, subject, unit, idx){
   };
 }
 
-// 2. 問題および単元のコンテントシグネチャ生成（真の差分のみ検出）
+function normalizeDeck(raw, fallbackSubject){
+  if(!raw || typeof raw!=="object") return null;
+  var subject = String(raw.subject || raw.教科 || fallbackSubject || "未分類");
+  var unit = String(raw.unit || raw.単元 || "未分類単元");
+  var tags = raw.tags || raw.タグ || [];
+  if(!Array.isArray(tags)) tags = [String(tags)];
+  var srcQ = raw.questions || raw.問題 || [];
+  if(!Array.isArray(srcQ)) return null;
+
+  var qs = [];
+  for(var i=0;i<srcQ.length;i++){
+    try {
+      var nq = normalizeQuestion(srcQ[i], subject, unit, i);
+      if(nq) qs.push(nq);
+    } catch(err){}
+  }
+  if(qs.length===0) return null;
+  return { subject:subject, unit:unit, tags:tags.map(String), questions:qs };
+}
+
+function extractDecks(parsed){
+  var decks = [];
+  if(Array.isArray(parsed)){
+    parsed.forEach(function(item){
+      try {
+        var d = normalizeDeck(item);
+        if(d) decks.push(d);
+      } catch(err){}
+    });
+  } else if(parsed && typeof parsed==="object"){
+    var parentSubject = parsed.subject || parsed.教科 || null;
+    if(Array.isArray(parsed.decks)){
+      parsed.decks.forEach(function(item){
+        try {
+          var d = normalizeDeck(item, parentSubject);
+          if(d) decks.push(d);
+        } catch(err){}
+      });
+    } else if(parsed.questions){
+      try {
+        var d = normalizeDeck(parsed, parentSubject);
+        if(d) decks.push(d);
+      } catch(err){}
+    }
+  }
+  return decks;
+}
+
+// 2. 問題の「実質的な内容」を署名化する。
+// 問題文だけでなく、画像・選択肢・正解・解説・各種メタデータまで比較する。
 function getQuestionSignature(q){
-  return q.id + "::" + q.question + "::" + q.choices.join("|") + "::" + q.answerIndex + "::" + q.explanation;
+  return JSON.stringify({
+    id:q.id,
+    question:q.question,
+    image:q.image || null,
+    choices:q.choices,
+    answerIndex:q.answerIndex,
+    explanation:q.explanation || "",
+    level:q.level,
+    major:q.major,
+    theme:q.theme,
+    subtheme:q.subtheme,
+    knowledgeId:q.knowledgeId,
+    questionType:q.questionType
+  });
 }
 
 function getDeckSignature(deck){
@@ -869,73 +933,83 @@ function getDeckSignature(deck){
   return deck.subject + "::" + deck.unit + "::" + sigs.join("||");
 }
 
-// 3. IDの重複率および名称に基づく柔軟なデッキマッチング
+// 3. 同一単元の特定。
+// まず subject + unit を優先し、旧データの名称揺れ等がある場合だけID重複率を使う。
 function findMatchingDeck(newDeck, claimedSet){
   claimedSet = claimedSet || new Set();
   var candidates = library.decks.filter(function(d){ return !claimedSet.has(d); });
 
-  // A. 完全なID重複に基づくマッチング
+  // A. subject + unit が一致する単元を最優先
+  for(var i=0;i<candidates.length;i++){
+    if(candidates[i].subject===newDeck.subject && candidates[i].unit===newDeck.unit){
+      return candidates[i];
+    }
+  }
+
+  // B. 旧データとの互換用：問題IDの重複率で候補を探す
   var newIds = new Set(newDeck.questions.map(function(q){ return q.id; }));
   var bestMatch = null;
   var maxOverlap = 0;
 
-  for(var i = 0; i < candidates.length; i++){
-    var cand = candidates[i];
+  for(var j=0;j<candidates.length;j++){
+    var cand = candidates[j];
     var overlap = 0;
     cand.questions.forEach(function(q){
       if(newIds.has(q.id)) overlap++;
     });
-    // 30%以上のID重複があれば同一単元の変化とみなす
     var ratio = overlap / Math.max(1, cand.questions.length);
     if(overlap > 0 && ratio >= 0.3 && overlap > maxOverlap){
       maxOverlap = overlap;
       bestMatch = cand;
     }
   }
-  if(bestMatch) return bestMatch;
-
-  // B. 名称(subject + unit)に基づくフォールバックマッチング
-  for(var j = 0; j < candidates.length; j++){
-    if(candidates[j].subject === newDeck.subject && candidates[j].unit === newDeck.unit){
-      return candidates[j];
-    }
-  }
-
-  return null;
+  return bestMatch;
 }
 
-// 4. ピンポイント差分更新および影響を受ける問題のみの進捗リセット
+// 4. 差分更新。
+// 同じIDで内容が変わった問題、削除された問題だけ進捗をリセットする。
+// 変更されていない問題の progress[id] は一切触らない。
 function mergeDeck(newDeck, claimedSet){
   var match = findMatchingDeck(newDeck, claimedSet);
 
   if(!match){
-    // 新規単元の追加
     newDeck.addedAt = Date.now();
     newDeck.contentSig = getDeckSignature(newDeck);
     library.decks.push(newDeck);
     if(claimedSet) claimedSet.add(newDeck);
-    return { action: "added", deck: newDeck };
+    return { action:"added", deck:newDeck };
   }
 
   if(claimedSet) claimedSet.add(match);
 
   var newSig = getDeckSignature(newDeck);
+
+  // contentSig が残っている場合は、単元全体が完全一致しているか高速判定。
   if(match.contentSig && match.contentSig === newSig){
-    // 内容に変更がない場合は進捗を1ミリも維持・保持
-    return { action: "unchanged", deck: match };
+    return { action:"unchanged", deck:match };
   }
 
-  // 削除・変更された問題のIDを特定し、その問題の進捗のみをピンポイントでクリア
-  var oldIds = new Set(match.questions.map(function(q){ return q.id; }));
-  var newIds = new Set(newDeck.questions.map(function(q){ return q.id; }));
+  var oldById = {};
+  match.questions.forEach(function(q){ oldById[q.id] = q; });
 
-  oldIds.forEach(function(id){
-    if(!newIds.has(id)){
-      delete progress[id];
+  var newById = {};
+  newDeck.questions.forEach(function(q){ newById[q.id] = q; });
+
+  // 削除された問題：その問題だけ進捗を削除。
+  Object.keys(oldById).forEach(function(id){
+    if(!newById[id]) delete progress[id];
+  });
+
+  // 同じIDだが内容が変わった問題：その問題だけ進捗を削除。
+  newDeck.questions.forEach(function(newQ){
+    var oldQ = oldById[newQ.id];
+    if(oldQ && getQuestionSignature(oldQ) !== getQuestionSignature(newQ)){
+      delete progress[newQ.id];
     }
   });
 
-  // 単元データの置き換えとシグネチャの更新
+  // 問題一覧は新JSONをそのまま採用する。
+  // したがって「新JSONにある＝追加」「旧JSONにあって新JSONにない＝削除」になる。
   match.subject = newDeck.subject;
   match.unit = newDeck.unit;
   match.tags = uniq((match.tags || []).concat(newDeck.tags || []));
@@ -943,13 +1017,13 @@ function mergeDeck(newDeck, claimedSet){
   match.addedAt = Date.now();
   match.contentSig = newSig;
 
-  return { action: "updated", deck: match };
+  return { action:"updated", deck:match };
 }
 
-// 5. バッチ単位での一括インポート処理
+// 5. バッチ単位で一括更新
 function importDecks(decks){
   var claimedSet = new Set();
-  var summary = { added: 0, updated: 0, unchanged: 0 };
+  var summary = { added:0, updated:0, unchanged:0 };
 
   decks.forEach(function(d){
     var res = mergeDeck(d, claimedSet);
@@ -960,6 +1034,7 @@ function importDecks(decks){
   persistProg();
   return summary;
 }
+
 
 function loadSample(){
   var decks = SAMPLE_DECKS.map(normalizeDeck).filter(Boolean);
@@ -1885,6 +1960,99 @@ document.addEventListener("pointerup", function(e){
     document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
   }, {passive:true});
 });
+
+/* ============================================================
+   data-action 共通ディスパッチャ
+   ============================================================ */
+function handleAction(el, e){
+  var action = el.getAttribute("data-action");
+  if(!action) return;
+  if(e && (action==="answer" || action==="nav")) e.preventDefault();
+
+  switch(action){
+    case "nav":
+      goto(el.getAttribute("data-screen") || "home");
+      break;
+
+    case "pickFile":
+      $("#fileInput").click();
+      break;
+
+    case "startUnit": {
+      var subject = el.getAttribute("data-subject");
+      var unit = el.getAttribute("data-unit");
+      var deck = library.decks.filter(function(d){ return d.subject===subject && d.unit===unit; })[0];
+      if(deck) startSession(buildWeightedQueue(deck, settings.defaultSetSize));
+      break;
+    }
+
+    case "startAutoTask":
+      startSession(buildAutoTask(settings.defaultSetSize));
+      break;
+
+    case "answer":
+      answerCurrent(parseInt(el.getAttribute("data-idx"),10));
+      break;
+
+    case "nextQuestion":
+      nextQuestion();
+      break;
+
+    case "backHome":
+      clearAutoAdvance();
+      session = null;
+      goto("home");
+      break;
+
+    case "exitQuiz":
+      clearAutoAdvance();
+      session = null;
+      goto("home");
+      break;
+
+    case "closeModal":
+      closeModal();
+      break;
+
+    case "openLibrary":
+      openModal(libraryModalHtml());
+      break;
+
+    case "loadSample":
+      loadSample();
+      break;
+
+    case "deleteDeck":
+      deleteDeck(el.getAttribute("data-subject"), el.getAttribute("data-unit"));
+      break;
+
+    case "historyMonth":
+      shiftHistoryMonth(parseInt(el.getAttribute("data-v"),10) || 0);
+      break;
+
+    case "stepSetting": {
+      var k = el.getAttribute("data-k");
+      var delta = parseInt(el.getAttribute("data-v"),10) || 0;
+      if(k && typeof settings[k] === "number") {
+        settings[k] = Math.max(1, settings[k] + delta);
+        if(k === "defaultSetSize") settings[k] = Math.min(100, settings[k]);
+        persistSettings();
+        render();
+      }
+      break;
+    }
+
+    case "exportBackup":
+      exportBackup();
+      break;
+
+    case "confirmReset":
+      if(window.confirm("問題データ・進捗・実績をすべて初期化します。よろしいですか？")){
+        resetAllData();
+      }
+      break;
+  }
+}
 
 /* 実際のクリックターゲットをそのまま使用する。
    select等のネイティブ操作はchangeイベント側に任せる。 */
@@ -1966,1509 +2134,4 @@ goto("home");
 
 
 
-<script>
-(function(){
-"use strict";
-
-/* iOS WebKit viewport: layout viewportを固定し、visualViewport高さで
-   #appを動的に変形させない。iPhone全画面時の表示座標とタップ座標の
-   基準が途中で変わることを避ける。 */
-/* ============================================================
-   定数
-   ============================================================ */
-var STORAGE_KEY_LIB   = "drill_library_v1";
-var STORAGE_KEY_PROG  = "drill_progress_v1";
-var STORAGE_KEY_STATS = "drill_stats_v1";
-var STORAGE_KEY_SET   = "drill_settings_v1";
-
-/* 間隔反復の日数テーブル（レベル0〜7） */
-var INTERVALS = [0, 1, 3, 7, 14, 30, 60, 120];
-var HALF_LIFE = [1, 2, 4, 8, 14, 28, 56, 112]; // レベル別忘却半減期
-var MASTERY_STREAK = 3; 
-var LEVEL_THRESHOLD = 70; // 前レベル定着度70%で次解放
-var LEVEL_COVERAGE_THRESHOLD = 0.6; // 前レベル学習済み割合60%で次解放
-
-var ACHIEVEMENTS = [
-  { id:"first",    title:"はじめの一歩", desc:"最初の1問に回答した",         check:function(s){ return s.totalAnswered>=1; } },
-  { id:"streak3",  title:"3日坊主を突破", desc:"3日連続で学習した",           check:function(s){ return s.streak>=3; } },
-  { id:"streak7",  title:"一週間戦士",   desc:"7日連続で学習した",           check:function(s){ return s.streak>=7; } },
-  { id:"streak14", title:"二週間の壁",   desc:"14日連続で学習した",          check:function(s){ return s.streak>=14; } },
-  { id:"streak30", title:"継続マスター", desc:"30日連続で学習した",          check:function(s){ return s.streak>=30; } },
-  { id:"total50",  title:"五十本ノック", desc:"累計50問に回答した",          check:function(s){ return s.totalAnswered>=50; } },
-  { id:"total200", title:"二百本ノック", desc:"累計200問に回答した",         check:function(s){ return s.totalAnswered>=200; } },
-  { id:"total1000",title:"千本ノック",   desc:"累計1000問に回答した",        check:function(s){ return s.totalAnswered>=1000; } },
-  { id:"perfect",  title:"パーフェクト", desc:"1セットで全問正解した",       check:function(s,ctx){ return !!(ctx&&ctx.perfect); } },
-  { id:"days30",   title:"コツコツ型",   desc:"のべ30日学習した",           check:function(s){ return (s.studyDays||[]).length>=30; } }
-];
-
-/* ============================================================
-   ユーティリティ
-   ============================================================ */
-function $(sel,root){ return (root||document).querySelector(sel); }
-function esc(s){
-  return String(s==null?"":s).replace(/[&<>"']/g, function(c){
-    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
-  });
-}
-function nl2br(s){ return esc(s).replace(/\n/g,"<br>"); }
-
-/* ============================================================
-   リッチテキスト（question / choices / explanation 共通レンダラ）
-   ------------------------------------------------------------
-   対応記法：
-     **太字**            → <b>
-     __下線__            → <u>
-     [[種類｜項目｜項目...]]  → 表・グラフなどのブロック要素
-       （文字列全体がそのまま "種類｜..." で始まる場合は [[ ]] を省略可。
-        既存の "雨温図｜気温: ...｜降水量: ..." 形式との後方互換のため）
-   対応する種類：雨温図 / 表 / 棒グラフ / 折れ線グラフ / 円グラフ
-   詳細な記法ガイドは同梱の別紙を参照。
-   ============================================================ */
-var RT_BLOCK_TYPES = ["雨温図","表","棒グラフ","折れ線グラフ","円グラフ"];
-
-function renderRichText(raw){
-  if(raw==null || raw==="") return "";
-  var s = String(raw);
-  var trimmed = s.trim();
-  for(var i=0;i<RT_BLOCK_TYPES.length;i++){
-    if(trimmed.indexOf(RT_BLOCK_TYPES[i]+"｜")===0){ s = "[["+trimmed+"]]"; break; }
-  }
-  var out = "", last = 0, m;
-  var re = /\[\[([\s\S]+?)\]\]/g;
-  while((m = re.exec(s))){
-    out += rtInline(s.slice(last, m.index));
-    out += rtBlock(m[1]);
-    last = re.lastIndex;
-  }
-  out += rtInline(s.slice(last));
-  return out;
-}
-
-function rtInline(text){
-  if(!text) return "";
-  var e = esc(text);
-  e = e.replace(/\*\*([\s\S]+?)\*\*/g, "<b>$1</b>");
-  e = e.replace(/__([\s\S]+?)__/g, "<u>$1</u>");
-  e = e.replace(/\n/g, "<br>");
-  return e;
-}
-
-function rtBlock(content){
-  var parts = content.split("｜").map(function(p){ return p.trim(); });
-  var type = parts[0], rest = parts.slice(1);
-  try{
-    switch(type){
-      case "雨温図": return rtClimateGraph(rest);
-      case "表": return rtTable(rest);
-      case "棒グラフ": return rtXYChart(rest, "bar");
-      case "折れ線グラフ": return rtXYChart(rest, "line");
-      case "円グラフ": return rtPieChart(rest);
-      default: return '<div class="rt-block rt-unknown">'+esc(content)+'</div>';
-    }
-  }catch(err){
-    return '<div class="rt-block rt-unknown">'+esc(content)+'</div>';
-  }
-}
-
-/* "気温: 9,10,12" のような1項目を {label, raw[], nums[]|null} に分解 */
-function rtParseField(str){
-  var idx = str.indexOf(":");
-  if(idx<0) idx = str.indexOf("：");
-  var label = idx>=0 ? str.slice(0, idx).trim() : "";
-  var body = idx>=0 ? str.slice(idx+1) : str;
-  var raw = body.split(",").map(function(v){ return v.trim(); }).filter(function(v){ return v!==""; });
-  var nums = raw.map(Number);
-  var allNum = nums.length>0 && nums.every(function(n){ return !isNaN(n); });
-  return { label:label, raw:raw, nums: allNum ? nums : null };
-}
-
-/* 表｜見出し1,見出し2,...｜行1セル1,行1セル2,...｜行2セル1,... */
-function rtTable(rows){
-  rows = rows.filter(function(r){ return r!==""; });
-  if(rows.length===0) return "";
-  var header = rows[0].split(",").map(function(c){ return c.trim(); });
-  var body = rows.slice(1).map(function(r){ return r.split(",").map(function(c){ return c.trim(); }); });
-  var html = '<table class="rt-table"><thead><tr>'
-    + header.map(function(h){ return '<th>'+rtInline(h)+'</th>'; }).join("")
-    + '</tr></thead><tbody>'
-    + body.map(function(r){ return '<tr>'+r.map(function(c){ return '<td>'+rtInline(c)+'</td>'; }).join("")+'</tr>'; }).join("")
-    + '</tbody></table>';
-  return '<div class="rt-block">'+html+'</div>';
-}
-
-/* 雨温図｜気温: n,n,...｜降水量: n,n,...（12ヶ月分を想定、月数は可変） */
-function rtClimateGraph(rest){
-  var temp=null, precip=null;
-  rest.forEach(function(r){
-    var f = rtParseField(r);
-    if(!f.nums) return;
-    if(/気温|気候|temp/i.test(f.label)) temp = f;
-    else if(/降水|precip|雨/i.test(f.label)) precip = f;
-    else if(!temp) temp = f; else if(!precip) precip = f;
-  });
-  if(!temp || !precip) return '<div class="rt-block rt-unknown">'+esc(rest.join(" / "))+'</div>';
-
-  var n = Math.max(temp.nums.length, precip.nums.length);
-  var W=300, H=192, padL=30, padR=30, padT=14, padB=24;
-  var plotW=W-padL-padR, plotH=H-padT-padB;
-  var colW = plotW/n;
-
-  var tMin = Math.min.apply(null, temp.nums), tMax = Math.max.apply(null, temp.nums);
-  var tLow = Math.floor((tMin-4)/5)*5, tHigh = Math.ceil((tMax+4)/5)*5;
-  if(tHigh<=tLow) tHigh = tLow+5;
-
-  var pMax = Math.max.apply(null, precip.nums);
-  var pHigh = Math.ceil((pMax*1.15)/10)*10; if(!pHigh) pHigh = 10;
-
-  function xAt(i){ return padL + colW*i + colW/2; }
-  function yTemp(v){ return padT + plotH*(1-(v-tLow)/(tHigh-tLow)); }
-  function yPrecipTop(v){ return padT + plotH*(1-v/pHigh); }
-  var baseY = padT+plotH;
-
-  var bars = precip.nums.map(function(v,i){
-    var bw = colW*0.56, bx = xAt(i)-bw/2, by = yPrecipTop(v), bh = Math.max(baseY-by,0);
-    return '<rect x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="1"></rect>';
-  }).join("");
-
-  var pts = temp.nums.map(function(v,i){ return xAt(i).toFixed(1)+","+yTemp(v).toFixed(1); }).join(" ");
-  var dots = temp.nums.map(function(v,i){ return '<circle cx="'+xAt(i).toFixed(1)+'" cy="'+yTemp(v).toFixed(1)+'" r="2.6" fill="currentColor"></circle>'; }).join("");
-
-  var axis = '<line x1="'+padL+'" y1="'+padT+'" x2="'+padL+'" y2="'+baseY+'" stroke="currentColor" stroke-width="1.4"></line>'
-    + '<line x1="'+padL+'" y1="'+baseY+'" x2="'+(padL+plotW)+'" y2="'+baseY+'" stroke="currentColor" stroke-width="1.4"></line>'
-    + '<line x1="'+(padL+plotW)+'" y1="'+padT+'" x2="'+(padL+plotW)+'" y2="'+baseY+'" stroke="currentColor" stroke-opacity="0.4" stroke-width="1"></line>';
-
-  var monthLabels="";
-  for(var i=0;i<n;i++){ monthLabels += '<text x="'+xAt(i).toFixed(1)+'" y="'+(baseY+12)+'" font-size="7" text-anchor="middle" fill="currentColor" fill-opacity="0.7">'+(i+1)+'</text>'; }
-
-  var tTicks="", pTicks="", steps=4;
-  for(var s=0;s<=steps;s++){
-    var tv = tLow + (tHigh-tLow)*s/steps, ty = yTemp(tv);
-    tTicks += '<text x="'+(padL-4)+'" y="'+(ty+2.5)+'" font-size="6.5" text-anchor="end" fill="currentColor" fill-opacity="0.7">'+Math.round(tv)+'</text>';
-    var pv = pHigh*s/steps, py = yPrecipTop(pv);
-    pTicks += '<text x="'+(padL+plotW+4)+'" y="'+(py+2.5)+'" font-size="6.5" text-anchor="start" fill="currentColor" fill-opacity="0.7">'+Math.round(pv)+'</text>';
-  }
-
-  var svg = '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'
-    + axis + bars
-    + '<polyline points="'+pts+'" fill="none" stroke="currentColor" stroke-width="2"></polyline>' + dots
-    + monthLabels + tTicks + pTicks
-    + '<text x="'+padL+'" y="9" font-size="7" fill="currentColor" fill-opacity="0.7">℃</text>'
-    + '<text x="'+(padL+plotW)+'" y="9" font-size="7" text-anchor="end" fill="currentColor" fill-opacity="0.7">mm</text>'
-    + '</svg>';
-  var caption = '<div class="rt-caption"><span class="rt-lg rt-lg-line"></span>気温<span class="rt-lg rt-lg-bar"></span>降水量</div>';
-  return '<div class="rt-block rt-graph">'+svg+caption+'</div>';
-}
-
-/* 棒グラフ｜ラベル: A,B,C｜値: n,n,n｜単位: 任意   /   折れ線グラフ｜同形式 */
-function rtXYChart(rest, kind){
-  var labels=null, values=null, unit="";
-  rest.forEach(function(r){
-    var f = rtParseField(r);
-    if(/単位|unit/i.test(f.label)){ unit = f.raw.join(""); return; }
-    if(f.nums && !values) values = f;
-    else if(!f.nums && !labels) labels = f;
-  });
-  if(!values) return '<div class="rt-block rt-unknown">'+esc(rest.join(" / "))+'</div>';
-
-  var nums = values.nums, n = nums.length;
-  var cats = (labels && labels.raw.length===n) ? labels.raw : nums.map(function(_,i){ return String(i+1); });
-
-  var W=300, H=176, padL=32, padR=14, padT=12, padB=26;
-  var plotW=W-padL-padR, plotH=H-padT-padB;
-  var vMax = Math.max.apply(null, nums.concat([0])), vMin = Math.min.apply(null, nums.concat([0]));
-  var top = vMax>0 ? vMax*1.15 : 1;
-  var bottom = vMin<0 ? vMin*1.15 : 0;
-  if(top===bottom) top = bottom+1;
-
-  function xAt(i){ return padL + (plotW/n)*(i+0.5); }
-  function yAt(v){ return padT + plotH*(1-(v-bottom)/(top-bottom)); }
-  var y0 = yAt(0);
-
-  var body;
-  if(kind==="bar"){
-    var bw=(plotW/n)*0.58;
-    body = nums.map(function(v,i){
-      var x=xAt(i)-bw/2, y=Math.min(yAt(v),y0), h=Math.abs(yAt(v)-y0);
-      return '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" fill="currentColor" fill-opacity="0.24" stroke="currentColor" stroke-width="1"></rect>';
-    }).join("");
-  } else {
-    var pts = nums.map(function(v,i){ return xAt(i).toFixed(1)+","+yAt(v).toFixed(1); }).join(" ");
-    var dots = nums.map(function(v,i){ return '<circle cx="'+xAt(i).toFixed(1)+'" cy="'+yAt(v).toFixed(1)+'" r="2.6" fill="currentColor"></circle>'; }).join("");
-    body = '<polyline points="'+pts+'" fill="none" stroke="currentColor" stroke-width="2"></polyline>'+dots;
-  }
-
-  var axis = '<line x1="'+padL+'" y1="'+padT+'" x2="'+padL+'" y2="'+(padT+plotH)+'" stroke="currentColor" stroke-width="1.4"></line>'
-    + '<line x1="'+padL+'" y1="'+y0.toFixed(1)+'" x2="'+(padL+plotW)+'" y2="'+y0.toFixed(1)+'" stroke="currentColor" stroke-width="1.4"></line>';
-  var catLabels = cats.map(function(c,i){ return '<text x="'+xAt(i).toFixed(1)+'" y="'+(padT+plotH+13)+'" font-size="7" text-anchor="middle" fill="currentColor" fill-opacity="0.7">'+esc(String(c))+'</text>'; }).join("");
-  var yTicks="", steps=4;
-  for(var s=0;s<=steps;s++){
-    var val = bottom + (top-bottom)*s/steps, y = yAt(val);
-    yTicks += '<text x="'+(padL-4)+'" y="'+(y+2.5)+'" font-size="6.5" text-anchor="end" fill="currentColor" fill-opacity="0.7">'+Math.round(val)+'</text>';
-  }
-  var svg = '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'
-    + axis + body + catLabels + yTicks
-    + (unit ? '<text x="'+padL+'" y="9" font-size="7" fill="currentColor" fill-opacity="0.7">'+esc(unit)+'</text>' : '')
-    + '</svg>';
-  return '<div class="rt-block rt-graph">'+svg+'</div>';
-}
-
-/* 円グラフ｜ラベル: A,B,C｜値: n,n,n */
-function rtPieChart(rest){
-  var labels=null, values=null;
-  rest.forEach(function(r){
-    var f = rtParseField(r);
-    if(f.nums && !values) values = f;
-    else if(!f.nums && !labels) labels = f;
-  });
-  if(!values) return '<div class="rt-block rt-unknown">'+esc(rest.join(" / "))+'</div>';
-  var nums = values.nums, n = nums.length;
-  var cats = (labels && labels.raw.length===n) ? labels.raw : nums.map(function(_,i){ return "項目"+(i+1); });
-  var total = nums.reduce(function(a,b){ return a+b; }, 0) || 1;
-  var shades = ["#141414","#5a5a5a","#8f8f8f","#bcbcbc","#dcdcdc","#eeeeee"];
-  var cx=68, cy=68, r=60, angle=-90, paths="";
-  nums.forEach(function(v,i){
-    var frac=v/total, sweep=frac*360;
-    var a0=angle*Math.PI/180, a1=(angle+sweep)*Math.PI/180;
-    var x0=(cx+r*Math.cos(a0)).toFixed(1), y0=(cy+r*Math.sin(a0)).toFixed(1);
-    var x1=(cx+r*Math.cos(a1)).toFixed(1), y1=(cy+r*Math.sin(a1)).toFixed(1);
-    var large = sweep>180 ? 1 : 0;
-    paths += '<path d="M'+cx+','+cy+' L'+x0+','+y0+' A'+r+','+r+' 0 '+large+' 1 '+x1+','+y1+' Z" fill="'+shades[i%shades.length]+'" stroke="#fff" stroke-width="1.5"></path>';
-    angle += sweep;
-  });
-  var legend = cats.map(function(c,i){
-    var pct = Math.round(nums[i]/total*1000)/10;
-    return '<div class="rt-lgrow"><span class="rt-lgsw" style="background:'+shades[i%shades.length]+';"></span>'+rtInline(String(c))+'（'+pct+'%）</div>';
-  }).join("");
-  var svg = '<svg viewBox="0 0 136 136" width="120" style="display:block;">'+paths+'</svg>';
-  return '<div class="rt-block rt-graph"><div class="rt-pieflex">'+svg+'<div class="rt-legend">'+legend+'</div></div></div>';
-}
-function pad2(n){ return n<10 ? "0"+n : ""+n; }
-function dateStr(d){ return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
-function todayStr(){ return dateStr(new Date()); }
-function addDaysStr(baseStr, days){
-  var parts = baseStr.split("-").map(Number);
-  var d = new Date(parts[0], parts[1]-1, parts[2]);
-  d.setDate(d.getDate()+days);
-  return dateStr(d);
-}
-function daysBetween(aStr,bStr){
-  var a = aStr.split("-").map(Number), b = bStr.split("-").map(Number);
-  var da = new Date(a[0],a[1]-1,a[2]), db = new Date(b[0],b[1]-1,b[2]);
-  return Math.round((db-da)/86400000);
-}
-function hashStr(s){
-  var h = 0;
-  s = String(s);
-  for(var i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i))|0; }
-  return Math.abs(h).toString(36);
-}
-function shuffle(arr){
-  var a = arr.slice();
-  for(var i=a.length-1;i>0;i--){
-    var j = Math.floor(Math.random()*(i+1));
-    var t = a[i]; a[i]=a[j]; a[j]=t;
-  }
-  return a;
-}
-function uniq(arr){ return arr.filter(function(v,i){ return arr.indexOf(v)===i; }); }
-
-function loadJSONStore(key, fallback){
-  try{
-    var raw = localStorage.getItem(key);
-    if(!raw) return fallback;
-    return JSON.parse(raw);
-  }catch(e){ return fallback; }
-}
-function saveJSONStore(key, val){
-  try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ /* ストレージ容量超過等は無視 */ }
-}
-
-/* ============================================================
-   状態
-   ============================================================ */
-var library  = loadJSONStore(STORAGE_KEY_LIB, { decks:[] });
-var progress = loadJSONStore(STORAGE_KEY_PROG, {});     // questionId -> {level,nextDue,correct,wrong,lastSeen}
-var stats    = loadJSONStore(STORAGE_KEY_STATS, { totalAnswered:0, totalCorrect:0, streak:0, lastStudyDate:null, studyDays:[], achievements:{}, dailySeconds:{} });
-if(!stats.dailySeconds) stats.dailySeconds = {}; // 旧バージョンのデータ互換
-var settings = loadJSONStore(STORAGE_KEY_SET, { newPerDay:8, reviewCap:40, defaultSetSize:10 });
-
-function persistLib(){ saveJSONStore(STORAGE_KEY_LIB, library); }
-function persistProg(){ saveJSONStore(STORAGE_KEY_PROG, progress); }
-function persistStats(){ saveJSONStore(STORAGE_KEY_STATS, stats); }
-function persistSettings(){ saveJSONStore(STORAGE_KEY_SET, settings); }
-
-var nav = { screen:"home", params:{} };
-var session = null; // 出題セッション
-var selectState = { subjects:[], units:[], size:settings.defaultSetSize };
-var homeFilter = { subject:"", sort:"mastery" };  // ホームの「教科／更新順」ドロップダウン
-var historyState = (function(){ var d=new Date(); return { year:d.getFullYear(), month:d.getMonth() }; })(); // ログイン履歴カレンダーの表示年月
-
-/* ============================================================
-   サンプルデータ（初回体験用）
-   ============================================================ */
-var SAMPLE_DECKS = [
-  {
-    subject:"英語", unit:"be動詞と一般動詞", tags:["文法","中1"],
-    questions:[
-      { question:"次の文の空欄に入る正しい語を選びなさい。\nShe ___ a student.", choices:["is","are","am","be"], answerIndex:0, explanation:"主語が三人称単数（She）のときはisを使う。" },
-      { question:"次の文の空欄に入る正しい語を選びなさい。\nThey ___ from Canada.", choices:["is","am","are","was"], answerIndex:2, explanation:"主語が複数（They）のときはareを使う。" },
-      { question:"次の文を否定文にするとき、空欄に入る語を選びなさい。\nI ___ not like coffee.", choices:["am","do","does","is"], answerIndex:1, explanation:"一般動詞likeの否定文はdo not（don't）を使う。" }
-    ]
-  },
-  {
-    subject:"数学", unit:"正負の数", tags:["計算","中1"],
-    questions:[
-      { question:"次の計算をしなさい。\n(-3) + 5 = ?", choices:["-8","-2","2","8"], answerIndex:2, explanation:"符号の異なる数の加法は、絶対値の大きい方から小さい方を引き、絶対値の大きい方の符号をつける。5-3=2。" },
-      { question:"次の計算をしなさい。\n(-4) × (-2) = ?", choices:["-8","-6","6","8"], answerIndex:3, explanation:"負の数×負の数は正の数になる。4×2=8。" }
-    ]
-  },
-  {
-    subject:"理科", unit:"植物のつくり", tags:["生物","中1"],
-    questions:[
-      { question:"光合成が主に行われる植物の部分はどれか。", choices:["根","茎","葉","花"], answerIndex:2, explanation:"葉緑体を多く含む葉で光合成が盛んに行われる。" }
-    ]
-  }
-];
-
-/* ============================================================
-   データ正規化・コンテンツ署名・差分更新ロジック (修正版)
-   ============================================================ */
-
-// 1. 位置(idx)ベースの安定したID生成（テキストのわずかな修正でIDが変わるのを防止）
-function normalizeQuestion(raw, subject, unit, idx){
-  if(!raw || typeof raw!=="object") return null;
-  var qtext = raw.question || raw.q || raw.text;
-  var choices = raw.choices || raw.options;
-  if(!qtext || !Array.isArray(choices) || choices.length<2) return null;
-  var ansIdx = raw.answerIndex;
-  if(typeof ansIdx !== "number" || ansIdx<0 || ansIdx>=choices.length){
-    if(typeof raw.answer === "string"){
-      var found = choices.indexOf(raw.answer);
-      ansIdx = found>=0 ? found : 0;
-    } else {
-      ansIdx = 0;
-    }
-  }
-  // raw.id があれば優先、なければ subject_unit_idx で固定IDを生成
-  var id = raw.id ? String(raw.id) : (subject + "__" + unit + "__" + idx);
-  return {
-    id: id,
-    question: String(qtext),
-    image: raw.image || raw.imageUrl || null,
-    choices: choices.map(function(c){ return String(c); }),
-    answerIndex: ansIdx,
-    explanation: raw.explanation || raw.note || "",
-    level: typeof raw.level === "number" ? raw.level : (parseInt(raw.level, 10) || 1),
-    major: raw.major != null ? String(raw.major) : null,
-    theme: raw.theme != null ? String(raw.theme) : null,
-    subtheme: raw.subtheme != null ? String(raw.subtheme) : null,
-    knowledgeId: raw.knowledgeId != null ? String(raw.knowledgeId) : null,
-    questionType: raw.questionType != null ? String(raw.questionType) : null
-  };
-}
-
-// 2. 問題および単元のコンテントシグネチャ生成（真の差分のみ検出）
-function getQuestionSignature(q){
-  return q.id + "::" + q.question + "::" + q.choices.join("|") + "::" + q.answerIndex + "::" + q.explanation;
-}
-
-function getDeckSignature(deck){
-  var sigs = deck.questions.map(getQuestionSignature);
-  sigs.sort();
-  return deck.subject + "::" + deck.unit + "::" + sigs.join("||");
-}
-
-// 3. IDの重複率および名称に基づく柔軟なデッキマッチング
-function findMatchingDeck(newDeck, claimedSet){
-  claimedSet = claimedSet || new Set();
-  var candidates = library.decks.filter(function(d){ return !claimedSet.has(d); });
-
-  // A. 完全なID重複に基づくマッチング
-  var newIds = new Set(newDeck.questions.map(function(q){ return q.id; }));
-  var bestMatch = null;
-  var maxOverlap = 0;
-
-  for(var i = 0; i < candidates.length; i++){
-    var cand = candidates[i];
-    var overlap = 0;
-    cand.questions.forEach(function(q){
-      if(newIds.has(q.id)) overlap++;
-    });
-    // 30%以上のID重複があれば同一単元の変化とみなす
-    var ratio = overlap / Math.max(1, cand.questions.length);
-    if(overlap > 0 && ratio >= 0.3 && overlap > maxOverlap){
-      maxOverlap = overlap;
-      bestMatch = cand;
-    }
-  }
-  if(bestMatch) return bestMatch;
-
-  // B. 名称(subject + unit)に基づくフォールバックマッチング
-  for(var j = 0; j < candidates.length; j++){
-    if(candidates[j].subject === newDeck.subject && candidates[j].unit === newDeck.unit){
-      return candidates[j];
-    }
-  }
-
-  return null;
-}
-
-// 4. ピンポイント差分更新および影響を受ける問題のみの進捗リセット
-function mergeDeck(newDeck, claimedSet){
-  var match = findMatchingDeck(newDeck, claimedSet);
-
-  if(!match){
-    // 新規単元の追加
-    newDeck.addedAt = Date.now();
-    newDeck.contentSig = getDeckSignature(newDeck);
-    library.decks.push(newDeck);
-    if(claimedSet) claimedSet.add(newDeck);
-    return { action: "added", deck: newDeck };
-  }
-
-  if(claimedSet) claimedSet.add(match);
-
-  var newSig = getDeckSignature(newDeck);
-  if(match.contentSig && match.contentSig === newSig){
-    // 内容に変更がない場合は進捗を1ミリも維持・保持
-    return { action: "unchanged", deck: match };
-  }
-
-  // 削除・変更された問題のIDを特定し、その問題の進捗のみをピンポイントでクリア
-  var oldIds = new Set(match.questions.map(function(q){ return q.id; }));
-  var newIds = new Set(newDeck.questions.map(function(q){ return q.id; }));
-
-  oldIds.forEach(function(id){
-    if(!newIds.has(id)){
-      delete progress[id];
-    }
-  });
-
-  // 単元データの置き換えとシグネチャの更新
-  match.subject = newDeck.subject;
-  match.unit = newDeck.unit;
-  match.tags = uniq((match.tags || []).concat(newDeck.tags || []));
-  match.questions = newDeck.questions;
-  match.addedAt = Date.now();
-  match.contentSig = newSig;
-
-  return { action: "updated", deck: match };
-}
-
-// 5. バッチ単位での一括インポート処理
-function importDecks(decks){
-  var claimedSet = new Set();
-  var summary = { added: 0, updated: 0, unchanged: 0 };
-
-  decks.forEach(function(d){
-    var res = mergeDeck(d, claimedSet);
-    summary[res.action]++;
-  });
-
-  persistLib();
-  persistProg();
-  return summary;
-}
-
-function loadSample(){
-  var decks = SAMPLE_DECKS.map(normalizeDeck).filter(Boolean);
-  importDecks(decks);
-  toast("サンプルデータを追加しました");
-  render();
-}
-
-function deleteDeck(subject, unit){
-  library.decks = library.decks.filter(function(d){ return !(d.subject===subject && d.unit===unit); });
-  persistLib();
-  render();
-}
-
-function resetAllData(){
-  library = { decks:[] };
-  progress = {};
-  stats = { totalAnswered:0, totalCorrect:0, streak:0, lastStudyDate:null, studyDays:[], achievements:{} };
-  persistLib(); persistProg(); persistStats();
-  render();
-}
-
-function exportBackup(){
-  var payload = { library:library, progress:progress, stats:stats, settings:settings, exportedAt:new Date().toISOString() };
-  var blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement("a");
-  a.href = url; a.download = "drill_backup_"+todayStr()+".json";
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
-}
-
-/* ============================================================
-   出題範囲の集計ヘルパー
-   ============================================================ */
-function allSubjects(){ return uniq(library.decks.map(function(d){ return d.subject; })); }
-function unitsOfSubjects(subjects){
-  return library.decks.filter(function(d){ return subjects.length===0 || subjects.indexOf(d.subject)>=0; })
-    .map(function(d){ return d.subject+"｜"+d.unit; });
-}
-function tagsOf(subjects, units){
-  var t = [];
-  library.decks.forEach(function(d){
-    if(subjects.length && subjects.indexOf(d.subject)<0) return;
-    if(units.length && units.indexOf(d.subject+"｜"+d.unit)<0) return;
-    t = t.concat(d.tags);
-  });
-  return uniq(t);
-}
-function deckMatches(d, subjects, units, tags){
-  if(subjects.length && subjects.indexOf(d.subject)<0) return false;
-  if(units.length && units.indexOf(d.subject+"｜"+d.unit)<0) return false;
-  if(tags.length && !d.tags.some(function(t){ return tags.indexOf(t)>=0; })) return false;
-  return true;
-}
-
-function totalQuestionCount(subjects, units, tags){
-  var n = 0;
-  library.decks.forEach(function(d){ if(deckMatches(d,subjects||[],units||[],tags||[])) n += d.questions.length; });
-  return n;
-}
-
-function dueCount(subjects, units, tags){
-  var t = todayStr(); var n=0;
-  library.decks.forEach(function(d){
-    if(!deckMatches(d,subjects||[],units||[],tags||[])) return;
-    d.questions.forEach(function(q){
-      var p = progress[q.id];
-      if(p && p.nextDue<=t) n++;
-    });
-  });
-  return n;
-}
-function newCount(subjects, units, tags){
-  var n=0;
-  library.decks.forEach(function(d){
-    if(!deckMatches(d,subjects||[],units||[],tags||[])) return;
-    d.questions.forEach(function(q){ if(!progress[q.id]) n++; });
-  });
-  return n;
-}
-
-/* ============================================================
-   出題キューの構築（出現確率の重みづけサンプリング）
-   ------------------------------------------------------------
-   「復習中心／新規のみ／すべてから」のようなモード切り替えは廃止し、
-   常に単元の全問題からランダムに出題する。ただし、間違えた問題
-   （直近の連続正解数=0）ほど出やすく、3回連続正解して「クリア」した
-   問題は出現確率を下げる（消えはしない）。また、一度も出題して
-   いない問題もある程度優先して出す。
-   ============================================================ */
-function questionWeight(qid){
-  var p = progress[qid];
-  if(!p) return 1.4;                                  // 未回答：やや優先
-  var streak = p.streak || 0;
-  if(streak >= MASTERY_STREAK) return 0.35;            // クリア済み：出現を抑える
-  if(streak === 0) return 3.0;                         // 直近で間違えた：出現を増やす
-  return 1.0;                                          // 連続正解1〜2回目：通常
-}
-
-/* 重み付き無作為抽出（A-ExpJアルゴリズム）。
-   重みが大きいほど選ばれやすいが、重みが小さくても選ばれる可能性は残る。 */
-function weightedSample(pool, size){
-  if(size<=0 || pool.length<=size) return shuffle(pool.slice());
-  var keyed = pool.map(function(item){
-    var w = Math.max(0.01, questionWeight(item.q.id));
-    var r = Math.random();
-    return { item:item, key:Math.pow(r, 1/w) };
-  });
-  keyed.sort(function(a,b){ return b.key - a.key; });
-  return shuffle(keyed.slice(0, size).map(function(k){ return k.item; }));
-}
-
-function buildWeightedQueue(deck, size){
-  var pool = deck.questions.map(function(q){ return {deck:deck, q:q}; });
-  return weightedSample(pool, size);
-}
-
-function buildCustomQueue(subjects, units, size){
-  var pool = [];
-  library.decks.forEach(function(d){
-    if(!deckMatches(d,subjects||[],units||[],[])) return;
-    d.questions.forEach(function(q){ pool.push({deck:d,q:q}); });
-  });
-  return weightedSample(pool, size);
-}
-
-/* ============================================================
-   自動タスク生成
-   ============================================================ */
-function buildAutoTask(size, targetDecks){
-  size = (typeof size === "number" && size > 0) ? size : (settings.defaultSetSize || 10);
-  var decks = targetDecks || library.decks;
-  var today = todayStr();
-  var seenIds = {};
-  var duePool = [];     // 復習期限到来（最優先）
-  var unseenPool = [];  // 未学習問題（新出開拓）
-  var reviewPool = [];  // その他既習問題（低定着・直近誤答優先）
-
-  decks.forEach(function(deck){
-    deck.questions.forEach(function(q){
-      if(seenIds[q.id]) return; // 同一IDの重複登録防止
-      seenIds[q.id] = true;
-
-      var lvl = getQuestionLevel(q);
-      if(!isLevelAvailable(deck, lvl)) return; // レベル未解放なら出さない
-
-      var p = progress[q.id];
-      if(!p){
-        // 未学習問題
-        unseenPool.push({ deck: deck, q: q, weight: Math.random() });
-      } else if(p.nextDue <= today){
-        // 復習期限到来：直近で間違えたもの(streak=0)や定着度が低いものをより優先
-        var ret = computeRetention(q.id);
-        var w = (p.streak === 0 ? 10.0 : (100 - (ret.percent || 0)) / 10 + 5.0) * (Math.random() * 0.4 + 0.8);
-        duePool.push({ deck: deck, q: q, weight: w });
-      } else {
-        // 復習期限前：直近誤答や定着度50%未満を優先
-        var ret = computeRetention(q.id);
-        var w = (p.streak === 0 ? 5.0 : ((ret.percent || 0) < 50 ? 3.0 : 1.0)) * (Math.random() * 0.4 + 0.8);
-        reviewPool.push({ deck: deck, q: q, weight: w });
-      }
-    });
-  });
-
-  // 各プールを重み順・ランダム順にソート
-  duePool.sort(function(a, b){ return b.weight - a.weight; });
-  unseenPool.sort(function(a, b){ return b.weight - a.weight; });
-  reviewPool.sort(function(a, b){ return b.weight - a.weight; });
-
-  var selected = [];
-  var added = {};
-
-  function addFrom(pool, limit){
-    for(var i = 0; i < pool.length && selected.length < limit; i++){
-      var item = pool[i];
-      if(!added[item.q.id]){
-        added[item.q.id] = true;
-        selected.push({ deck: item.deck, q: item.q });
-      }
-    }
-  }
-
-  // 1. 復習期限到来問題を最優先で選出
-  addFrom(duePool, size);
-
-  // 2. 残り枠に未学習問題を積極的に選出
-  if(selected.length < size){
-    addFrom(unseenPool, size);
-  }
-
-  // 3. まだ枠が余っていれば、低定着・直近誤答などの既習問題で補充
-  if(selected.length < size){
-    addFrom(reviewPool, size);
-  }
-
-  // バランスよく混ざるようシャッフルして返す
-  return shuffle(selected);
-}
-
-function buildAutoTaskForDeck(deck, size){
-  return buildAutoTask(size, [deck]);
-}
-
-/* ============================================================
-   進捗更新（間隔反復）
-   ============================================================ */
-function recordAnswer(qid, correct){
-  var p = progress[qid];
-  if(!p){ p = { level:0, nextDue:todayStr(), correct:0, wrong:0, lastSeen:null, streak:0 }; progress[qid]=p; }
-  if(correct){
-    p.level = Math.min(p.level+1, INTERVALS.length-1);
-    p.correct++;
-    p.streak = (p.streak||0) + 1;   // 連続正解を加算
-  } else {
-    p.level = Math.max(p.level-1, 0);
-    p.wrong++;
-    p.streak = 0;                   // 一度でも間違えたら連続記録はリセット
-  }
-  p.nextDue = addDaysStr(todayStr(), INTERVALS[p.level]);
-  p.lastSeen = todayStr();
-  persistProg();
-}
-
-function getQuestionLevel(q){ return q.level || 1; }
-
-function computeRetention(qid){
-  var p = progress[qid];
-  if(!p) return { percent:0, mastered:false };
-  var streak = p.streak || 0;
-  var cap = streak >= MASTERY_STREAK ? 100 : Math.round(streak/MASTERY_STREAK * 100);
-  var diff = Math.max(0, (new Date(todayStr()) - new Date(p.lastSeen || todayStr())) / 86400000);
-  var hl = HALF_LIFE[Math.min(p.level||0, 7)] || 1;
-  return { percent: Math.round(cap * Math.pow(0.5, diff/hl)), mastered: streak >= MASTERY_STREAK };
-}
-
-function isLevelAvailable(deck, level){
-  if(level <= 1) return true;
-  var prevLevel = level - 1;
-  var total = 0, learned = 0, sumRet = 0;
-  deck.questions.forEach(function(q){
-    if(getQuestionLevel(q) === prevLevel){
-      total++;
-      var p = progress[q.id];
-      if(p){
-        learned++;
-        sumRet += computeRetention(q.id).percent;
-      }
-    }
-  });
-  if(total === 0) return true;
-  if(learned === 0) return false;
-  var coverage = learned / total;
-  var avgRet = sumRet / learned;
-  return (coverage >= LEVEL_COVERAGE_THRESHOLD) && (avgRet >= LEVEL_THRESHOLD);
-}
-
-function getDeckLevelStatus(deck){
-  var levels = [];
-  var hasLevel = {};
-  deck.questions.forEach(function(q){
-    var lvl = getQuestionLevel(q);
-    hasLevel[lvl] = true;
-  });
-  var maxLvl = 1;
-  for(var l = 1; l <= 5; l++){
-    if(hasLevel[l]) maxLvl = l;
-  }
-  for(var lvl = 1; lvl <= maxLvl; lvl++){
-    if(!hasLevel[lvl] && lvl > 1) continue;
-    var avail = isLevelAvailable(deck, lvl);
-    if(avail){
-      levels.push({ level: lvl, unlocked: true, label: "Level " + lvl + " 解放済み" });
-    } else {
-      levels.push({ level: lvl, unlocked: false, label: "Level " + lvl + " 🔒" });
-    }
-  }
-  return levels;
-}
-
-function computeUnitStats(deck){
-  if(!deck || !deck.questions || !deck.questions.length){
-    return { total:0, learned:0, progress:0, retention:0 };
-  }
-  var total = deck.questions.length;
-  var learned = 0;
-  var sumRet = 0;
-  deck.questions.forEach(function(q){
-    var p = progress[q.id];
-    if(p){
-      learned++;
-      sumRet += computeRetention(q.id).percent;
-    }
-  });
-  var progressPct = total === 0 ? 0 : Math.round(learned / total * 100);
-  var retentionPct = learned === 0 ? 0 : Math.round(sumRet / learned);
-  return {
-    total: total,
-    learned: learned,
-    progress: progressPct,
-    retention: retentionPct
-  };
-}
-
-function computeUnitRetention(deck){
-  return computeUnitStats(deck).retention;
-}
-
-function computeSubjectRetention(subject){
-  var learned = 0, sumRet = 0;
-  library.decks.forEach(function(d){
-    if(d.subject === subject){
-      d.questions.forEach(function(q){
-        var p = progress[q.id];
-        if(p){
-          learned++;
-          sumRet += computeRetention(q.id).percent;
-        }
-      });
-    }
-  });
-  return learned === 0 ? 0 : Math.round(sumRet / learned);
-}
-
-function recordSessionInStats(answeredCount, correctCount, durationMs){
-  stats.totalAnswered += answeredCount;
-  stats.totalCorrect += correctCount;
-  var t = todayStr();
-  if(stats.studyDays.indexOf(t)<0) stats.studyDays.push(t);
-  if(!stats.dailySeconds) stats.dailySeconds = {};
-  var addSec = Math.max(1, Math.round((durationMs||0)/1000));
-  stats.dailySeconds[t] = (stats.dailySeconds[t]||0) + addSec;
-  if(stats.lastStudyDate){
-    var diff = daysBetween(stats.lastStudyDate, t);
-    if(diff===1) stats.streak += 1;
-    else if(diff===0) { /* 変化なし */ }
-    else if(diff>1) stats.streak = 1;
-  } else {
-    stats.streak = 1;
-  }
-  stats.lastStudyDate = t;
-  persistStats();
-}
-
-function checkAchievements(ctx){
-  var unlocked = [];
-  ACHIEVEMENTS.forEach(function(a){
-    if(stats.achievements[a.id]) return;
-    if(a.check(stats, ctx)){
-      stats.achievements[a.id] = new Date().toISOString();
-      unlocked.push(a);
-    }
-  });
-  if(unlocked.length) persistStats();
-  return unlocked;
-}
-
-/* ============================================================
-   トースト
-   ============================================================ */
-var toastTimer = null;
-function toast(msg){
-  var old = document.querySelector(".toast");
-  if(old) old.remove();
-  var el = document.createElement("div");
-  el.className = "toast";
-  el.textContent = msg;
-  document.body.appendChild(el);
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ el.remove(); }, 2200);
-}
-
-/* ============================================================
-   モーダル
-   ============================================================ */
-function openModal(html){
-  $("#modalBox").innerHTML = html;
-  $("#modalLayer").classList.add("open");
-}
-function closeModal(){
-  $("#modalLayer").classList.remove("open");
-  $("#modalBox").innerHTML = "";
-}
-
-/* ============================================================
-   画面遷移
-   ============================================================ */
-function goto(screen, params){
-  nav.screen = screen;
-  nav.params = params || {};
-  render();
-  $("#screens").scrollTop = 0;
-}
-
-/* ============================================================
-   レンダリング：トップバー & タブバー
-   ============================================================ */
-var TABS = [
-  { id:"home", label:"ホーム", icon:"■" },
-  { id:"history", label:"履歴", icon:"▦" },
-  { id:"achievements", label:"実績", icon:"◆" },
-  { id:"settings", label:"設定", icon:"⚙" }
-];
-
-function renderChrome(){
-  var tb = $("#tbTitle"), left = $("#tbLeft"), right = $("#tbRight");
-  var titles = { home:"暗記ドリル", history:"ログイン履歴", achievements:"実績", settings:"設定", quiz:"学習中", result:"結果" };
-  tb.textContent = titles[nav.screen] || "暗記ドリル";
-
-  left.innerHTML = ""; right.innerHTML = "";
-  if(nav.screen==="quiz"){
-    left.innerHTML = '<button class="tb-btn" data-action="exitQuiz">×</button>';
-  } else if(["home","history","achievements","settings"].indexOf(nav.screen)>=0){
-    // トップレベル画面はサイドボタンなし
-  } else if(nav.screen==="result"){
-    // 戻る不可（ホームへのみ）
-  }
-
-  var tabbar = $("#tabbar");
-  var showTabs = ["home","history","achievements","settings"].indexOf(nav.screen)>=0;
-  $("#screens").classList.toggle("no-tab", !showTabs);
-  if(showTabs){
-    tabbar.style.display = "flex";
-    tabbar.innerHTML = TABS.map(function(t){
-      return '<button data-action="nav" data-screen="'+t.id+'" class="'+(nav.screen===t.id?"active":"")+'">'+
-        '<span class="ic">'+t.icon+'</span><span>'+t.label+'</span></button>';
-    }).join("");
-  } else {
-    tabbar.style.display = "none";
-  }
-}
-
-/* ============================================================
-   レンダリング：ホーム
-   ============================================================ */
-function renderStreakBar(){
-  return '<div class="sb-cell"><div class="sb-num">'+stats.streak+'</div><div class="sb-lab">連続日数</div></div>'
-    + '<div class="sb-cell"><div class="sb-num">'+stats.totalAnswered+'</div><div class="sb-lab">累計回答数</div></div>'
-    + '<div class="sb-cell"><div class="sb-num">'+(stats.totalAnswered? Math.round(stats.totalCorrect/stats.totalAnswered*100):0)+'<span style="font-size:12px;">%</span></div><div class="sb-lab">正答率</div></div>';
-}
-
-function renderDeckList(){
-  var html = "";
-  var subjectsAvail = allSubjects();
-
-  html += '<div class="section-row">'
-    + '<div class="section-label">単元選択</div>'
-    + '<div class="home-filters">'
-      + '<select class="home-select" data-action="setHomeSubject" aria-label="教科で絞り込み">'
-        + '<option value=""'+(homeFilter.subject===""?" selected":"")+'>教科</option>'
-        + subjectsAvail.map(function(s){
-            return '<option value="'+esc(s)+'"'+(homeFilter.subject===s?" selected":"")+'>'+esc(s)+'</option>';
-          }).join("")
-      + '</select>'
-      + '<select class="home-select" data-action="setHomeSort" aria-label="並び替え">'
-        + '<option value="mastery"'+(homeFilter.sort==="mastery"?" selected":"")+'>定着度（低い）順</option>'
-        + '<option value="progress"'+(homeFilter.sort==="progress"?" selected":"")+'>学習進捗順</option>'
-        + '<option value="new"'+(homeFilter.sort==="new"?" selected":"")+'>新着順</option>'
-      + '</select>'
-    + '</div>'
-    + '<button class="add-btn" data-action="pickFile" aria-label="JSONを追加">＋</button>'
-    + '</div>';
-
-  if(library.decks.length===0){
-    html += '<div class="empty"><div class="eic">＋</div><p>まだ問題データがありません。<br>右上の「＋」からJSONファイルを追加してください。</p></div>';
-  } else {
-    var decks = library.decks.slice();
-    if(homeFilter.subject) decks = decks.filter(function(d){ return d.subject===homeFilter.subject; });
-    if(homeFilter.sort==="new"){
-      decks.sort(function(a,b){ return (b.addedAt||0) - (a.addedAt||0); });
-    } else if(homeFilter.sort==="progress"){
-      decks.sort(function(a,b){ return computeUnitStats(b).progress - computeUnitStats(a).progress; });
-    } else {
-      decks.sort(function(a,b){ return computeUnitStats(a).retention - computeUnitStats(b).retention; });
-    }
-
-    if(decks.length===0){
-      html += '<div class="empty"><p>該当する単元がありません。</p></div>';
-    } else {
-      html += '<div class="list">';
-      decks.forEach(function(d){
-        var st = computeUnitStats(d);
-        var lvls = getDeckLevelStatus(d);
-        var lvlBadges = lvls.map(function(l){
-          var isLocked = !l.unlocked;
-          var badgeText = isLocked ? "L" + l.level + " 🔒" : "L" + l.level + (st.learned > 0 ? " 学習中" : " 解放済み");
-          var badgeStyle = isLocked ? "color:var(--g-400); border-color:var(--g-300);" : "color:var(--ink); border-color:var(--ink); font-weight:800;";
-          return '<span style="display:inline-block; font-size:10.5px; padding:1px 5px; border:1.2px solid; margin-right:4px; ' + badgeStyle + '">' + esc(badgeText) + '</span>';
-        }).join("");
-
-        html += '<div class="card unit-row hoverable" data-action="startUnit" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'" style="cursor:pointer;">'
-          + '<div class="ur-top"><span class="ur-title">'+esc(d.unit)+'</span>'
-          + '<span class="ur-pct" style="font-size:12px; font-weight:800;">定着度 '+st.retention+'%</span></div>'
-          + '<div class="ur-meta" style="margin-left:0; margin-top:4px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">'
-          + '<span>学習進捗 '+st.progress+'% ('+st.learned+'/'+st.total+'問)'+(homeFilter.subject?"":" ・ "+esc(d.subject))+'</span>'
-          + '<div>'+lvlBadges+'</div>'
-          + '</div>'
-          + '<div style="display:flex; gap:8px; margin-top:8px;">'
-          + '<div style="flex:1;"><div style="font-size:9.5px; color:var(--g-500); font-weight:700;">進捗 '+st.progress+'%</div><div class="mbar-track" style="margin-top:2px; height:4px;"><div class="mbar-fill" style="width:'+st.progress+'%; background:var(--g-600);"></div></div></div>'
-          + '<div style="flex:1;"><div style="font-size:9.5px; color:var(--g-500); font-weight:700;">定着度 '+(st.learned>0 ? st.retention+'%' : '未学習')+'</div><div class="mbar-track" style="margin-top:2px; height:4px;"><div class="mbar-fill" style="width:'+st.retention+'%; background:var(--ink);"></div></div></div>'
-          + '</div>'
-          + '</div>';
-      });
-      html += '</div>';
-    }
-  }
-  return html;
-}
-
-function renderHome(){
-  var html = "";
-  // 戦略タスクボタン
-  html += '<div class="task-card" data-action="startAutoTask" style="background:#000; color:#fff; padding:24px; margin:16px; border-radius:12px; cursor:pointer;">'
-    + '<div style="font-size:20px; font-weight:900;">🚀 今日のTaskを開始</div>'
-    + '<div style="font-size:13px; opacity:0.8;">現在の定着度に基づき、今解くべき問題を自動抽出。</div></div>';
-
-  // 既存の統計表示 (元のコードの統計部分)
-  html += '<div class="streakbar">' + (typeof renderStreakBar === 'function' ? renderStreakBar() : "") + '</div>';
-
-  // 既存の単元リスト (ここも元のコードを維持)
-  if (typeof renderDeckList === 'function') {
-    html += renderDeckList();
-  }
-  
-  return html;
-}
-function todayLabel(){
-  var d = new Date();
-  var w = ["日","月","火","水","木","金","土"][d.getDay()];
-  return (d.getMonth()+1)+"月"+d.getDate()+"日（"+w+"）の学習";
-}
-
-/* ============================================================
-   レンダリング：ログイン履歴（学習カレンダー）
-   ------------------------------------------------------------
-   その日に学習したかどうかと、学習時間（分／時間）をカレンダー
-   形式で表示する。実績タブの連続日数と重なる情報だが、こちらは
-   月単位で「いつ・どれくらい」学習したかを一覧できるようにする。
-   ============================================================ */
-function formatDuration(sec){
-  sec = sec||0;
-  if(sec<=0) return "0分";
-  if(sec<60) return "1分未満";
-  var mins = Math.round(sec/60);
-  if(mins<60) return mins+"分";
-  var hrs = Math.round(mins/60*10)/10;
-  return hrs+"時間";
-}
-
-function shiftHistoryMonth(delta){
-  var m = historyState.month + delta, y = historyState.year;
-  while(m<0){ m += 12; y--; }
-  while(m>11){ m -= 12; y++; }
-  historyState.month = m; historyState.year = y;
-}
-
-function renderHistory(){
-  var y = historyState.year, m = historyState.month;
-  var monthLabel = y+"年"+(m+1)+"月";
-  var firstWeekday = new Date(y, m, 1).getDay();
-  var daysInMonth = new Date(y, m+1, 0).getDate();
-  var today = todayStr();
-
-  var studiedDays = 0, monthSeconds = 0;
-  var cells = "";
-  for(var i=0;i<firstWeekday;i++){ cells += '<div class="hc-cell hc-empty"></div>'; }
-  for(var day=1; day<=daysInMonth; day++){
-    var ds = y+"-"+pad2(m+1)+"-"+pad2(day);
-    var studied = stats.studyDays.indexOf(ds)>=0;
-    var sec = (stats.dailySeconds && stats.dailySeconds[ds]) || 0;
-    if(studied){ studiedDays++; monthSeconds += sec; }
-    cells += '<div class="hc-cell'+(studied?" hc-studied":"")+(ds===today?" hc-today":"")+'">'
-      + '<div class="hc-day">'+day+'</div>'
-      + (studied ? '<div class="hc-dot">●</div><div class="hc-time">'+esc(formatDuration(sec))+'</div>' : '')
-      + '</div>';
-  }
-
-  var html = "";
-  html += '<div class="streakbar" style="margin-top:14px;">'
-    + '<div class="sb-cell"><div class="sb-num">'+stats.streak+'</div><div class="sb-lab">連続学習日数</div></div>'
-    + '<div class="sb-cell"><div class="sb-num">'+stats.studyDays.length+'</div><div class="sb-lab">のべ学習日数</div></div>'
-    + '</div>';
-
-  html += '<div class="hist-nav">'
-    + '<button class="btn-ghost" data-action="historyMonth" data-v="-1">＜ 前の月</button>'
-    + '<div class="section-label">'+monthLabel+'</div>'
-    + '<button class="btn-ghost" data-action="historyMonth" data-v="1">次の月 ＞</button>'
-    + '</div>';
-
-  html += '<div class="hcal-wrap">'
-    + '<div class="hcal-grid hcal-head">' + ["日","月","火","水","木","金","土"].map(function(w){ return '<div class="hc-wd">'+w+'</div>'; }).join("") + '</div>'
-    + '<div class="hcal-grid">' + cells + '</div>'
-    + '</div>';
-
-  html += '<div class="filter-summary">この月の学習日数：'+studiedDays+'日／合計学習時間：'+formatDuration(monthSeconds)+'</div>';
-
-  return html;
-}
-
-/* ============================================================
-   レンダリング：データ管理（モーダル）
-   ============================================================ */
-function libraryModalHtml(){
-  var html = '<div class="mb-head"><div class="mbt">問題データを管理</div><button data-action="closeModal">×</button></div>';
-  html += '<div class="pad">'
-    + '<button class="btn-primary" data-action="pickFile">JSONファイルを追加</button>'
-    + '<div style="height:10px;"></div>'
-    + '<button class="btn-outline" data-action="loadSample">サンプルデータを追加</button>'
-    + '</div>';
-  html += '<div class="section-label">読み込み済みデータ（'+library.decks.length+'）</div>';
-  if(library.decks.length===0){
-    html += '<div class="empty"><p>まだありません。</p></div>';
-  } else {
-    html += '<div class="list">' + library.decks.map(function(d){
-      return '<div class="card row-item">'
-        + '<div class="ri-main"><div class="ri-title">'+esc(d.subject)+' ／ '+esc(d.unit)+'</div>'
-        + '<div class="ri-sub">'+d.questions.length+'問</div></div>'
-        + '<button class="btn-ghost" data-action="deleteDeck" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'">削除</button>'
-        + '</div>';
-    }).join("") + '</div>';
-  }
-  return html;
-}
-
-/* ============================================================
-   レンダリング：実績
-   ============================================================ */
-function renderAchievements(){
-  var html = '<div class="hero"><div class="row"><div class="big">'+Object.keys(stats.achievements).length+'<span class="unit">／'+ACHIEVEMENTS.length+'</span></div><div class="sub">達成した実績</div></div></div>';
-  html += '<div class="section-label">一覧</div>';
-  html += '<div class="list">' + ACHIEVEMENTS.map(function(a){
-    var got = stats.achievements[a.id];
-    var mark = got ? "済" : "－";
-    var dateLabel = got ? new Date(got).toLocaleDateString("ja-JP") : "";
-    return '<div class="card ach-item'+(got?"":" locked")+'">'
-      + '<div class="ai-badge">'+mark+'</div>'
-      + '<div class="ai-main" style="flex:1;min-width:0;"><div class="ai-title">'+esc(a.title)+'</div><div class="ai-desc">'+esc(a.desc)+'</div></div>'
-      + (got ? '<div class="ai-date">'+dateLabel+'</div>' : '')
-      + '</div>';
-  }).join("") + '</div>';
-  return html;
-}
-
-/* ============================================================
-   レンダリング：設定
-   ============================================================ */
-function renderSettings(){
-  var html = "";
-  html += '<div class="section-label">学習ペースの設定</div>';
-  html += '<div class="field"><label>1回の学習で出題する問題数（デフォルト）</label>'
-    + '<div class="stepper"><button data-action="stepSetting" data-k="defaultSetSize" data-v="-1">−</button>'
-    + '<div class="sval">'+settings.defaultSetSize+'</div>'
-    + '<button data-action="stepSetting" data-k="defaultSetSize" data-v="1">＋</button></div></div>';
-
-  html += '<div class="section-label">データ</div>';
-  html += '<div class="pad" style="padding-top:0;">'
-    + '<button class="btn-outline" data-action="openLibrary">問題データを管理</button>'
-    + '<div style="height:10px;"></div>'
-    + '<button class="btn-outline" data-action="exportBackup">バックアップを書き出す（JSON）</button>'
-    + '<div style="height:10px;"></div>'
-    + '<button class="btn-outline" data-action="confirmReset" style="border-color:#000;">すべてのデータを初期化</button>'
-    + '</div>';
-
-  html += '<div class="section-label">このアプリについて</div>';
-  html += '<div class="pad" style="padding-top:0;color:#7a7a7a;font-size:12.5px;font-weight:600;line-height:1.8;">'
-    + '出題は単元内の全問題からランダムに選ばれますが、直近で間違えた問題（連続正解が0の問題）ほど出やすくなります。'
-    + '3回連続で正解すると「クリア」扱いになり出現頻度は下がりますが、そのあと1回でも間違えるとまた出やすくなります。<br>'
-    + '「理解度」は連続'+MASTERY_STREAK+'回正解ではじめて100%になり、1回や2回の正解では上限を超えません。'
-    + '一度も出題していない問題は0%として計算されるため、答えた問題だけで見かけ上100%になることはありません。'
-    + 'また、答えてから日数が経つほど少しずつ下がっていきます（一度覚えても時間が経てば忘れる、という前提の表示です）。<br>'
-    + '完璧を目指すより、毎日少しずつ続けることを優先した設計です。<br>'
-    + 'データはこの端末内にのみ保存されます。'
-    + '</div>';
-  return html;
-}
-
-/* ============================================================
-   レンダリング：クイズ
-   ============================================================ */
-function renderQuiz(){
-  if(!session) return "";
-  var idx = session.index;
-  var total = session.queue.length;
-  var cur = session.queue[idx];
-  var q = cur.q, deck = cur.deck;
-  var answered = session.answers[idx] != null;
-  var pct = Math.round((idx/total)*100);
-
-  /* 問題文の長さによるクラス */
-  var qText = q.question || "";
-  var qLen = qText.length;
-  var qLenCls = " qlen-sm";
-  if(qLen > 180)      qLenCls = " qlen-2xl";
-  else if(qLen > 110) qLenCls = " qlen-xl";
-  else if(qLen > 65)  qLenCls = " qlen-lg";
-  else if(qLen > 35)  qLenCls = " qlen-md";
-
-  /* 選択肢の最大文字数 */
-  var maxChoiceLen = 0;
-  q.choices.forEach(function(c){ var l=(c||"").length; if(l>maxChoiceLen) maxChoiceLen=l; });
-
-  /* compact モード判定 */
-  var needCompact = (qLen > 65 || q.choices.length >= 5 || maxChoiceLen > 20);
-  var choiceCompact = needCompact ? " choices-compact" : "";
-
-  /* 選択肢ごとの文字数クラス */
-  function clenCls(txt){
-    var l = (txt||"").length;
-    if(needCompact){
-      if(l > 20) return " clen-xl";
-      if(l > 12) return " clen-lg";
-      if(l > 7)  return " clen-md";
-    } else {
-      if(l > 30) return " clen-xl";
-      if(l > 18) return " clen-lg";
-      if(l > 10) return " clen-md";
-    }
-    return "";
-  }
-
-  var choicesAreGraphs = q.choices.every(function(c){
-    return RT_BLOCK_TYPES.some(function(t){ return String(c).trim().indexOf(t+"｜")===0; });
-  });
-  var order = cur.order || q.choices.map(function(_,i){ return i; });
-
-  var html = '<div id="quizscreen">';
-  html += '<div class="qz-progress-track"><div class="qz-progress-fill" style="width:'+pct+'%;"></div></div>';
-  html += '<div class="qz-meta"><div class="qm-tag">'+esc(deck.subject)+' ／ '+esc(deck.unit)+'</div><div class="qm-count">'+(idx+1)+' / '+total+'</div></div>';
-
-  /* 問題文 */
-  html += '<div class="qz-question"><div class="qtxt'+qLenCls+'">'+renderRichText(qText)+'</div>';
-  if(q.image){ html += '<img src="'+esc(q.image)+'" alt="">'; }
-  html += '</div>';
-
-  /* 選択肢エリア（flex:1 1 0 で残り高さを均等分割） */
-  html += '<div class="qz-choices'+choiceCompact+(choicesAreGraphs?" qz-choices-grid":"")+'">';
-  order.forEach(function(origIdx, ci){
-    var c = q.choices[origIdx];
-    var cls = "choice-btn"+(choicesAreGraphs?" choice-btn-grid":"")+clenCls(c);
-    var mark = "";
-    if(answered){
-      var picked = session.answers[idx];
-      if(origIdx===q.answerIndex){ cls += " sel-correct"; mark="○"; }
-      else if(origIdx===picked){ cls += " sel-wrong"; mark="×"; }
-    }
-    html += '<button class="'+cls+'" data-locked="'+(answered?1:0)+'" data-action="'+(answered?"":"answer")+'" data-idx="'+origIdx+'">'
-      + '<span class="cb-mark">'+(mark || (ci+1))+'</span>'
-      + '<span class="cb-txt">'+renderRichText(c)+'</span>'
-      + '</button>';
-  });
-  html += '</div>';
-
-  /* 解説（回答後のみ） */
-  if(answered && q.explanation){
-    html += '<div class="qz-explain"><span class="el">解説</span>'+renderRichText(q.explanation)+'</div>';
-  }
-
-  /* フッター */
-  html += '<div class="qz-footer">';
-  if(answered){
-    var wasCorrect = session.answers[idx] === q.answerIndex;
-    html += '<button class="btn-primary" data-action="nextQuestion">'+(idx+1<total ? "次の問題へ" : "結果を見る")+'</button>';
-    if(wasCorrect){
-      html += '<div class="autoadv-track"><div class="autoadv-fill" id="autoadvFill"></div></div>';
-    }
-  } else {
-    html += '<button class="btn-primary" disabled>選択肢をタップしてください</button>';
-  }
-  html += '</div>';
-  html += '</div>';
-  return html;
-}
-
-/* ============================================================
-   レンダリング：結果
-   ============================================================ */
-function renderResult(){
-  if(!session) return "";
-  var total = session.queue.length;
-  var correct = session.answers.filter(function(a,i){ return a === session.queue[i].q.answerIndex; }).length;
-  var pct = Math.round(correct/total*100);
-  var mistakes = session.queue.filter(function(cur,i){ return session.answers[i] !== cur.q.answerIndex; });
-
-  var html = "";
-  html += '<div class="result-score"><div class="rs-frac">'+correct+' / '+total+'</div><div class="rs-pct">正答率 '+pct+'%</div></div>';
-
-  if(session.unlocked && session.unlocked.length){
-    html += '<div class="section-label">新しい実績</div><div class="list">' + session.unlocked.map(function(a){
-      return '<div class="card ach-item"><div class="ai-badge">済</div><div class="ai-main" style="flex:1;"><div class="ai-title">'+esc(a.title)+'</div><div class="ai-desc">'+esc(a.desc)+'</div></div></div>';
-    }).join("") + '</div>';
-  }
-
-  html += '<div class="section-label">間違えた問題（'+mistakes.length+'）</div>';
-  if(mistakes.length===0){
-    html += '<div class="empty"><div class="eic">○</div><p>全問正解です。</p></div>';
-  } else {
-    html += '<div class="list"><div class="card">' + mistakes.map(function(cur){
-      return '<div class="mistake-item"><div class="mi-q">'+renderRichText(cur.q.question)+'</div>'
-        + '<div class="mi-a">正解：<b>'+renderRichText(cur.q.choices[cur.q.answerIndex])+'</b></div></div>';
-    }).join("") + '</div></div>';
-  }
-
-  html += '<div class="pad">';
-  html += '<button class="btn-outline" data-action="backHome">ホームに戻る</button>';
-  html += '</div>';
-  return html;
-}
-
-/* ============================================================
-   メインレンダー
-   ============================================================ */
-function render(){
-  renderChrome();
-  var el = $("#screens");
-  var html = "";
-  switch(nav.screen){
-    case "home": html = renderHome(); break;
-    case "history": html = renderHistory(); break;
-    case "achievements": html = renderAchievements(); break;
-    case "settings": html = renderSettings(); break;
-    case "quiz": html = renderQuiz(); break;
-    case "result": html = renderResult(); break;
-    default: html = renderHome();
-  }
-  el.innerHTML = html;
-}
-
-/* ============================================================
-   セッション制御
-   ============================================================ */
-var autoAdvanceTimer = null;
-function clearAutoAdvance(){
-  if(autoAdvanceTimer){ clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
-}
-
-function startSession(queue){
-  if(queue.length===0){ toast("該当する問題がありません"); return; }
-  clearAutoAdvance();
-  /* 選択肢の表示順は、JSON内の並び順に関わらず毎回ランダムにする。
-     item.order[表示位置] = 元のchoices配列でのインデックス、という
-     対応表をセッション開始時に1回だけ作り、以後の再描画では
-     このorderを使い回すことで、同じ問題を見ている間は順番が
-     ぶれないようにする（正誤判定は常に元のインデックスで行う）。 */
-  queue.forEach(function(item){
-    var idxs = item.q.choices.map(function(_,i){ return i; });
-    item.order = shuffle(idxs);
-  });
-  session = { queue:queue, index:0, answers:[], unlocked:[], startedAt:Date.now() };
-  goto("quiz");
-}
-
-function answerCurrent(choiceIdx){
-  if(!session) return;
-  var idx = session.index;
-  if(session.answers[idx] != null) return; // 二重回答防止
-  var cur = session.queue[idx];
-  var correct = choiceIdx === cur.q.answerIndex;
-  session.answers[idx] = choiceIdx;
-  recordAnswer(cur.q.id, correct);
-  render();
-  clearAutoAdvance();
-  if(correct){
-    /* 正解した場合のみ0.8秒後に自動で次の問題へ。
-       不正解の場合は解説を読めるよう手動で進めてもらう。
-       待たずに自分でタップして進むこともできる。 */
-    autoAdvanceTimer = setTimeout(function(){
-      autoAdvanceTimer = null;
-      if(session && session.index===idx){ nextQuestion(); }
-    }, 800);
-  }
-}
-
-function nextQuestion(){
-  clearAutoAdvance();
-  if(!session) return;
-  if(session.index+1 < session.queue.length){
-    session.index++;
-    render();
-    $("#screens").scrollTop = 0;
-  } else {
-    finishSession();
-  }
-}
-
-function finishSession(){
-  var total = session.queue.length;
-  var correct = session.answers.filter(function(a,i){ return a === session.queue[i].q.answerIndex; }).length;
-  var durationMs = Date.now() - (session.startedAt || Date.now());
-  recordSessionInStats(total, correct, durationMs);
-  var unlocked = checkAchievements({ perfect: (correct===total) });
-  session.unlocked = unlocked;
-  goto("result");
-}
-
-function retryMistakes(){
-  var mistakes = session.queue.filter(function(cur,i){ return session.answers[i] !== cur.q.answerIndex; });
-  startSession(shuffle(mistakes));
-}
-
-/* ============================================================
-   イベント処理（委譲）
-   ============================================================ */
-/* ============================================================
-   タップ処理
-   ------------------------------------------------------------
-   タップ判定はブラウザ標準のclickターゲットに任せる。
-   iOS WebKitの全画面時に clientX/clientY や elementFromPoint() を
-   再計算しない。pointer系イベントは押下表示だけに使用する。
-   ============================================================ */
-document.addEventListener("pointerdown", function(e){
-  var t = e.target.closest("button, .choice-btn");
-  if(t) t.classList.add("pressed");
-}, {passive:true});
-
-document.addEventListener("pointerup", function(e){
-  var t = e.target.closest("button, .choice-btn");
-  if(t) t.classList.remove("pressed");
-  document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
-}, {passive:true});
-
-["pointercancel","pointerleave"].forEach(function(ev){
-  document.addEventListener(ev, function(){
-    document.querySelectorAll(".pressed").forEach(function(el){ el.classList.remove("pressed"); });
-  }, {passive:true});
-});
-
-/* 実際のクリックターゲットをそのまま使用する。
-   select等のネイティブ操作はchangeイベント側に任せる。 */
-document.addEventListener("click", function(e){
-  var el = e.target.closest("[data-action]");
-  if(!el) return;
-  if(el.tagName === "SELECT" || el.tagName === "OPTION") return;
-  handleAction(el, e);
-});
-
-/* ホームの「教科／更新順」ドロップダウン（<select>のchangeイベント） */
-document.addEventListener("change", function(e){
-  var el = e.target.closest("select[data-action]");
-  if(!el) return;
-  var action = el.getAttribute("data-action");
-  if(action==="setHomeSubject"){ homeFilter.subject = el.value; render(); }
-  else if(action==="setHomeSort"){ homeFilter.sort = el.value; render(); }
-});
-
-/* PCでのキーボード操作（数字キーで選択／Enterで次へ） */
-document.addEventListener("keydown", function(e){
-  if(nav.screen!=="quiz" || !session) return;
-  var idx = session.index;
-  var answered = session.answers[idx] != null;
-  if(!answered){
-    var n = parseInt(e.key,10);
-    if(n>=1 && n<=9){
-      var cur = session.queue[idx];
-      var order = cur.order || cur.q.choices.map(function(_,i){ return i; });
-      if(n<=order.length) answerCurrent(order[n-1]);
-    }
-  } else {
-    if(e.key==="Enter" || e.key===" "){ e.preventDefault(); nextQuestion(); }
-  }
-});
-
-/* ファイル読み込み */
-$("#fileInput").addEventListener("change", function(e){
-  var files = Array.prototype.slice.call(e.target.files || []);
-  if(files.length===0) return;
-  var pending = files.length;
-  var addedDecks = 0, addedQuestions = 0, failedFiles = 0;
-  files.forEach(function(file){
-    var reader = new FileReader();
-    reader.onload = function(){
-      try{
-        var parsed = JSON.parse(reader.result);
-        var decks = extractDecks(parsed);
-        if(decks.length===0){ failedFiles++; }
-        else {
-          importDecks(decks);
-          addedDecks += decks.length;
-          decks.forEach(function(d){ addedQuestions += d.questions.length; });
-        }
-      }catch(err){ failedFiles++; }
-      pending--;
-      if(pending===0){
-        var msg = addedDecks>0 ? (addedDecks+"個の単元（計 "+addedQuestions+"問）を追加しました") : "追加できるデータがありませんでした";
-        if(failedFiles>0) msg += "（"+failedFiles+"件は形式エラーでスキップ）";
-        toast(msg);
-        e.target.value = "";
-        render();
-        if($("#modalLayer").classList.contains("open")) openModal(libraryModalHtml());
-      }
-    };
-    reader.onerror = function(){
-      failedFiles++; pending--;
-      if(pending===0){ toast("読み込みに失敗しました"); render(); }
-    };
-    reader.readAsText(file);
-  });
-});
-
-/* 初期化 */
-goto("home");
-
-})();
-</script></body></html>
+</body></html>
