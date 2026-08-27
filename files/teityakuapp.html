@@ -438,6 +438,34 @@ button.pressed, .choice-btn.pressed{ background:var(--g-100); }
 .btn-primary.pressed{ background:var(--g-800); }
 .tag.on.pressed, .chip.on.pressed{ background:var(--g-800); }
 </style>
+
+<style>
+/* クイズ画面：選択肢を少し上へ、案内文を初期画面最下部へ */
+@media (max-width:700px){
+  #screens .screen.quiz-screen{
+    min-height:calc(100dvh - 56px);
+    height:calc(100dvh - 56px);
+    box-sizing:border-box;
+  }
+  #screens .screen.quiz-screen .quiz-options{
+    transform:translateY(-18px);
+  }
+  #screens .screen.quiz-screen .quiz-hint{
+    position:absolute;
+    left:0; right:0; bottom:6px;
+    margin:0 !important;
+  }
+}
+</style>
+<style id="dynamic-quiz-layout">
+/* クイズ画面：画面高に応じた動的配置。固定18px指定なし。 */
+@media (max-width:700px){
+  #quizscreen{height:100dvh; min-height:0; display:flex; flex-direction:column; overflow:hidden;}
+  #quizscreen .qz-question{flex:1 1 auto; min-height:0;}
+  #quizscreen .qz-choices{flex:0 0 auto;}
+  #quizscreen .qz-hint{flex:0 0 auto; margin-top:8px; padding-bottom:max(8px,env(safe-area-inset-bottom));}
+}
+</style>
 </head>
 <body>
 <div id="app">
