@@ -250,6 +250,20 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
    出題範囲選択
    ============================================================ */
 .filter-summary{ margin:14px 16px; padding:12px 14px; border:1.5px dashed var(--g-400); font-size:12.5px; font-weight:600; color:var(--g-600); line-height:1.6; }
+.home-search{ margin:14px 16px 8px; position:relative; }
+.home-search input{ display:block; width:100%; height:44px; padding:9px 42px 9px 12px; border:2px solid var(--ink); background:#fff; color:var(--ink); font-size:14px; font-weight:700; outline:none; }
+.home-search input::placeholder{ color:var(--g-400); font-weight:600; }
+.home-search input:focus{ box-shadow:inset 0 0 0 1px var(--ink); }
+.home-search .search-clear{ position:absolute; right:5px; top:5px; width:34px; height:34px; font-size:18px; font-weight:900; color:var(--g-500); display:none; align-items:center; justify-content:center; }
+.home-search.has-value .search-clear{ display:flex; }
+.search-results{ margin:0 16px 14px; }
+.search-results-head{ font-size:11.5px; font-weight:800; color:var(--g-500); margin:8px 0 6px; }
+.search-result{ border:2px solid var(--ink); border-bottom:none; background:#fff; padding:10px 12px; display:block; width:100%; text-align:left; }
+.search-result:last-child{ border-bottom:2px solid var(--ink); }
+.search-result:active{ background:var(--g-100); }
+.search-result .sr-meta{ font-size:10.5px; color:var(--g-500); font-weight:700; margin-bottom:3px; }
+.search-result .sr-q{ font-size:13px; line-height:1.45; font-weight:800; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.search-result .sr-a{ margin-top:4px; font-size:10.5px; color:var(--g-600); font-weight:700; }
 
 /* ============================================================
    クイズ画面 — スクロールなし全画面 flex
@@ -258,7 +272,7 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 #quizscreen{
   height:100%;
   display:flex; flex-direction:column;
-  overflow:hidden; /* 内部コンテンツは flex で管理。外スクロール禁止 */
+  overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;
 }
 .qz-progress-track{ height:5px; background:var(--g-200); flex:0 0 5px; }
 .qz-progress-fill{ height:100%; background:var(--ink); transition:width .25s ease; }
@@ -270,7 +284,7 @@ button{ background:none; border:none; touch-action:manipulation; cursor:pointer;
 .qz-meta .qm-count{ font-size:12px; font-weight:900; font-variant-numeric:tabular-nums; flex:0 0 auto; }
 
 /* 問題文エリア：縮小可能 */
-.qz-question{ padding:8px 16px 2px; flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-start; }
+.qz-question{ padding:8px 16px 2px; flex:0 0 auto; min-height:0; overflow:visible; display:flex; flex-direction:column; justify-content:flex-start; }
 .qz-question .qtxt{
   font-size:17px; font-weight:800; line-height:1.55;
   white-space:pre-wrap; user-select:text; overflow:hidden;
@@ -437,28 +451,6 @@ button.pressed, .choice-btn.pressed{ background:var(--g-100); }
 .choice-btn.sel-correct.pressed, .choice-btn.sel-wrong.pressed{ background:inherit; }
 .btn-primary.pressed{ background:var(--g-800); }
 .tag.on.pressed, .chip.on.pressed{ background:var(--g-800); }
-</style>
-
-<style id="quiz-dynamic-position-final">
-/* クイズ画面は #screens がヘッダー下の実サイズを持つため、100dvhを直接指定しない。
-   選択肢と「選択肢をタップしてください」は、その実表示領域の下端を基準に配置する。 */
-#screens.quiz-active #quizscreen{
-  height:100%;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-#screens.quiz-active #quizscreen .qz-question{
-  flex:1 1 auto;
-  min-height:0;
-}
-#screens.quiz-active #quizscreen .qz-choices{
-  flex:0 0 auto;
-}
-#screens.quiz-active #quizscreen .qz-footer{
-  flex:0 0 auto;
-}
 </style>
 </head>
 <body>
@@ -816,6 +808,8 @@ var nav = { screen:"home", params:{} };
 var session = null; // 出題セッション
 var selectState = { subjects:[], units:[], size:settings.defaultSetSize };
 var homeFilter = { subject:"", sort:"mastery" };  // ホームの「教科／更新順」ドロップダウン
+var homeSearch = "";
+var searchResults = [];
 var historyState = (function(){ var d=new Date(); return { year:d.getFullYear(), month:d.getMonth() }; })(); // ログイン履歴カレンダーの表示年月
 
 /* ============================================================
@@ -1427,11 +1421,53 @@ function renderStreakBar(){
     + '<div class="sb-cell"><div class="sb-num">'+(stats.totalAnswered? Math.round(stats.totalCorrect/stats.totalAnswered*100):0)+'<span style="font-size:12px;">%</span></div><div class="sb-lab">正答率</div></div>';
 }
 
+function normalizeSearchText(s){
+  return String(s||"").toLocaleLowerCase().replace(/\s+/g," ").trim();
+}
+function searchLibraryQuestions(query){
+  var q = normalizeSearchText(query);
+  if(!q) return [];
+  var terms = q.split(/\s+/).filter(Boolean);
+  var out = [];
+  library.decks.forEach(function(d){
+    var hay = normalizeSearchText([d.subject, d.unit].join(" "));
+    if(terms.every(function(term){ return hay.indexOf(term)>=0; })){
+      out.push({deck:d});
+    }
+  });
+  return out;
+}
+function renderSearchResults(query){
+  var box = $("#homeSearchResults");
+  if(!box) return;
+  searchResults = searchLibraryQuestions(query);
+  if(!normalizeSearchText(query)){ box.innerHTML=""; return; }
+  if(searchResults.length===0){
+    box.innerHTML='<div class="search-results-head">検索結果 0単元</div><div class="empty" style="margin:20px 10px;"><p>該当する単元がありません。</p></div>';
+    return;
+  }
+  var shown = searchResults.slice(0,100);
+  box.innerHTML='<div class="search-results-head">検索結果 '+searchResults.length+'単元'+(searchResults.length>100?'（先頭100単元を表示）':'')+'</div>'
+    + shown.map(function(item,i){
+      var d=item.deck;
+      var st=computeUnitStats(d);
+      return '<button class="search-result" data-action="startSearchUnit" data-search-index="'+i+'" data-subject="'+esc(d.subject)+'" data-unit="'+esc(d.unit)+'">'
+        + '<div style="font-size:14px;font-weight:800;">'+esc(d.unit)+'</div>'
+        + '<div style="font-size:11px;color:var(--g-500);margin-top:3px;">'+esc(d.subject)+' ・ '+d.questions.length+'問 ・ 定着度 '+st.retention+'%</div>'
+        + '</button>';
+    }).join("");
+}
+
 function renderDeckList(){
   var html = "";
   var subjectsAvail = allSubjects();
 
-  html += '<div class="section-row">'
+  html += '<div class="home-search'+(normalizeSearchText(homeSearch)?' has-value':'')+'" id="homeSearchWrap">'
+    + '<input id="homeSearchInput" type="search" autocomplete="off" enterkeyhint="search" placeholder="単元を自由検索" value="'+esc(homeSearch)+'" aria-label="単元を自由検索">'
+    + '<button class="search-clear" type="button" data-action="clearHomeSearch" aria-label="検索をクリア">×</button>'
+    + '</div>'
+    + '<div id="homeSearchResults" class="search-results"></div>'
+    + '<div class="section-row">' 
     + '<div class="section-label">単元選択</div>'
     + '<div class="home-filters">'
       + '<select class="home-select" data-action="setHomeSubject" aria-label="教科で絞り込み">'
@@ -1816,6 +1852,7 @@ function render(){
     default: html = renderHome();
   }
   el.innerHTML = html;
+  if(nav.screen==="home" && homeSearch){ renderSearchResults(homeSearch); }
 }
 
 /* ============================================================
@@ -1936,6 +1973,8 @@ function handleAction(btn, e){
     case "exitQuiz": if(confirm("学習を中断しますか？ここまでの回答は保存されます。")){ clearAutoAdvance(); session=null; goto("home"); } break;
     case "retryMistakes": retryMistakes(); break;
     case "backHome": session=null; goto("home"); break;
+    case "startSearchUnit": { var si=parseInt(btn.getAttribute("data-search-index"),10); var item=searchResults[si]; if(item && item.deck){ var q=buildAutoTaskForDeck(item.deck,settings.defaultSetSize); if(q.length>0) startSession(q); else alert("学習可能な問題がありません。"); } break; }
+    case "clearHomeSearch": homeSearch=""; render(); break;
     case "historyMonth": shiftHistoryMonth(parseInt(btn.getAttribute("data-v"),10)); render(); break;
     case "openLibrary": openModal(libraryModalHtml()); break;
     case "closeModal": closeModal(); break;
@@ -1956,6 +1995,16 @@ document.addEventListener("click", function(e){
   if(!el) return;
   if(el.tagName === "SELECT" || el.tagName === "OPTION") return;
   handleAction(el, e);
+});
+
+/* ホームの自由検索（入力のたびに検索結果だけ更新。画面全体は再描画しない） */
+document.addEventListener("input", function(e){
+  if(e.target && e.target.id==="homeSearchInput"){
+    homeSearch = e.target.value;
+    var wrap = $("#homeSearchWrap");
+    if(wrap) wrap.classList.toggle("has-value", !!normalizeSearchText(homeSearch));
+    renderSearchResults(homeSearch);
+  }
 });
 
 /* ホームの「教科／更新順」ドロップダウン（<select>のchangeイベント） */
