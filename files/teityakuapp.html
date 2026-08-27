@@ -456,6 +456,8 @@ button.pressed, .choice-btn.pressed{ background:var(--g-100); }
 </div>
 
 <input type="file" id="fileInput" class="hidden-input" accept="application/json,.json" multiple="">
+<input type="file" id="updateJsonInput" class="hidden-input" accept="application/json,.json" multiple="">
+<input type="file" id="backupInput" class="hidden-input" accept="application/json,.json">
 
 <script>
 (function(){
@@ -822,104 +824,145 @@ var SAMPLE_DECKS = [
 ];
 
 /* ============================================================
-   データ正規化・取り込み
+   データ正規化・コンテンツ署名・差分更新
    ============================================================ */
 function normalizeQuestion(raw, subject, unit, idx){
   if(!raw || typeof raw!=="object") return null;
-  var qtext = raw.question || raw.q || raw.text;
-  var choices = raw.choices || raw.options;
+  var qtext=raw.question || raw.q || raw.text;
+  var choices=raw.choices || raw.options;
   if(!qtext || !Array.isArray(choices) || choices.length<2) return null;
-  var ansIdx = raw.answerIndex;
-  if(typeof ansIdx !== "number" || ansIdx<0 || ansIdx>=choices.length){
-    if(typeof raw.answer === "string"){
-      var found = choices.indexOf(raw.answer);
-      ansIdx = found>=0 ? found : 0;
-    } else {
-      ansIdx = 0;
-    }
+  var ansIdx=raw.answerIndex;
+  if(typeof ansIdx!=="number" || ansIdx<0 || ansIdx>=choices.length){
+    if(typeof raw.answer==="string"){
+      var found=choices.indexOf(raw.answer);
+      ansIdx=found>=0 ? found : 0;
+    }else ansIdx=0;
   }
-  var id = raw.id ? String(raw.id) : (subject+"__"+unit+"__"+idx+"__"+hashStr(qtext));
+  /* 明示IDを最優先。無い問題は位置ベースで固定。 */
+  var id=raw.id ? String(raw.id) : (subject+"__"+unit+"__"+idx);
   return {
-    id: id,
-    question: String(qtext),
-    image: raw.image || raw.imageUrl || null,
-    choices: choices.map(function(c){ return String(c); }),
-    answerIndex: ansIdx,
-    explanation: raw.explanation || raw.note || "",
-    level: typeof raw.level === "number" ? raw.level : (parseInt(raw.level, 10) || 1),
-    major: raw.major != null ? String(raw.major) : null,
-    theme: raw.theme != null ? String(raw.theme) : null,
-    subtheme: raw.subtheme != null ? String(raw.subtheme) : null,
-    knowledgeId: raw.knowledgeId != null ? String(raw.knowledgeId) : null,
-    questionType: raw.questionType != null ? String(raw.questionType) : null
+    id:id, question:String(qtext), image:raw.image || raw.imageUrl || null,
+    choices:choices.map(function(c){return String(c);}), answerIndex:ansIdx,
+    explanation:raw.explanation || raw.note || "",
+    level:typeof raw.level==="number" ? raw.level : (parseInt(raw.level,10)||1),
+    major:raw.major!=null ? String(raw.major) : null,
+    theme:raw.theme!=null ? String(raw.theme) : null,
+    subtheme:raw.subtheme!=null ? String(raw.subtheme) : null,
+    knowledgeId:raw.knowledgeId!=null ? String(raw.knowledgeId) : null,
+    questionType:raw.questionType!=null ? String(raw.questionType) : null
   };
 }
-
-function normalizeDeck(raw, fallbackSubject){
+function normalizeDeck(raw,fallbackSubject){
   if(!raw || typeof raw!=="object") return null;
-  var subject = String(raw.subject || raw.教科 || fallbackSubject || "未分類");
-  var unit = String(raw.unit || raw.単元 || "未分類単元");
-  var tags = raw.tags || raw.タグ || [];
-  if(!Array.isArray(tags)) tags = [String(tags)];
-  var srcQ = raw.questions || raw.問題 || [];
+  var subject=String(raw.subject || raw.教科 || fallbackSubject || "未分類");
+  var unit=String(raw.unit || raw.単元 || "未分類単元");
+  var tags=raw.tags || raw.タグ || [];
+  if(!Array.isArray(tags)) tags=[String(tags)];
+  var srcQ=raw.questions || raw.問題 || [];
   if(!Array.isArray(srcQ)) return null;
-  var qs = [];
+  var qs=[];
   for(var i=0;i<srcQ.length;i++){
-    try {
-      var nq = normalizeQuestion(srcQ[i], subject, unit, i);
-      if(nq) qs.push(nq);
-    } catch(err){}
+    try{var nq=normalizeQuestion(srcQ[i],subject,unit,i); if(nq) qs.push(nq);}catch(err){}
   }
   if(qs.length===0) return null;
-  return { subject:subject, unit:unit, tags:tags.map(String), questions:qs };
+  return {subject:subject,unit:unit,tags:tags.map(String),questions:qs};
 }
-
 function extractDecks(parsed){
-  var decks = [];
+  var decks=[];
   if(Array.isArray(parsed)){
-    parsed.forEach(function(item){
-      try {
-        var d = normalizeDeck(item);
-        if(d) decks.push(d);
-      } catch(err){}
-    });
-  } else if(parsed && typeof parsed==="object"){
-    var parentSubject = parsed.subject || parsed.教科 || null;
+    parsed.forEach(function(item){try{var d=normalizeDeck(item);if(d)decks.push(d);}catch(err){}});
+  }else if(parsed && typeof parsed==="object"){
+    var parentSubject=parsed.subject || parsed.教科 || null;
     if(Array.isArray(parsed.decks)){
-      parsed.decks.forEach(function(item){
-        try {
-          var d = normalizeDeck(item, parentSubject);
-          if(d) decks.push(d);
-        } catch(err){}
-      });
-    } else if(parsed.questions){
-      try {
-        var d = normalizeDeck(parsed);
-        if(d) decks.push(d);
-      } catch(err){}
-    }
+      parsed.decks.forEach(function(item){try{var d=normalizeDeck(item,parentSubject);if(d)decks.push(d);}catch(err){}});
+    }else if(parsed.questions){try{var d=normalizeDeck(parsed,parentSubject);if(d)decks.push(d);}catch(err){}}
   }
   return decks;
 }
-
-function mergeDeck(newDeck){
-  var existing = library.decks.filter(function(d){ return d.subject===newDeck.subject && d.unit===newDeck.unit; })[0];
-  if(existing){
-    var byId = {};
-    existing.questions.forEach(function(q){ byId[q.id]=q; });
-    newDeck.questions.forEach(function(q){ byId[q.id]=q; });
-    existing.questions = Object.keys(byId).map(function(k){ return byId[k]; });
-    existing.tags = uniq(existing.tags.concat(newDeck.tags));
-    existing.addedAt = Date.now(); // 「更新順」ソート用：追加・更新された時刻を記録
-  } else {
-    newDeck.addedAt = Date.now();
-    library.decks.push(newDeck);
+function getQuestionSignature(q){
+  return q.id+"::"+q.question+"::"+q.choices.join("|")+"::"+q.answerIndex+"::"+q.explanation+"::"+(q.image||"")+"::"+q.level+"::"+(q.major||"")+"::"+(q.theme||"")+"::"+(q.subtheme||"")+"::"+(q.knowledgeId||"")+"::"+(q.questionType||"");
+}
+function getDeckSignature(deck){
+  var sigs=deck.questions.map(getQuestionSignature); sigs.sort();
+  return deck.subject+"::"+deck.unit+"::"+sigs.join("||");
+}
+function findMatchingDeck(newDeck,claimedSet){
+  claimedSet=claimedSet||new Set();
+  var candidates=library.decks.filter(function(d){return !claimedSet.has(d);});
+  for(var i=0;i<candidates.length;i++){
+    if(candidates[i].subject===newDeck.subject && candidates[i].unit===newDeck.unit) return candidates[i];
+  }
+  var newIds=new Set(newDeck.questions.map(function(q){return q.id;}));
+  var best=null,maxOverlap=0;
+  candidates.forEach(function(cand){
+    var overlap=0;(cand.questions||[]).forEach(function(q){if(newIds.has(q.id))overlap++;});
+    var ratio=overlap/Math.max(1,(cand.questions||[]).length);
+    if(overlap>0 && ratio>=0.3 && overlap>maxOverlap){maxOverlap=overlap;best=cand;}
+  });
+  return best;
+}
+function sameQuestionContent(a,b){
+  if(!a||!b)return false;
+  return getQuestionSignature(a)===getQuestionSignature(b);
+}
+function clearChangedProgress(oldDeck,newDeck){
+  var oldById={},newById={};
+  (oldDeck.questions||[]).forEach(function(q){oldById[q.id]=q;});
+  (newDeck.questions||[]).forEach(function(q){newById[q.id]=q;});
+  Object.keys(oldById).forEach(function(id){if(!newById[id])delete progress[id];});
+  Object.keys(newById).forEach(function(id){if(oldById[id]&&!sameQuestionContent(oldById[id],newById[id]))delete progress[id];});
+}
+function migrateLegacyProgress(oldDeck,newDeck){
+  /* 旧版の「本文ハッシュ付きID」が残っている場合でも、位置と内容が同一なら
+     旧進捗を新しい位置ベースIDへ移してから更新する。 */
+  var oldQ=oldDeck.questions||[], newQ=newDeck.questions||[];
+  var n=Math.min(oldQ.length,newQ.length);
+  for(var i=0;i<n;i++){
+    if(oldQ[i].id!==newQ[i].id && sameQuestionContent(oldQ[i],newQ[i]) && progress[oldQ[i].id]!==undefined){
+      progress[newQ[i].id]=progress[oldQ[i].id];
+      delete progress[oldQ[i].id];
+    }
   }
 }
-
+function mergeDeck(newDeck,claimedSet){
+  var match=findMatchingDeck(newDeck,claimedSet);
+  if(!match){newDeck.addedAt=Date.now();newDeck.contentSig=getDeckSignature(newDeck);library.decks.push(newDeck);if(claimedSet)claimedSet.add(newDeck);return {action:"added",deck:newDeck};}
+  if(claimedSet)claimedSet.add(match);
+  var newSig=getDeckSignature(newDeck), oldSig=match.contentSig||getDeckSignature(match);
+  if(oldSig===newSig){if(!match.contentSig)match.contentSig=oldSig;return {action:"unchanged",deck:match};}
+  migrateLegacyProgress(match,newDeck);
+  clearChangedProgress(match,newDeck);
+  match.subject=newDeck.subject; match.unit=newDeck.unit;
+  match.tags=uniq((match.tags||[]).concat(newDeck.tags||[]));
+  match.questions=newDeck.questions; match.contentSig=newSig; match.addedAt=Date.now();
+  return {action:"updated",deck:match};
+}
 function importDecks(decks){
-  decks.forEach(mergeDeck);
-  persistLib();
+  var claimedSet=new Set(),summary={added:0,updated:0,unchanged:0};
+  (decks||[]).forEach(function(d){var r=mergeDeck(d,claimedSet);summary[r.action]++;});
+  persistLib();persistProg();return summary;
+}
+/* 完全版JSONを「正本」として対象教科だけを同期する。 */
+function updateDecks(decks){
+  var grouped={},summary={added:0,updated:0,unchanged:0,deleted:0},claimedSet=new Set();
+  (decks||[]).forEach(function(d){if(!grouped[d.subject])grouped[d.subject]=[];grouped[d.subject].push(d);});
+  Object.keys(grouped).forEach(function(subject){
+    var incoming=grouped[subject], keys=new Set(incoming.map(function(d){return d.subject+"::"+d.unit;}));
+    library.decks.slice().forEach(function(oldDeck){
+      if(oldDeck.subject!==subject || keys.has(oldDeck.subject+"::"+oldDeck.unit))return;
+      (oldDeck.questions||[]).forEach(function(q){delete progress[q.id];});
+      library.decks=library.decks.filter(function(d){return d!==oldDeck;}); summary.deleted++;
+    });
+    incoming.forEach(function(d){var r=mergeDeck(d,claimedSet);summary[r.action]++;});
+  });
+  persistLib();persistProg();return summary;
+}
+function importBackupPayload(payload){
+  if(!payload||typeof payload!=="object"||!payload.library||!Array.isArray(payload.library.decks)||!payload.progress||typeof payload.progress!=="object")throw new Error("バックアップ形式が不正です。");
+  library={decks:payload.library.decks}; progress=payload.progress;
+  if(payload.stats&&typeof payload.stats==="object")stats=payload.stats;
+  if(payload.settings&&typeof payload.settings==="object")settings=payload.settings;
+  persistLib();persistProg();persistStats();persistSettings();
 }
 
 function loadSample(){
@@ -1579,7 +1622,12 @@ function renderSettings(){
   html += '<div class="pad" style="padding-top:0;">'
     + '<button class="btn-outline" data-action="openLibrary">問題データを管理</button>'
     + '<div style="height:10px;"></div>'
+    + '<button class="btn-outline" data-action="updateJson">JSONを更新（差分アップデート）</button>'
+    + '<div style="height:6px;"></div>'
+    + '<div style="font-size:11px;color:var(--g-500);line-height:1.5;margin-bottom:10px;">完全改善版JSONを読み込むと、同じ単元は差分更新、新規単元は追加、JSONから消えた対象教科の単元は削除します。正常な問題の進捗は保持します。</div>'
     + '<button class="btn-outline" data-action="exportBackup">バックアップを書き出す（JSON）</button>'
+    + '<div style="height:6px;"></div>'
+    + '<button class="btn-outline" data-action="importBackup">バックアップを読み込む</button>'
     + '<div style="height:10px;"></div>'
     + '<button class="btn-outline" data-action="confirmReset" style="border-color:#000;">すべてのデータを初期化</button>'
     + '</div>';
@@ -1870,6 +1918,8 @@ function handleAction(btn, e){
     case "openLibrary": openModal(libraryModalHtml()); break;
     case "closeModal": closeModal(); break;
     case "pickFile": $("#fileInput").click(); break;
+    case "updateJson": if(confirm("完全改善版JSONで更新します。対象教科のJSONに存在しない単元は削除されます。実行しますか？")){ $("#updateJsonInput").click(); } break;
+    case "importBackup": $("#backupInput").click(); break;
     case "loadSample": loadSample(); closeModal(); break;
     case "deleteDeck": if(confirm("「"+btn.getAttribute("data-subject")+" ／ "+btn.getAttribute("data-unit")+"」を削除しますか？進捗も削除されます。")){ deleteDeck(btn.getAttribute("data-subject"),btn.getAttribute("data-unit")); openModal(libraryModalHtml()); } break;
     case "exportBackup": exportBackup(); break;
@@ -1947,6 +1997,46 @@ $("#fileInput").addEventListener("change", function(e){
     };
     reader.readAsText(file);
   });
+});
+
+/* ============================================================
+   JSON差分更新
+   ============================================================ */
+$("#updateJsonInput").addEventListener("change",function(e){
+  var files=Array.prototype.slice.call(e.target.files||[]); if(!files.length)return;
+  var pending=files.length,allDecks=[],failed=0;
+  files.forEach(function(file){
+    var reader=new FileReader();
+    reader.onload=function(){
+      try{var parsed=JSON.parse(reader.result),decks=extractDecks(parsed);if(decks.length)allDecks=allDecks.concat(decks);else failed++;}
+      catch(err){failed++;}
+      pending--;
+      if(pending===0){
+        try{var s=updateDecks(allDecks),msg="更新完了：追加 "+s.added+"、変更 "+s.updated+"、変更なし "+s.unchanged+"、削除 "+s.deleted;if(failed)msg+="（"+failed+"件は形式エラーでスキップ）";toast(msg);render();if($("#modalLayer").classList.contains("open"))openModal(libraryModalHtml());}
+        catch(err2){toast("JSON更新に失敗しました："+err2.message);}
+        e.target.value="";
+      }
+    };
+    reader.onerror=function(){failed++;pending--;if(pending===0){toast("JSON更新の読み込みに失敗しました");e.target.value="";}};
+    reader.readAsText(file);
+  });
+});
+/* ============================================================
+   バックアップ復元
+   ============================================================ */
+$("#backupInput").addEventListener("change",function(e){
+  var file=e.target.files&&e.target.files[0]; if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(){
+    try{
+      var payload=JSON.parse(reader.result);
+      if(!confirm("バックアップを読み込むと、現在の問題・進捗・実績・設定がバックアップの状態に置き換わります。実行しますか？")){e.target.value="";return;}
+      importBackupPayload(payload);toast("バックアップを復元しました");render();if($("#modalLayer").classList.contains("open"))closeModal();
+    }catch(err){toast("バックアップの読み込みに失敗しました："+err.message);}
+    e.target.value="";
+  };
+  reader.onerror=function(){toast("バックアップの読み込みに失敗しました");e.target.value="";};
+  reader.readAsText(file);
 });
 
 /* 初期化 */
